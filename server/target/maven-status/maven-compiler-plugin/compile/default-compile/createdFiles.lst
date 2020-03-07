@@ -1,1 +1,6 @@
 group5/demo/Ceng453projectApplication.class
+group5/demo/repository/UserRepository.class
+group5/demo/service/UserServiceImpl.class
+group5/demo/model/User.class
+group5/demo/service/UserService.class
+group5/demo/api/UserController.class
