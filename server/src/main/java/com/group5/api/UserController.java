@@ -1,7 +1,7 @@
-package group5.demo.api;
+package com.group5.api;
 
-import group5.demo.model.User;
-import group5.demo.service.UserService;
+import com.group5.model.User;
+import com.group5.service.UserService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

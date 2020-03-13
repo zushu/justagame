@@ -1,7 +1,7 @@
-package group5.demo.service;
+package com.group5.service;
 
-import group5.demo.model.User;
-import group5.demo.repository.UserRepository;
+import com.group5.model.User;
+import com.group5.repository.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

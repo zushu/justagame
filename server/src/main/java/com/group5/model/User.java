@@ -1,4 +1,4 @@
-package group5.demo.model;
+package com.group5.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

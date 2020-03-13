@@ -1,6 +1,6 @@
-package group5.demo.service;
+package com.group5.service;
 
-import group5.demo.model.User;
+import com.group5.model.User;
 import org.json.JSONObject;
 
 import java.util.List;

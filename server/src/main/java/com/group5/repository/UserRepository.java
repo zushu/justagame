@@ -1,6 +1,6 @@
-package group5.demo.repository;
+package com.group5.repository;
 
-import group5.demo.model.User;
+import com.group5.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
