@@ -8,7 +8,10 @@ import javax.persistence.Table;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
-import java.sql.Date;
+//import java.time.temporal.*;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 
 
 
@@ -24,7 +27,9 @@ public class Game {
     private long score;
   
     @Column(name = "ENDTIME")
-    private java.sql.Date endTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal
+    private java.util.Date endTime;
 
 
     // TODO: FOR deleteGame, GET userId and delete all games with that userId\
@@ -55,11 +60,11 @@ public class Game {
         this.score = score;
     }
 
-    public java.sql.Date getEndTime() {
+    public java.util.Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(java.sql.Date endTime) {
+    public void setEndTime(java.util.Date endTime) {
         this.endTime = endTime;
     }
 

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "df52677b-fb16-4c32-b1e6-0250d0c99016",
+		"_postman_id": "b237400f-5ca3-4cec-9e15-2345118d372b",
 		"name": "ceng453project",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -118,6 +118,37 @@
 					]
 				},
 				"description": "body --> [\"id1\",\"id2\",\"id3\",.......]"
+			},
+			"response": []
+		},
+		{
+			"name": "add game ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"score\":\"35\",\n\t\"endTime\":\"2019-11-10T14:25:00\",\n\t\"user\": {\n\t\t\"id\":\"1\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/game/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"game",
+						"add"
+					]
+				}
 			},
 			"response": []
 		}
