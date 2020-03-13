@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import java.sql.Date;
 
 
@@ -28,7 +29,7 @@ public class Game {
 
     // TODO: FOR deleteGame, GET userId and delete all games with that userId\
     // TODO: add @ManyToOne(cascade = CascadeType.ALL)
-    @ManyToOne(targetEntity=User.class)
+    @ManyToOne                      // (fetch = FetchType.EAGER) denenedi ama sadece user id'si return etti
     @JoinColumn(name = "USERID", referencedColumnName="ID")
     private User user;
 

@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 @Table(name = "USER")
@@ -19,6 +23,9 @@ public class User {
 
     @Column(name = "PASSWORD")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL)
+    private List<Game> gameList;
 
     public User(){
     }
