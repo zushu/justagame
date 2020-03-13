@@ -1,6 +1,11 @@
-group5/demo/Ceng453projectApplication.class
-group5/demo/repository/UserRepository.class
-group5/demo/service/UserServiceImpl.class
-group5/demo/model/User.class
-group5/demo/service/UserService.class
-group5/demo/api/UserController.class
+com/group5/service/UserServiceImpl.class
+com/group5/service/GameServiceImpl.class
+com/group5/service/UserService.class
+com/group5/Ceng453projectApplication.class
+com/group5/repository/UserRepository.class
+com/group5/api/UserController.class
+com/group5/repository/GameRepository.class
+com/group5/model/Game.class
+com/group5/model/User.class
+com/group5/api/GameController.class
+com/group5/service/GameService.class
