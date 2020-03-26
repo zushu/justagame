@@ -8,9 +8,9 @@ import javax.persistence.Table;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
-//import java.time.temporal.*;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.GenerationType;
 import java.util.Date;
 
 
@@ -19,7 +19,7 @@ import java.util.Date;
 @Table(name = "GAME")
 public class Game {
     @Id 
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="game_gen") //if we do not specify a separate generator, all tables increment same id number
     @Column(name = "GAMEID")
     private int id;
 
@@ -28,14 +28,10 @@ public class Game {
   
     @Column(name = "ENDTIME")
     @Temporal(TemporalType.TIMESTAMP)
-    //@Temporal
     private java.util.Date endTime;
-
-
-    // TODO: FOR deleteGame, GET userId and delete all games with that userId\
-    // TODO: add @ManyToOne(cascade = CascadeType.ALL)
-    @ManyToOne                      // (fetch = FetchType.EAGER) denenedi ama sadece user id'si return etti
-    @JoinColumn(name = "USERID", referencedColumnName="ID")
+    
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "USERID", referencedColumnName="ID", nullable = false)
     private User user;
 
     public Game(){

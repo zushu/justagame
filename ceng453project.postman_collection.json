@@ -1,156 +1,318 @@
 {
 	"info": {
-		"_postman_id": "b237400f-5ca3-4cec-9e15-2345118d372b",
+		"_postman_id": "155c1487-0fe1-4408-9b58-6cc7ed7a96d4",
 		"name": "ceng453project",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "getAll users",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/user/getAll",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"user",
-						"getAll"
-					]
+			"name": "User",
+			"item": [
+				{
+					"name": "getAll users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/user/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"asdw\",\n\t\"password\":\"passwwss\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/user/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"3\",\n\t\"name\":\"updatetest222\",\n\t\"password\":\"test222222\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/user/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"update"
+							]
+						},
+						"description": "when 'id' is not provided, a new user is added to db"
+					},
+					"response": []
+				},
+				{
+					"name": "delete user with id list",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"3\"]\n"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/user/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"delete"
+							]
+						},
+						"description": "body --> [\"id1\",\"id2\",\"id3\",.......]"
+					},
+					"response": []
+				},
+				{
+					"name": "getUsersGameList/userId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/user/getUsersGameList/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"getUsersGameList",
+								"1"
+							]
+						},
+						"description": "returns all games of user with provided userId"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "add user",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\":\"asdw\",\n\t\"password\":\"passwwss\"\n}"
+			"name": "Game",
+			"item": [
+				{
+					"name": "getAll games",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/game/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"game",
+								"getAll"
+							]
+						},
+						"description": "if you use FetchType.LAZY it will crash ( use FethcType.EAGER )"
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8080/api/user/add",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"user",
-						"add"
-					]
+				{
+					"name": "add game ",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"score\":\"90\",\n\t\"endTime\":\"2020-03-10T14:45:00\",\n\t\"user\": {\n\t\t\"id\":\"15\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/game/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"game",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update game ",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":35,\n\t\"score\":\"77\",\n\t\"endTime\":\"2021-03-10T14:25:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/game/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"game",
+								"update"
+							]
+						},
+						"description": "does not updates user\nonly updates score or date"
+					},
+					"response": []
+				},
+				{
+					"name": "delete game with id list",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"32\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/game/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"game",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllAfterDate   NOT WORKING, FIX IT LATER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"2020-01-10T14:45:00\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/game/getAllAfterDate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"game",
+								"getAllAfterDate"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "update user",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"id\":\"3\",\n\t\"name\":\"updatetest222\",\n\t\"password\":\"test222222\"\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/user/update",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"user",
-						"update"
-					]
-				},
-				"description": "when 'id' is not provided, a new user is added to db"
-			},
-			"response": []
-		},
-		{
-			"name": "delete user",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[\"3\"]\n"
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/user/delete",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"user",
-						"delete"
-					]
-				},
-				"description": "body --> [\"id1\",\"id2\",\"id3\",.......]"
-			},
-			"response": []
-		},
-		{
-			"name": "add game ",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"score\":\"35\",\n\t\"endTime\":\"2019-11-10T14:25:00\",\n\t\"user\": {\n\t\t\"id\":\"1\"\n\t}\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/game/add",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"game",
-						"add"
-					]
-				}
-			},
-			"response": []
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}

@@ -1,6 +1,7 @@
 package com.group5.service;
 
 import com.group5.model.User;
+import com.group5.model.Game;
 import com.group5.repository.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
         return  this.userRepository.save(userUpdate);
     }
 
+    //TODO: delete all game records for that user
     @Override
     public void deleteUser(List<Integer> idList) {
         Iterable<User> users = this.userRepository.findAllById(idList);
@@ -62,11 +64,15 @@ public class UserServiceImpl implements UserService {
             predicates.add(cb.equal(user.get("id"), jsonUser.get("id")));
         if (jsonUser.has("name"))
             predicates.add(cb.equal(user.get("name"), jsonUser.get("name")));
-        if (jsonUser.has("password"))
-            predicates.add(cb.equal(user.get("password"), jsonUser.get("password")));
-
 
         cq.where(predicates.toArray(new Predicate[0]));
         return em.createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<Game> getUsersGameList(Integer userId){
+        Optional<User> userDb = this.userRepository.findById(userId);
+        User userUpdate = userDb.get();
+        return userUpdate.getGameList();
     }
 }

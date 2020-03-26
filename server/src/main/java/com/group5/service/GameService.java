@@ -10,5 +10,6 @@ public interface GameService {
     List<Game> getAllGames();
     Game updateGame(Game game);
     void deleteGame(List<Integer> idList);
+    List<Game> getAllGamesAfterDate(String date);
     //List<Game> findGame(JSONObject jsonGame);
 }

@@ -36,6 +36,13 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public List<Game> getAllGamesAfterDate(String date){
+        return gameRepository.findGamesAfterDate22(date);
+        //String query = "SELECT * FROM Game  WHERE Game.endDate > ?1";
+        //Query q = em.createQuery(query).setParameter(1, date, TemporalType.TIMESTAMP);//.setParameter(2, endDate, TemporalType.DATE);
+    }
+
+    @Override
     public Game updateGame(Game game){
         Optional<Game> gameDb = this.gameRepository.findById(game.getId());
         Game gameUpdate = gameDb.get();
@@ -45,7 +52,6 @@ public class GameServiceImpl implements GameService {
         return  this.gameRepository.save(gameUpdate);
     }
 
-    // TODO: FOR deleteGame, GET userId and delete all games with that userId
     @Override
     public void deleteGame(List<Integer> idList) {
         Iterable<Game> games = this.gameRepository.findAllById(idList);
