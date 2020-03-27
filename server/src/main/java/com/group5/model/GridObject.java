@@ -2,8 +2,8 @@ package com.group5.model;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 public abstract class GridObject {
-    private Vector2D position;
-    private Vector2D direction;
+    private Vector2D position;  // x, y
+    private Vector2D direction; // x, y
     private double speed;
     private double width;
     private double height;
@@ -57,9 +57,9 @@ public abstract class GridObject {
         this.height = height;
     }
 
-    /*protected void move(Vector2D newPosition) // update position
+    protected void move(Vector2D newPosition) // update position
     {
-
-    }*/
+        setPosition(newPosition);
+    }
 
 }

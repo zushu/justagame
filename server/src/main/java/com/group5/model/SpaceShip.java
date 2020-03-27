@@ -2,6 +2,9 @@ package com.group5.model;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import java.util.List;
 
+
+// TODO: DECIDE, SHOULD I CREATE A MainObject INTERFACE FOR SpaceShip AND Alien?
+// THEY HAVE A LOT OF FUNCTIONS IN COMMON, DIFFERENT FROM BULLET
 public class SpaceShip extends GridObject {
     private int health;
     private double shootFrequency; // can change
@@ -38,5 +41,10 @@ public class SpaceShip extends GridObject {
     public void setHealth(int health) {
         this.health = health;
     }   
+
+    /*public boolean collidesWithBullets(List<Bullet> alienBullets)
+    {
+        return false;
+    }*/
 
 }
