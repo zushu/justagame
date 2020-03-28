@@ -37,9 +37,9 @@ public class GameController {
         return ResponseEntity.ok().body(this.gameService.getAllGames());
     }
 
-    @PostMapping("/getAllAfterDate")
-    public ResponseEntity<List<Game>> getAllGamesAfterDate(@RequestBody String date){
-        return ResponseEntity.ok().body(this.gameService.getAllGamesAfterDate(date));
+    @PostMapping("/scoreboard")
+    public ResponseEntity<List<Game>> scoreboardAfterDate(@RequestBody String date){
+        return ResponseEntity.ok().body(this.gameService.scoreboardAfterDate(date));
     }
 
     @DeleteMapping("/delete")

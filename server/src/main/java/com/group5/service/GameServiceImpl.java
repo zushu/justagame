@@ -1,6 +1,7 @@
 package com.group5.service;
 
 import com.group5.model.Game;
+import com.group5.model.User;
 import com.group5.repository.GameRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -29,17 +32,37 @@ public class GameServiceImpl implements GameService {
         return gameRepository.save(game);
     }
 
-    // TODO: getAllGames between two timestamps (for distinct users)
     @Override
     public List<Game> getAllGames() {
         return this.gameRepository.findAll();
     }
 
     @Override
-    public List<Game> getAllGamesAfterDate(String date){
-        return gameRepository.findGamesAfterDate22(date);
-        //String query = "SELECT * FROM Game  WHERE Game.endDate > ?1";
-        //Query q = em.createQuery(query).setParameter(1, date, TemporalType.TIMESTAMP);//.setParameter(2, endDate, TemporalType.DATE);
+    public List<Game> scoreboardAfterDate(String date){    //Bu fonksiyon doğrudan java.util.Date parametre de alabilir, postman kullanıldığı için string    
+        try {
+            Date parsedDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date); 
+        
+            List<User> distinctUsersAfterDate = gameRepository.distinctUsersAfterDateJpa(parsedDate);
+            List<Game> gamesAfterDate = gameRepository.scoreboardAfterDateJpa(parsedDate);
+
+            List<Game> scoreBoard = new ArrayList<Game>();
+            List<User> addedUsers = new ArrayList<User>();
+            for (int i=0; i< gamesAfterDate.size(); i++){
+                for(int j=0; j<distinctUsersAfterDate.size(); j++){
+                    if ( !addedUsers.contains(distinctUsersAfterDate.get(j)) && distinctUsersAfterDate.get(j).getId() == gamesAfterDate.get(i).getUser().getId()){
+                        scoreBoard.add(gamesAfterDate.get(i));
+                        addedUsers.add(distinctUsersAfterDate.get(j));
+                        break;
+                    }
+                }
+            }
+            return scoreBoard;
+        } catch (Exception e) {
+            System.out.println("date parse exception occured");
+            e.printStackTrace();
+            List<Game> test = new ArrayList<Game>();
+            return test;
+        }    
     }
 
     @Override
