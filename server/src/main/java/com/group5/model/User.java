@@ -22,7 +22,7 @@ public class User {
     @Column(name = "ID")
     private int id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique=true)
     private String name;
 
     @Column(name = "PASSWORD")
@@ -35,8 +35,7 @@ public class User {
     public User(){
     }
 
-    public User(int id, String name, String password) {
-        this.id = id;
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
     }

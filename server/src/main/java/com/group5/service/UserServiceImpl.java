@@ -16,6 +16,10 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.math.BigInteger;  
+import java.security.NoSuchAlgorithmException; 
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,6 +31,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) {
+        List<User> allUsers = getAllUsers();
+        for(int i=0; i< allUsers.size(); i++){
+            if(allUsers.get(i).getName().equals(user.getName())){
+                return new User();
+            }
+        }
+        user.setPassword(hashSha256(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -45,7 +56,6 @@ public class UserServiceImpl implements UserService {
         return  this.userRepository.save(userUpdate);
     }
 
-    //TODO: delete all game records for that user
     @Override
     public void deleteUser(List<Integer> idList) {
         Iterable<User> users = this.userRepository.findAllById(idList);
@@ -74,5 +84,75 @@ public class UserServiceImpl implements UserService {
         Optional<User> userDb = this.userRepository.findById(userId);
         User userUpdate = userDb.get();
         return userUpdate.getGameList();
+    }
+
+    @Override
+    public Boolean login(User user){
+        try {
+            User userRecord = findUserByName(user.getName());
+
+            String hashedPassword = hashSha256((user.getPassword()));
+
+            if (userRecord.getPassword().equals(hashedPassword)){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean changePassword(JSONObject jsonPassword){
+        Optional<User> userDb = this.userRepository.findById((Integer)jsonPassword.get("userid"));
+        User userUpdate = userDb.get();
+
+        String oldPassword = (String)jsonPassword.get("oldPassword");
+        String oldPassHashed = hashSha256(oldPassword); 
+        String newPassword = (String)jsonPassword.get("newPassword"); 
+        String newPassHashed = hashSha256(newPassword); 
+
+        if ( oldPassHashed.equals(userUpdate.getPassword()) ){
+            userUpdate.setPassword(newPassHashed);
+            this.userRepository.save(userUpdate);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private static String hashSha256(String toHash) 
+    {  
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-256"); 
+            byte[] hashedPasswd = md.digest(toHash.getBytes(StandardCharsets.UTF_8));
+
+            BigInteger number = new BigInteger(1, hashedPasswd);  
+            StringBuilder hexString = new StringBuilder(number.toString(16));  
+
+            while (hexString.length() < 32)  
+            {  
+                hexString.insert(0, '0');  
+            }  
+            return hexString.toString();  
+        }
+        catch (NoSuchAlgorithmException e) {  
+            System.out.println("Exception thrown for incorrect algorithm: " + e);  
+            return "Error occured.";
+        }  
+    } 
+
+    private User findUserByName(String name) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+
+        Root<User> user = cq.from(User.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(cb.equal(user.get("name"), name));
+
+        cq.where(predicates.toArray(new Predicate[0]));
+        return em.createQuery(cq).getResultList().get(0);
     }
 }
