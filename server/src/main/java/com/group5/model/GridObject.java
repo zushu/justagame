@@ -1,5 +1,7 @@
 package com.group5.model;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
+import com.group5.helper.Vector2D;
+//import java.lang.Math;
 
 public abstract class GridObject {
     private Vector2D position;  // x, y
@@ -7,6 +9,11 @@ public abstract class GridObject {
     private double speed;
     private double width;
     private double height;
+    // angle of orientation from x axis counterclockwise
+    private double angle;
+
+    // TODO: KEEP DIRECTION AS A UNIT VECTOR
+    // CHANGE DIRECTION IN ROTATE FUNCTION
 
     public GridObject() {}
     public GridObject(Vector2D position, Vector2D direction, double speed, double width, double height) {
@@ -15,6 +22,21 @@ public abstract class GridObject {
         this.speed = speed;
         this.width = width;
         this.height = height; 
+        // if angle is pi/2 or -pi/2 (atan2 undefined)
+        if (direction.x - position.x == 0) {
+            // looking upwards
+            if (direction.y >= position.y) {
+                this.angle = Math.PI / 2;
+            }
+            // looking downwards
+            if (direction.y < position.y) {
+                this.angle = - Math.PI / 2;
+            }
+        }
+        else {
+            //atan2(y,x)
+            this.angle = Math.atan2(direction.y - position.y, direction.x - position.x); 
+        }
     }
 
     public Vector2D getPosition() {
@@ -37,6 +59,10 @@ public abstract class GridObject {
         return height;
     }
 
+    public double getAngle() {
+        return angle;
+    }
+
     public void setPosition(Vector2D position) {
         this.position = position;
     }
@@ -57,9 +83,26 @@ public abstract class GridObject {
         this.height = height;
     }
 
-    protected void move(Vector2D newPosition) // update position
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+    // TODO: CHECK GRID BOUNDARIES
+    protected void move(Vector2D newStep) // update position
     {
+        Vector2D newPosition = position;
+        newPosition.add(newStep);
         setPosition(newPosition);
     }
+
+    /*protected void rotate(double rotationAngle) // angle in radians
+    {
+        double newAngle = angle + rotationAngle;
+        direction.x = 
+        if (newAngle >= 2* Math.PI) {
+            setAngle(newAngle - 2*Math.PI);
+        }
+        if (newAngle < 0 )
+        
+    }*/
 
 }

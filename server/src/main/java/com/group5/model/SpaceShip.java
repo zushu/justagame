@@ -1,16 +1,17 @@
 package com.group5.model;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
+import com.group5.helper.Vector2D;
 import java.util.List;
 
 
 // TODO: DECIDE, SHOULD I CREATE A MainObject INTERFACE FOR SpaceShip AND Alien?
 // THEY HAVE A LOT OF FUNCTIONS IN COMMON, DIFFERENT FROM BULLET
 public class SpaceShip extends GridObject {
-    private int health;
+    private double health;
     private double shootFrequency; // can change
     private List<Bullet> bulletList;
     public SpaceShip() {}
-    public SpaceShip(Vector2D position, Vector2D direction, double speed, double width, double height, List<Bullet> bulletList, double shootFrequency, int health)
+    public SpaceShip(Vector2D position, Vector2D direction, double speed, double width, double height, List<Bullet> bulletList, double shootFrequency, double health)
     {
         super(position, direction, speed, width, height);
         this.bulletList = bulletList; // TODO: check, is it correct ???
@@ -26,7 +27,7 @@ public class SpaceShip extends GridObject {
         return shootFrequency;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 
@@ -38,7 +39,7 @@ public class SpaceShip extends GridObject {
         this.shootFrequency = shootFrequency;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(double health) {
         this.health = health;
     }   
 
