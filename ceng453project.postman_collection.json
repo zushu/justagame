@@ -282,21 +282,21 @@
 					"response": []
 				},
 				{
-					"name": "getAllAfterDate   NOT WORKING, FIX IT LATER",
+					"name": "scoreboard",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "\"2020-01-10T14:45:00\"",
+							"raw": "2020-03-16T14:45:00",
 							"options": {
 								"raw": {
-									"language": "json"
+									"language": "text"
 								}
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/game/getAllAfterDate",
+							"raw": "http://localhost:8080/api/game/scoreboard",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -305,7 +305,7 @@
 							"path": [
 								"api",
 								"game",
-								"getAllAfterDate"
+								"scoreboard"
 							]
 						}
 					},
