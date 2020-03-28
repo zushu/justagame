@@ -18,9 +18,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/add")
+    @PostMapping("/signup")
     public ResponseEntity<User> addUser(@RequestBody User user){
         return ResponseEntity.ok().body(this.userService.addUser(user));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> login(@RequestBody User user){
+        return ResponseEntity.ok().body(this.userService.login(user));
+    }
+
+    @PostMapping("/passwordchange")
+    public ResponseEntity<Boolean> changePassword(@RequestBody String jsonPassword){
+        return ResponseEntity.ok().body(this.userService.changePassword(new JSONObject(jsonPassword)));
     }
 
     @PostMapping("/update")
@@ -50,6 +60,5 @@ public class UserController {
     public ResponseEntity<List<Game>> getUsersGameList(@PathVariable Integer userId){
         return ResponseEntity.ok().body(this.userService.getUsersGameList(userId));
     }
-
 
 }

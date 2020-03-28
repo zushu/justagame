@@ -13,4 +13,7 @@ public interface UserService {
     void deleteUser(List<Integer> idList);
     List<User> findUser(JSONObject jsonUser);
     List<Game> getUsersGameList(Integer userId);
+
+    Boolean login(User user);
+    Boolean changePassword(JSONObject jsonPassword);
 }
