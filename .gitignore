@@ -1,7 +1,5 @@
 # Ignore everything in this directory
 *.DS_Store 
 /server/target/
-server/target/classes/application.properties
-*.class
 # Except this file
 !.gitignore
