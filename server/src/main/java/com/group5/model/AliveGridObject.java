@@ -5,9 +5,8 @@ import java.util.List;
 
 
 public abstract class AliveGridObject extends GridObject {
-    private double health;
-    private boolean alive;
-
+    protected double health;
+    protected boolean alive;
     public AliveGridObject() {}
 
     public AliveGridObject(Vector2D position, Vector2D direction, double speed, double width, double height, double health) {
@@ -24,9 +23,21 @@ public abstract class AliveGridObject extends GridObject {
         this.health = health;
     }
 
-    public void getHit(double damage){
-        this.health -= damage;
-        if (this.health <= 0.0d){
+
+    public boolean getAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    // not a getter
+    protected void getHit(double bulletDamage) {
+        this.health -= bulletDamage;
+        if (this.health <= 0.0d) 
+        {
+            this.health = 0.0d;
             this.alive = false;
         }
     }

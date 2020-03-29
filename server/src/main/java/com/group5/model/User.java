@@ -11,7 +11,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.GenerationType;
 import com.fasterxml.jackson.annotation.JsonIgnore;         // if we do not use, infinite loop happens 
-                                                            //(source:https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion)
 import java.util.List;
 
 @Entity
