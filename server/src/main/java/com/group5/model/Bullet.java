@@ -19,8 +19,14 @@ public class Bullet extends GridObject {
         this.damage = damage;
     }
 
-    // ASSUMED: origin is at the lower left corner of the grid
-    public boolean isOutOfBounds(double gridWidth, double gridHeight) {
+    /**
+     * This method checks if bullet is still in grid.
+     * ASSUMED: origin is at the lower left corner of the grid
+     * @param gridWidth width of the current grid 
+     * @param gridHeight  height of the current grid 
+     * @return Boolean true if bullet is still in the grid, false otherwise.
+     */
+    public Boolean isOutOfBounds(double gridWidth, double gridHeight) {
         if (rightBoundary <= 0 || leftBoundary >= gridWidth || upperBoundary <= 0 || lowerBoundary >= gridHeight)
         {
             return true;

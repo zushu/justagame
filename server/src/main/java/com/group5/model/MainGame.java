@@ -15,6 +15,9 @@ public class MainGame{
         return this.grid;
     }
 
+    /** 
+    * This method is used to initialize grid.
+    */
     public void initializeGrid(){
         double gridWidth = 600.0d;
         double gridHeight = 900.0d;
@@ -39,6 +42,9 @@ public class MainGame{
         this.grid = grid;
     }
 
+    /** 
+    * This method creates the aliens of the grid for the first level of the game.
+    */
     public void setFirstLevelAliens(){
         List<IAlien> alienList = new ArrayList<>();
         double alienWidth = 15.0d;
@@ -53,6 +59,9 @@ public class MainGame{
         this.getGrid().setAlienList(alienList);
     }
 
+    /** 
+    * This method creates the aliens of the grid for the second level of the game.
+    */
     public void setSecondLevelAliens(){
         List<IAlien> alienList = new ArrayList<>();
         double alienWidth = 15.0d;
@@ -70,6 +79,9 @@ public class MainGame{
         this.getGrid().setAlienList(alienList);
     }
 
+    /** 
+    * This method creates the aliens of the grid for the third level of the game.
+    */
     public void setThirdLevelAliens(){
         List<IAlien> alienList = new ArrayList<>();
         double alienWidth = 15.0d;
@@ -92,8 +104,40 @@ public class MainGame{
         this.getGrid().setAlienList(alienList);
     }
 
+    /** 
+    * This method creates the aliens of the grid for the forth level of the game.
+    */
+   public void setForthLevelAliens(){
+        List<IAlien> alienList = new ArrayList<>();
+        double alienWidth = 15.0d;
+        double alienHeight = 15.0d;
+        Vector2D downVector = new Vector2D(0.0d, -1.0d);
+
+        List<Vector2D> positionsList = createUniformAlienPositions( 6, 10, 50.0d);
+        for(int i=0; i<20; i++){
+            alienList.add(new DefensiveAlien(new Alien(positionsList.get(i), downVector, 0.0d, alienWidth, alienHeight, 200.0d)));
+        }
+        double alienShootingFrequency = 1.0d;
+        for(int i=0; i<20; i++){
+            alienList.add(new ShootingAlien(new Alien(positionsList.get(20+i), downVector, 0.0d, alienWidth, alienHeight, 200.0d), 
+                                        alienShootingFrequency, new Bullet(positionsList.get(20+i),downVector, 20.0d, 5.0d, 8.0d, 300.0d)));
+        }
+        for(int i=0; i<20; i++){
+            alienList.add(new DefensiveAlien(new ShootingAlien(new Alien(positionsList.get(40+i), downVector, 0.0d, alienWidth, alienHeight, 200.0d), 
+                                        alienShootingFrequency, new Bullet(positionsList.get(40+i),downVector, 30.0d, 5.0d, 8.0d, 400.0d))));
+        }
+
+        this.getGrid().setAlienList(alienList);
+    }
 
 
+    /** 
+    * This method just prepares a list of positions(distributed uniformly) to use while placing aliens to the grid.
+    * @param rowCount Aliens will be aliged in rowCount many rows
+    * @param columnCount  Aliens will be aliged in rowCount many columns
+    * @param rowPadding  Rows will be rowPadding much padded from the top of the grid.
+    * @return List<Vector2D> This is the list of Alien positions.
+    */
     private List<Vector2D> createUniformAlienPositions( Integer rowCount, Integer columnCount, double rowPadding){
         double columnPadding = this.getGrid().getWidth() / columnCount;
 

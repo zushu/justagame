@@ -10,7 +10,6 @@ public class ShootingAlien extends AlienDecorator {
     private double shootFrequency;
     private Bullet bulletType;
 
-    //bulletlist başta boş olacağı için constructor'a parametre olarak vermedim
     public ShootingAlien(IAlien decoratedAlien, double shootFrequency, Bullet bulletType) {
         super(decoratedAlien);
         this.bulletList = new ArrayList<Bullet>();
@@ -38,18 +37,29 @@ public class ShootingAlien extends AlienDecorator {
         return this.bulletType;
     }
 
+    /** 
+    * This method calculates initial position of a new bullet.
+    * @return Vector2D The initial position of a newly fired bullet. 
+    */
     public Vector2D getBulletsInitialPosition(){
         Vector2D bulletsInitialPosition = new Vector2D(this.getPosition().x, this.getLowerBoundary() - this.getBulletType().getHeight() / 2.0d);
         return bulletsInitialPosition;
     }
 
+    /** 
+    * This method fires a bullet from alien(simply adds a new bullet to its bulletList).
+    */
     public void shootOneBullet() {
         Vector2D downVector = new Vector2D(0.0d, -1.0d); // downwards
         Bullet newBullet = new Bullet(this.getBulletsInitialPosition(), downVector, this.getBulletType().getSpeed(), this.getBulletType().getWidth(), this.getBulletType().getHeight(), this.getBulletType().getDamage());
         bulletList.add(newBullet);
     }
 
-    // from Iterator design pattern slide
+    /** 
+    * This method checks if bullets moved out of the grid and updates bullet list.
+    * @param gridWidth width of the current grid 
+    * @param gridHeight  height of the current grid 
+    */
     public void updateBulletList(double gridWidth, double gridHeight)
     {
         Iterator<Bullet> iter = bulletList.iterator();

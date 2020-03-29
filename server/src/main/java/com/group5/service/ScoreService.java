@@ -11,5 +11,4 @@ public interface ScoreService {
     Score updateScore(Score score);
     void deleteScore(List<Integer> idList);
     List<Score> scoreboardAfterDate(String date);
-    //List<Score> findScore(JSONObject jsonScore);
 }
