@@ -6,8 +6,8 @@ import java.util.List;
 // for aliens and spaceship
 
 public abstract class AliveGridObject extends GridObject {
-    private double health;
-    private boolean alive;
+    protected double health;
+    protected boolean alive;
     public AliveGridObject() {}
     public AliveGridObject(Vector2D position, Vector2D direction, double speed, double width, double height, double health) {
         super(position, direction, speed, width, height);
@@ -21,6 +21,14 @@ public abstract class AliveGridObject extends GridObject {
 
     public void setHealth(double health) {
         this.health = health;
+    }
+
+    public boolean getAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
     // to check collision with all bullets 
@@ -58,6 +66,20 @@ public abstract class AliveGridObject extends GridObject {
             return true;
         }
         return false;
+    }
+
+    // not a getter
+    protected void getHit(double bulletDamage) {
+
+        if (this.health - bulletDamage <= 0.0d) 
+        {
+            this.health = 0.0d;
+            this.alive = false;
+        }
+        else 
+        {
+            this.health -= bulletDamage;
+        }
     }
 
 }
