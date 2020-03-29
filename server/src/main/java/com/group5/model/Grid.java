@@ -8,10 +8,10 @@ public class Grid {
     private double width;                       // number of cells horizontally
     private double height;                      // number of cells vertically
     private List<SpaceShip> spaceShipList;      // one element in single player mode
-    private List<Alien> alienList;
+    private List<IAlien> alienList;
 
     public Grid() {}
-    public Grid(double width, double height, List<SpaceShip> spaceShipList, List<Alien> alienList)
+    public Grid(double width, double height, List<SpaceShip> spaceShipList, List<IAlien> alienList)
     {
         this.width = width;
         this.height = height;
@@ -31,7 +31,7 @@ public class Grid {
         return spaceShipList;
     }
 
-    public List<Alien> getAlienList() {
+    public List<IAlien> getAlienList() {
         return alienList;
     }
 
@@ -47,7 +47,7 @@ public class Grid {
         this.spaceShipList = spaceShipList;
     }
 
-    public void setAlienList(List<Alien> alienList) {
+    public void setAlienList(List<IAlien> alienList) {
         this.alienList = alienList;
     } 
 
