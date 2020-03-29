@@ -11,13 +11,12 @@ public class Grid {
     private List<Alien> alienList;
 
     public Grid() {}
-    public Grid(double width, double height, List<SpaceShip> spaceShipList, List<Alien> alienList, int level)
+    public Grid(double width, double height, List<SpaceShip> spaceShipList, List<Alien> alienList)
     {
         this.width = width;
         this.height = height;
         this.spaceShipList = spaceShipList;
         this.alienList = alienList;
-        this.level = level;
     }
 
     public double getWidth() {

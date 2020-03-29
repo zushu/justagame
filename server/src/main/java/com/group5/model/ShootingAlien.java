@@ -8,7 +8,7 @@ public class ShootingAlien extends AlienDecorator {
     private List<Bullet> bulletList;
     private double shootFrequency;
 
-    public ShootingAlien(Alien decoratedAlien, List<Bullet> bulletList, double shootFrequency) {
+    public ShootingAlien(IAlien decoratedAlien, List<Bullet> bulletList, double shootFrequency) {
         super(decoratedAlien);
         this.bulletList = bulletList;
         this.shootFrequency = shootFrequency;

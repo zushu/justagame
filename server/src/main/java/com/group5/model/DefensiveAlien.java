@@ -1,7 +1,7 @@
 package com.group5.model;
 
 public class DefensiveAlien extends AlienDecorator {
-    public DefensiveAlien(Alien decoratedAlien) {
+    public DefensiveAlien(IAlien decoratedAlien) {
         super(decoratedAlien);
     }
 
