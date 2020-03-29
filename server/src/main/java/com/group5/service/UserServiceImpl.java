@@ -1,7 +1,7 @@
 package com.group5.service;
 
 import com.group5.model.User;
-import com.group5.model.Game;
+import com.group5.model.Score;
 import com.group5.repository.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,10 +80,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Game> getUsersGameList(Integer userId){
+    public List<Score> getUsersScoreList(Integer userId){
         Optional<User> userDb = this.userRepository.findById(userId);
         User userUpdate = userDb.get();
-        return userUpdate.getGameList();
+        return userUpdate.getScoreList();
     }
 
     @Override

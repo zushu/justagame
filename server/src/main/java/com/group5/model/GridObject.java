@@ -119,4 +119,13 @@ public abstract class GridObject {
         move(new Vector2D(0.0d, speed));
     }
 
+    public boolean doCollide(GridObject gridObj1, GridObject gridObj2) {
+        if ( !( gridObj1.getRightBoundary() <= gridObj2.getLeftBoundary() || gridObj1.getLeftBoundary() >= gridObj2.getRightBoundary() || 
+                gridObj1.getUpperBoundary() <= gridObj2.getLowerBoundary() || gridObj1.getLowerBoundary() >= gridObj2.getUpperBoundary() ))
+        {   
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -36,7 +36,6 @@ public class ShootingAlien extends Alien {
         Vector2D bulletPosition = new Vector2D(this.getPosition().x, this.getLowerBoundary() - bulletHeight / 2.0d);
         Vector2D bulletDirection = new Vector2D(0.0d, -1.0d); // downwards
         Bullet newBullet = new Bullet(bulletPosition, bulletDirection, bulletSpeed, bulletWidth, bulletHeight, bulletDamage);
-        newBullet.setFired(true);
         bulletList.add(newBullet);
     }
 

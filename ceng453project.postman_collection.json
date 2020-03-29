@@ -94,12 +94,12 @@
 					"response": []
 				},
 				{
-					"name": "getUsersGameList/userId",
+					"name": "getUsersScoreList/userId",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/user/getUsersGameList/1",
+							"raw": "http://localhost:8080/api/user/getUsersScoreList/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -108,7 +108,7 @@
 							"path": [
 								"api",
 								"user",
-								"getUsersGameList",
+								"getUsersScoreList",
 								"1"
 							]
 						},
@@ -218,15 +218,15 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Game",
+			"name": "Score",
 			"item": [
 				{
-					"name": "getAll games",
+					"name": "getAll scores",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/game/getAll",
+							"raw": "http://localhost:8080/api/score/getAll",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -234,7 +234,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"game",
+								"score",
 								"getAll"
 							]
 						},
@@ -243,7 +243,7 @@
 					"response": []
 				},
 				{
-					"name": "add game ",
+					"name": "add score",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -258,7 +258,7 @@
 							"raw": "{\n\t\"score\":\"90\",\n\t\"endTime\":\"2020-03-10T14:45:00\",\n\t\"user\": {\n\t\t\"id\":\"15\"\n\t}\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/game/add",
+							"raw": "http://localhost:8080/api/score/add",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -266,7 +266,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"game",
+								"score",
 								"add"
 							]
 						}
@@ -274,7 +274,7 @@
 					"response": []
 				},
 				{
-					"name": "update game ",
+					"name": "update score",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -295,7 +295,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/game/update",
+							"raw": "http://localhost:8080/api/score/update",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -303,7 +303,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"game",
+								"score",
 								"update"
 							]
 						},
@@ -312,7 +312,7 @@
 					"response": []
 				},
 				{
-					"name": "delete game with id list",
+					"name": "delete score with id list",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -333,7 +333,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/game/delete",
+							"raw": "http://localhost:8080/api/score/delete",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -341,7 +341,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"game",
+								"score",
 								"delete"
 							]
 						}
@@ -363,7 +363,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/game/scoreboard",
+							"raw": "http://localhost:8080/api/score/scoreboard",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -371,7 +371,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"game",
+								"score",
 								"scoreboard"
 							]
 						}

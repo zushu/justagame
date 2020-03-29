@@ -28,9 +28,9 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade=CascadeType.REMOVE) // CascadeType.ALL prevents deleting game records via postman
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade=CascadeType.REMOVE) // CascadeType.ALL prevents deleting score records via postman
     @JsonIgnore
-    private List<Game> gameList;
+    private List<Score> scoreList;
 
     public User(){
     }
@@ -60,7 +60,7 @@ public class User {
         this.password = password;
     }
 
-    public List<Game> getGameList(){
-        return this.gameList;
+    public List<Score> getScoreList(){
+        return this.scoreList;
     }
 }
