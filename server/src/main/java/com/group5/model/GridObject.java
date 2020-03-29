@@ -1,19 +1,19 @@
 package com.group5.model;
 
 import com.group5.helper.Vector2D;
+import java.util.List;
 //import java.lang.Math;
 
 public abstract class GridObject {
-    private Vector2D position;  // x, y
-    private Vector2D direction; // x, y
-    private double speed;
-    private double width;
-    private double height;
-    // angle of orientation from x axis counterclockwise
-    private double angle;
-
-    // TODO: KEEP DIRECTION AS A UNIT VECTOR
-    // CHANGE DIRECTION IN ROTATE FUNCTION
+    protected Vector2D position;  // x, y
+    protected Vector2D direction; // x, y
+    protected double speed;
+    protected double width;
+    protected double height;
+    protected double leftBoundary;
+    protected double rightBoundary;
+    protected double lowerBoundary;
+    protected double upperBoundary;
 
     public GridObject() {}
     public GridObject(Vector2D position, Vector2D direction, double speed, double width, double height) {
@@ -22,21 +22,7 @@ public abstract class GridObject {
         this.speed = speed;
         this.width = width;
         this.height = height; 
-        // if angle is pi/2 or -pi/2 (atan2 undefined)
-        if (direction.x - position.x == 0) {
-            // looking upwards
-            if (direction.y >= position.y) {
-                this.angle = Math.PI / 2;
-            }
-            // looking downwards
-            if (direction.y < position.y) {
-                this.angle = - Math.PI / 2;
-            }
-        }
-        else {
-            //atan2(y,x)
-            this.angle = Math.atan2(direction.y - position.y, direction.x - position.x); 
-        }
+        updateBoundaries(position);
     }
 
     public Vector2D getPosition() {
@@ -59,12 +45,25 @@ public abstract class GridObject {
         return height;
     }
 
-    public double getAngle() {
-        return angle;
+    public double getLeftBoundary() {
+        return leftBoundary;
+    }
+
+    public double getRightBoundary() {
+        return rightBoundary;
+    }
+
+    public double getLowerBoundary() {
+        return lowerBoundary;
+    }
+
+    public double getUpperBoundary() {
+        return upperBoundary;
     }
 
     public void setPosition(Vector2D position) {
         this.position = position;
+        updateBoundaries(position);
     }
 
     public void setDirection(Vector2D direction) {
@@ -83,26 +82,42 @@ public abstract class GridObject {
         this.height = height;
     }
 
-    public void setAngle(double angle) {
-        this.angle = angle;
+    public void updateBoundaries(Vector2D newPosition) {
+        this.leftBoundary = newPosition.x - width/2.0d;
+        this.rightBoundary = newPosition.x + width/2.0d;
+        this.lowerBoundary = newPosition.y - height/2.0d;
+        this.upperBoundary = newPosition.y + height/2.0d;
     }
+
     // TODO: CHECK GRID BOUNDARIES
     protected void move(Vector2D newStep) // update position
     {
-        Vector2D newPosition = position;
+        // TODO: unnecessary steps here???
+        Vector2D newPosition = new Vector2D(position);
         newPosition.add(newStep);
         setPosition(newPosition);
     }
 
-    /*protected void rotate(double rotationAngle) // angle in radians
+    // move in one direction by the amount of speed units
+    // TODO: is it correct???
+    protected void moveLeft()
     {
-        double newAngle = angle + rotationAngle;
-        direction.x = 
-        if (newAngle >= 2* Math.PI) {
-            setAngle(newAngle - 2*Math.PI);
-        }
-        if (newAngle < 0 )
-        
-    }*/
+        move(new Vector2D((-1)*speed, 0.0d));
+    }
+
+    protected void moveRight()
+    {
+        move(new Vector2D(speed, 0.0d));
+    }
+
+    protected void moveDown()
+    {
+        move(new Vector2D(0.0d, (-1)*speed));
+    }
+
+    protected void moveUp()
+    {
+        move(new Vector2D(0.0d, speed));
+    }
 
 }
