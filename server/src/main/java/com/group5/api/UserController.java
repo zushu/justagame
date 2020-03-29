@@ -1,7 +1,7 @@
 package com.group5.api;
 
 import com.group5.model.User;
-import com.group5.model.Game;
+import com.group5.model.Score;
 import com.group5.service.UserService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,9 +56,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/getUsersGameList/{userId}")
-    public ResponseEntity<List<Game>> getUsersGameList(@PathVariable Integer userId){
-        return ResponseEntity.ok().body(this.userService.getUsersGameList(userId));
+    @GetMapping("/getUsersScoreList/{userId}")
+    public ResponseEntity<List<Score>> getUsersScoreList(@PathVariable Integer userId){
+        return ResponseEntity.ok().body(this.userService.getUsersScoreList(userId));
     }
 
 }

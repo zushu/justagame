@@ -16,11 +16,11 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "GAME")
-public class Game {
+@Table(name = "SCORE")
+public class Score {
     @Id 
-    @GeneratedValue(strategy=GenerationType.AUTO, generator="game_gen") //if we do not specify a separate generator, all tables increment same id number
-    @Column(name = "GAMEID")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="score_gen") //if we do not specify a separate generator, all tables increment same id number
+    @Column(name = "SCOREID")
     private int id;
 
     @Column(name = "SCORE")
@@ -34,10 +34,10 @@ public class Game {
     @JoinColumn(name = "USERID", referencedColumnName="ID", nullable = false)
     private User user;
 
-    public Game(){
+    public Score(){
     }
 
-    public Game(int id, long score, java.sql.Date endTime, User user) {
+    public Score(int id, long score, java.sql.Date endTime, User user) {
         this.id = id;
         this.score = score;
         this.endTime = endTime;

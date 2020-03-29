@@ -11,7 +11,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.GenerationType;
 import com.fasterxml.jackson.annotation.JsonIgnore;         // if we do not use, infinite loop happens 
-                                                            //(source:https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion)
 import java.util.List;
 
 @Entity
@@ -28,9 +27,9 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade=CascadeType.REMOVE) // CascadeType.ALL prevents deleting game records via postman
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade=CascadeType.REMOVE) // CascadeType.ALL prevents deleting score records via postman
     @JsonIgnore
-    private List<Game> gameList;
+    private List<Score> scoreList;
 
     public User(){
     }
@@ -60,7 +59,7 @@ public class User {
         this.password = password;
     }
 
-    public List<Game> getGameList(){
-        return this.gameList;
+    public List<Score> getScoreList(){
+        return this.scoreList;
     }
 }

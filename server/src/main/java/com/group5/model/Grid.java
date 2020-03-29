@@ -9,7 +9,6 @@ public class Grid {
     private double height;                      // number of cells vertically
     private List<SpaceShip> spaceShipList;      // one element in single player mode
     private List<Alien> alienList;
-    private int level;
 
     public Grid() {}
     public Grid(double width, double height, List<SpaceShip> spaceShipList, List<Alien> alienList, int level)
