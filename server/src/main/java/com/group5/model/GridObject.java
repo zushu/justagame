@@ -2,7 +2,6 @@ package com.group5.model;
 
 import com.group5.helper.Vector2D;
 import java.util.List;
-//import java.lang.Math;
 
 public abstract class GridObject {
     protected Vector2D position;  // x, y

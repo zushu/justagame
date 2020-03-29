@@ -31,7 +31,7 @@ public class ShootingAlien extends Alien {
     public void setShootFrequency(double shootFrequency) {
         this.shootFrequency = shootFrequency;
     }
-
+    
     public void shootOneBullet(double bulletSpeed, double bulletWidth, double bulletHeight, double bulletDamage) {
         Vector2D bulletPosition = new Vector2D(this.getPosition().x, this.getLowerBoundary() - bulletHeight / 2.0d);
         Vector2D bulletDirection = new Vector2D(0.0d, -1.0d); // downwards
@@ -45,7 +45,7 @@ public class ShootingAlien extends Alien {
         Iterator<Bullet> iter = bulletList.iterator();
         while (iter.hasNext()) {
             Bullet bullet = iter.next();
-            if (bullet.outOfBounds(gridWidth, gridHeight))
+            if (bullet.isOutOfBounds(gridWidth, gridHeight))
             {
                 iter.remove();
             }

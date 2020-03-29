@@ -5,10 +5,9 @@ import java.util.List;
 
 
 public class Grid {
-    // double or int?
-    private double width; // number of cells horizontally
-    private double height; // // number of cells vertically
-    private List<SpaceShip> spaceShipList; // one element in single player mode
+    private double width;                       // number of cells horizontally
+    private double height;                      // number of cells vertically
+    private List<SpaceShip> spaceShipList;      // one element in single player mode
     private List<Alien> alienList;
 
     public Grid() {}

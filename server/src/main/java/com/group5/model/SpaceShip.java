@@ -7,15 +7,14 @@ import java.util.Iterator;
 
 // TODO: DECIDE, SHOULD I CREATE A MainObject INTERFACE FOR SpaceShip AND Alien?
 // THEY HAVE A LOT OF FUNCTIONS IN COMMON, DIFFERENT FROM BULLET
-public class SpaceShip extends MainGridObject {
-    //private double health;
+public class SpaceShip extends AliveGridObject {
     private double shootFrequency; // can change
     private List<Bullet> bulletList;
     public SpaceShip() {}
     public SpaceShip(Vector2D position, Vector2D direction, double speed, double width, double height, List<Bullet> bulletList, double shootFrequency, double health)
     {
         super(position, direction, speed, width, height, health);
-        this.bulletList = bulletList; // TODO: check, is it correct ???
+        this.bulletList = bulletList; // TODO: check, is it correct ???     this may make just references equal, so we may need deep copy
         this.shootFrequency = shootFrequency;
     }
 
@@ -40,7 +39,6 @@ public class SpaceShip extends MainGridObject {
         Vector2D bulletPosition = new Vector2D(this.getPosition().x, this.getUpperBoundary() + bulletHeight / 2.0d);
         Vector2D bulletDirection = new Vector2D(0.0d, 1.0d); // upwards
         Bullet newBullet = new Bullet(bulletPosition, bulletDirection, bulletSpeed, bulletWidth, bulletHeight, bulletDamage);
-        newBullet.setFired(true);
         bulletList.add(newBullet);
     }
 
@@ -49,7 +47,7 @@ public class SpaceShip extends MainGridObject {
         Iterator<Bullet> iter = bulletList.iterator();
         while (iter.hasNext()) {
             Bullet bullet = iter.next();
-            if (bullet.outOfBounds(gridWidth, gridHeight))
+            if (bullet.isOutOfBounds(gridWidth, gridHeight))
             {
                 iter.remove();
             }
