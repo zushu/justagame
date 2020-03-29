@@ -9,6 +9,7 @@ public class Grid {
     private double height;                      // number of cells vertically
     private List<SpaceShip> spaceShipList;      // one element in single player mode
     private List<IAlien> alienList;
+    private Integer gameLevel;
 
     public Grid() {}
     public Grid(double width, double height, List<SpaceShip> spaceShipList, List<IAlien> alienList)
@@ -17,6 +18,7 @@ public class Grid {
         this.height = height;
         this.spaceShipList = spaceShipList;
         this.alienList = alienList;
+        this.gameLevel = 1;
     }
 
     public double getWidth() {
@@ -33,6 +35,18 @@ public class Grid {
 
     public List<IAlien> getAlienList() {
         return alienList;
+    }
+
+    public Integer getGameLevel(){
+        return this.gameLevel;
+    }
+
+    public void resetGameLevel(){
+        this.gameLevel = 1;
+    }
+
+    public void incrementGameLevel(){
+        this.gameLevel++;
     }
 
     public void setWidth(double width) {

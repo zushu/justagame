@@ -2,16 +2,20 @@ package com.group5.model;
 
 import com.group5.helper.Vector2D;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ShootingAlien extends AlienDecorator {
     private List<Bullet> bulletList;
     private double shootFrequency;
+    private Bullet bulletType;
 
-    public ShootingAlien(IAlien decoratedAlien, List<Bullet> bulletList, double shootFrequency) {
+    //bulletlist başta boş olacağı için constructor'a parametre olarak vermedim
+    public ShootingAlien(IAlien decoratedAlien, double shootFrequency, Bullet bulletType) {
         super(decoratedAlien);
-        this.bulletList = bulletList;
+        this.bulletList = new ArrayList<Bullet>();
         this.shootFrequency = shootFrequency;
+        this.bulletType = bulletType;
     }
 
     public List<Bullet> getBulletList() {
@@ -30,10 +34,18 @@ public class ShootingAlien extends AlienDecorator {
         this.shootFrequency = shootFrequency;
     }
 
-    public void shootOneBullet(double bulletSpeed, double bulletWidth, double bulletHeight, double bulletDamage) {
-        Vector2D bulletPosition = new Vector2D(this.getPosition().x, this.getLowerBoundary() - bulletHeight / 2.0d);
-        Vector2D bulletDirection = new Vector2D(0.0d, -1.0d); // downwards
-        Bullet newBullet = new Bullet(bulletPosition, bulletDirection, bulletSpeed, bulletWidth, bulletHeight, bulletDamage);
+    public Bullet getBulletType(){
+        return this.bulletType;
+    }
+
+    public Vector2D getBulletsInitialPosition(){
+        Vector2D bulletsInitialPosition = new Vector2D(this.getPosition().x, this.getLowerBoundary() - this.getBulletType().getHeight() / 2.0d);
+        return bulletsInitialPosition;
+    }
+
+    public void shootOneBullet() {
+        Vector2D downVector = new Vector2D(0.0d, -1.0d); // downwards
+        Bullet newBullet = new Bullet(this.getBulletsInitialPosition(), downVector, this.getBulletType().getSpeed(), this.getBulletType().getWidth(), this.getBulletType().getHeight(), this.getBulletType().getDamage());
         bulletList.add(newBullet);
     }
 
