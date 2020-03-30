@@ -89,7 +89,7 @@ public abstract class GridObject {
     }
 
     // TODO: CHECK GRID BOUNDARIES
-    protected void move(Vector2D newStep) // update position
+    public void move(Vector2D newStep) // update position
     {
         // TODO: unnecessary steps here???
         Vector2D newPosition = new Vector2D(position);
@@ -99,22 +99,22 @@ public abstract class GridObject {
 
     // move in one direction by the amount of speed units
     // TODO: is it correct???
-    protected void moveLeft()
+    public void moveLeft()
     {
         move(new Vector2D((-1)*speed, 0.0d));
     }
 
-    protected void moveRight()
+    public void moveRight()
     {
         move(new Vector2D(speed, 0.0d));
     }
 
-    protected void moveDown()
+    public void moveDown()
     {
         move(new Vector2D(0.0d, (-1)*speed));
     }
 
-    protected void moveUp()
+    public void moveUp()
     {
         move(new Vector2D(0.0d, speed));
     }

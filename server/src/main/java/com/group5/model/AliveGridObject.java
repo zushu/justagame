@@ -33,7 +33,7 @@ public abstract class AliveGridObject extends GridObject {
     }
 
     // not a getter
-    protected void getHit(double bulletDamage) {
+    public void getHit(double bulletDamage) {
         this.health -= bulletDamage;
         if (this.health <= 0.0d) 
         {
