@@ -96,7 +96,7 @@ public abstract class GridObject {
     * This method adds newStep to the gridObject's current position.
     * @param newStep step to be added to the gridObject's position.
     */
-    protected void move(Vector2D newStep) // update position    // TODO: CHECK GRID BOUNDARIES
+    public void move(Vector2D newStep) // update position    // TODO: CHECK GRID BOUNDARIES
     {   
         Vector2D newPosition = new Vector2D(position);          // TODO: unnecessary steps here???
         newPosition.add(newStep);
@@ -106,7 +106,7 @@ public abstract class GridObject {
     /** 
     * This method moves gridObject in left direction by the amount of speed units  
     */
-    protected void moveLeft()                                   // TODO: is it correct???
+    public void moveLeft()                                   // TODO: is it correct???
     {
         move(new Vector2D((-1)*speed, 0.0d));
     }
@@ -114,7 +114,7 @@ public abstract class GridObject {
     /** 
     * This method moves gridObject in right direction by the amount of speed units  
     */
-    protected void moveRight()
+    public void moveRight()
     {
         move(new Vector2D(speed, 0.0d));
     }
@@ -122,7 +122,7 @@ public abstract class GridObject {
     /** 
     * This method moves gridObject in down direction by the amount of speed units  
     */
-    protected void moveDown()
+    public void moveDown()
     {
         move(new Vector2D(0.0d, (-1)*speed));
     }
@@ -130,7 +130,7 @@ public abstract class GridObject {
     /** 
     * This method moves gridObject in up direction by the amount of speed units  
     */
-    protected void moveUp()
+    public void moveUp()
     {
         move(new Vector2D(0.0d, speed));
     }
@@ -141,7 +141,7 @@ public abstract class GridObject {
     * @param gridObj2 object_2 to check collusion
     * @return Boolean true if two objects are colliding, false otherwise.
     */
-    public Boolean doCollide(GridObject gridObj1, GridObject gridObj2) {
+    public boolean doCollide(GridObject gridObj1, GridObject gridObj2) {
         if ( !( gridObj1.getRightBoundary() <= gridObj2.getLeftBoundary() || gridObj1.getLeftBoundary() >= gridObj2.getRightBoundary() || 
                 gridObj1.getUpperBoundary() <= gridObj2.getLowerBoundary() || gridObj1.getLowerBoundary() >= gridObj2.getUpperBoundary() ))
         {   
