@@ -27,11 +27,6 @@ public class ScoreController {
         return ResponseEntity.ok().body(this.scoreService.updateScore(score));
     }
 
-    /*@PostMapping("/find")
-    public ResponseEntity<List<Score>> findScore(@RequestBody String jsonScore){
-        return ResponseEntity.ok().body(this.scoreService.findScore(new JSONObject(jsonScore)));
-    }*/
-
     @GetMapping("/getAll")
     public ResponseEntity<List<Score>> getAllScores(){
         return ResponseEntity.ok().body(this.scoreService.getAllScores());

@@ -27,16 +27,30 @@ public class ScoreServiceImpl implements ScoreService {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * This method creates a score in the database.
+     * @param score Score instance to save.
+     * @return Score Created score object.
+     */
     @Override
     public Score addScore(Score score) {
         return scoreRepository.save(score);
     }
 
+    /**
+     * This method returns all scores.
+     * @return List<Score> All scores in the database.
+     */
     @Override
     public List<Score> getAllScores() {
         return this.scoreRepository.findAll();
     }
 
+    /**
+     * This method returns scoreboard between date and now.
+     * @param date This is starting date of the scoreboard. End date is now.
+     * @return List<Score> This is scoreboard list.
+     */
     @Override
     public List<Score> scoreboardAfterDate(String date){    //Bu fonksiyon doğrudan java.util.Date parametre de alabilir, postman kullanıldığı için string    
         try {
@@ -65,6 +79,10 @@ public class ScoreServiceImpl implements ScoreService {
         }    
     }
 
+    /**
+     * This method updates a score record.
+     * @return Score Updated score object.
+     */
     @Override
     public Score updateScore(Score score){
         Optional<Score> scoreDb = this.scoreRepository.findById(score.getId());
@@ -75,29 +93,14 @@ public class ScoreServiceImpl implements ScoreService {
         return  this.scoreRepository.save(scoreUpdate);
     }
 
+    /**
+     * This method deletes scores with ids in the idList.
+     * @param idList List of score ids to remove.
+     */
     @Override
     public void deleteScore(List<Integer> idList) {
         Iterable<Score> scores = this.scoreRepository.findAllById(idList);
         for(Score score : scores) this.scoreRepository.delete(score);
     }
 
-    /*@Override
-    public List<Score> findScore(JSONObject jsonScore) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Score> cq = cb.createQuery(Score.class);
-
-        Root<Score> score = cq.from(Score.class);
-        List<Predicate> predicates = new ArrayList<>();
-
-        if (jsonScore.has("id"))
-            predicates.add(cb.equal(score.get("id"), jsonScore.get("id")));
-        if (jsonScore.has("name"))
-            predicates.add(cb.equal(score.get("name"), jsonScore.get("name")));
-        if (jsonScore.has("password"))
-            predicates.add(cb.equal(score.get("password"), jsonScore.get("password")));
-
-
-        cq.where(predicates.toArray(new Predicate[0]));
-        return em.createQuery(cq).getResultList();
-    }*/
 }

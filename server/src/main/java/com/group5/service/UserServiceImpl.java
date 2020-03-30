@@ -29,6 +29,11 @@ public class UserServiceImpl implements UserService {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * This method creates a user in the database.
+     * @param user User instance to save.
+     * @return User Created user object.
+     */
     @Override
     public User addUser(User user) {
         List<User> allUsers = getAllUsers();
@@ -41,11 +46,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * This method returns all users in the database.
+     * @return User All user records.
+     */
     @Override
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
     }
 
+    /**
+     * This method updates a user in the database.
+     * @param user User instance to update.
+     * @return User Updated user object.
+     */
     @Override
     public User updateUser(User user){
         Optional<User> userDb = this.userRepository.findById(user.getId());
@@ -56,12 +70,21 @@ public class UserServiceImpl implements UserService {
         return  this.userRepository.save(userUpdate);
     }
 
+    /**
+     * This method deletes users with ids in the idList.
+     * @param idList List of user ids to remove.
+     */
     @Override
     public void deleteUser(List<Integer> idList) {
         Iterable<User> users = this.userRepository.findAllById(idList);
         for(User user : users) this.userRepository.delete(user);
     }
 
+    /**
+     * This method finds users with given id or name in json form.
+     * @param jsonUser User information in json form.
+     * @return List<User> List of users according to given parameter.
+     */
     @Override
     public List<User> findUser(JSONObject jsonUser) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -79,6 +102,11 @@ public class UserServiceImpl implements UserService {
         return em.createQuery(cq).getResultList();
     }
 
+    /**
+     * This method gets past scores of the user.
+     * @param userId Id of some user to find its past scores.
+     * @return List<Score> List of past scores of given user.
+     */
     @Override
     public List<Score> getUsersScoreList(Integer userId){
         Optional<User> userDb = this.userRepository.findById(userId);
@@ -86,6 +114,11 @@ public class UserServiceImpl implements UserService {
         return userUpdate.getScoreList();
     }
 
+    /**
+     * This method is used for login with given user credentials.
+     * @param user Name and Password for login.
+     * @return Boolean true if login successful, false otherwise.
+     */
     @Override
     public Boolean login(User user){
         try {
@@ -103,6 +136,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * This method is to change password of the user.
+     * @param jsonPassword This json includes "userid","oldPassword", "newPassword"
+     * @return Boolean true if password is changed successfully, false otherwise.
+     */
     @Override
     public Boolean changePassword(JSONObject jsonPassword){
         Optional<User> userDb = this.userRepository.findById((Integer)jsonPassword.get("userid"));
@@ -122,6 +160,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Helper method to prepare hashed password.
+     * @param toHash String that will be hashed.
+     * @return String Hashed password.
+     */
     private static String hashSha256(String toHash) 
     {  
         try{
@@ -143,6 +186,11 @@ public class UserServiceImpl implements UserService {
         }  
     } 
 
+    /**
+     * Helper method to find user via name.
+     * @param name Name of the searched user.
+     * @return User User with given name.
+     */
     private User findUserByName(String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<User> cq = cb.createQuery(User.class);
