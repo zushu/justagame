@@ -34,7 +34,13 @@ public class ScoreServiceImpl implements ScoreService {
      */
     @Override
     public Score addScore(Score score) {
-        return scoreRepository.save(score);
+        List<User> userList = scoreRepository.getAllUsers();
+        for(int i=0; i<userList.size(); i++){
+            if( score.getUser().getId() == userList.get(i).getId()){
+                return scoreRepository.save(score);
+            }
+        }
+        return score;
     }
 
     /**
@@ -85,12 +91,17 @@ public class ScoreServiceImpl implements ScoreService {
      */
     @Override
     public Score updateScore(Score score){
-        Optional<Score> scoreDb = this.scoreRepository.findById(score.getId());
-        Score scoreUpdate = scoreDb.get();
-
-        scoreUpdate.setScore(score.getScore());
-        scoreUpdate.setEndTime(score.getEndTime());
-        return  this.scoreRepository.save(scoreUpdate);
+        try{
+            Optional<Score> scoreDb = this.scoreRepository.findById(score.getId());
+            Score scoreUpdate = scoreDb.get();
+    
+            scoreUpdate.setScore(score.getScore());
+            scoreUpdate.setEndTime(score.getEndTime());
+            return  this.scoreRepository.save(scoreUpdate);
+        }catch(java.util.NoSuchElementException e){
+            return new Score();
+        }
+        
     }
 
     /**
@@ -99,8 +110,13 @@ public class ScoreServiceImpl implements ScoreService {
      */
     @Override
     public void deleteScore(List<Integer> idList) {
-        Iterable<Score> scores = this.scoreRepository.findAllById(idList);
-        for(Score score : scores) this.scoreRepository.delete(score);
+        try{
+            Iterable<Score> scores = this.scoreRepository.findAllById(idList);
+            for(Score score : scores) this.scoreRepository.delete(score);
+        }catch(Exception e){
+            return;
+        }
+        
     }
 
 }

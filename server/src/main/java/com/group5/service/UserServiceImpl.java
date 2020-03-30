@@ -62,12 +62,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User updateUser(User user){
-        Optional<User> userDb = this.userRepository.findById(user.getId());
-        User userUpdate = userDb.get();
-
-        userUpdate.setName(user.getName());
-        userUpdate.setPassword(user.getPassword());
-        return  this.userRepository.save(userUpdate);
+        try{
+            Optional<User> userDb = this.userRepository.findById(user.getId());
+            User userUpdate = userDb.get();
+    
+            userUpdate.setName(user.getName());
+            userUpdate.setPassword(user.getPassword());
+            return  this.userRepository.save(userUpdate);
+        }catch(java.util.NoSuchElementException e){
+            return new User();
+        }
+        
     }
 
     /**
@@ -76,8 +81,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(List<Integer> idList) {
-        Iterable<User> users = this.userRepository.findAllById(idList);
-        for(User user : users) this.userRepository.delete(user);
+        try{
+            Iterable<User> users = this.userRepository.findAllById(idList);
+            for(User user : users) this.userRepository.delete(user);
+        }catch(Exception e){
+            return;
+        }
     }
 
     /**
@@ -109,9 +118,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<Score> getUsersScoreList(Integer userId){
-        Optional<User> userDb = this.userRepository.findById(userId);
-        User userUpdate = userDb.get();
-        return userUpdate.getScoreList();
+        try{
+            Optional<User> userDb = this.userRepository.findById(userId);
+            User userUpdate = userDb.get();
+            return userUpdate.getScoreList();
+        }catch(Exception e){
+            return new ArrayList<Score>();
+        }        
     }
 
     /**
