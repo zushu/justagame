@@ -17,4 +17,7 @@ public interface ScoreRepository extends JpaRepository<Score, Integer> {
 
     @Query("select distinct g.user from Score g where g.endTime > ?1")  
     List<User> distinctUsersAfterDateJpa(Date startingDate);
+
+    @Query("select u from User u")  
+    List<User> getAllUsers();
 }
