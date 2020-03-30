@@ -10,8 +10,7 @@ There is a postman collection provided **"ceng453project.postman_collection.json
 We have two simple tables for now. These are User and Score tables. User table will be used for authorization purpose, and score table will keep past game scores of users. ER Diagram of this simple database is named **"ERDiagram.png"** in the project's base folder.
 
  ## Run Commands
- 
-* To run **spring-boot application** execute **./mvnw spring-boot:run** command under group5/server/ folder.
-* To run **unit tests** execute **./mvnw -Dtest=GameObjectTest test** command under group5/server/ folder.
+To run **spring-boot application** execute **./mvnw spring-boot:run** command under group5/server/ folder.
+To run **unit tests** execute **./mvnw -Dtest=GameObjectTest test** command under group5/server/ folder.
 
 
