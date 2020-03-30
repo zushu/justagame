@@ -6,6 +6,7 @@ import com.group5.model.DefensiveAlien;
 import com.group5.model.ShootingAlien;
 import com.group5.model.Bullet;
 import com.group5.model.SpaceShip;
+import com.group5.model.MainGame;
 import com.group5.helper.Vector2D;
 import java.util.List;
 import java.util.Arrays;
@@ -16,8 +17,10 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
-// test functions in GridObject, AliveGridObject, Alien, ShootingAlien, DefensiveAlien, Bullet and SpaceShip
-// since GridObject and AliveGridObject are abstract, no objects of those classes can be instantiated.
+/** 
+    * this class contains test functions for GridObject, AliveGridObject, Alien, ShootingAlien, DefensiveAlien, Bullet, SpaceShip and MainGame
+    * since GridObject and AliveGridObject are abstract, no objects of those classes can be instantiated, Alien was used instead.
+*/
 @SpringBootTest
 public class GameObjectTest {
 
@@ -144,6 +147,25 @@ public class GameObjectTest {
         spaceShip.updateBulletList(10.0d, 10.0d);
         assertEquals(2, spaceShip.getBulletList().size());
 
+    }
+
+    @Test
+    public void testMainGame() {
+        MainGame mainGame = new MainGame();
+        // there is one spaceship in the Grid
+        assertEquals(1, mainGame.getGrid().getSpaceShipList().size());
+        mainGame.setFirstLevelAliens();
+        // there are 60 Aliens in the first level
+        assertEquals(60, mainGame.getGrid().getAlienList().size());
+        mainGame.setSecondLevelAliens();
+        // there are 60 Aliens in the second level
+        assertEquals(60, mainGame.getGrid().getAlienList().size());
+        mainGame.setThirdLevelAliens();
+        // there are 60 Aliens in the third level
+        assertEquals(60, mainGame.getGrid().getAlienList().size());
+        mainGame.setForthLevelAliens();
+        // there are 60 Aliens in the fourth level
+        assertEquals(60, mainGame.getGrid().getAlienList().size());        
     }
 
 

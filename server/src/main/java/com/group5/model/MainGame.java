@@ -143,7 +143,7 @@ public class MainGame{
 
         List<Vector2D> positionsList = new ArrayList<>(rowCount*columnCount);
         for(int i=0; i<rowCount; i++){
-            for(int j=0; j<rowCount; j++){
+            for(int j=0; j<columnCount; j++){
                 positionsList.add(new Vector2D( (columnPadding/2) + (j*columnPadding), this.getGrid().getHeight() - (rowPadding + (i*rowPadding)) ));
             } 
         } 
