@@ -62,7 +62,7 @@ public abstract class GridObject {
 
     public void setPosition(Vector2D position) {
         this.position = position;
-        updateBoundaries(position);
+        this.updateBoundaries(this.position);
     }
 
     public void setDirection(Vector2D direction) {
@@ -96,17 +96,17 @@ public abstract class GridObject {
     * This method adds newStep to the gridObject's current position.
     * @param newStep step to be added to the gridObject's position.
     */
-    public void move(Vector2D newStep) // update position    // TODO: CHECK GRID BOUNDARIES
+    public void move(Vector2D newStep) // update position
     {   
-        Vector2D newPosition = new Vector2D(position);          // TODO: unnecessary steps here???
+        Vector2D newPosition = new Vector2D(position);
         newPosition.add(newStep);
-        setPosition(newPosition);
+        this.setPosition(newPosition);
     }
 
     /** 
     * This method moves gridObject in left direction by the amount of speed units  
     */
-    public void moveLeft()                                   // TODO: is it correct???
+    public void moveLeft()                                   
     {
         move(new Vector2D((-1)*speed, 0.0d));
     }

@@ -10,6 +10,7 @@ public interface IAlien {
     public double getSpeed();
     public double getWidth();
     public double getHeight();
+    public void updateBoundaries(Vector2D newPosition);
     public double getLeftBoundary();
     public double getRightBoundary();
     public double getLowerBoundary();
@@ -19,7 +20,6 @@ public interface IAlien {
     public void setSpeed(double speed);
     public void setWidth(double width);
     public void setHeight(double height);
-    public void updateBoundaries(Vector2D newPosition);
     public void move(Vector2D newStep);
     public void moveLeft();
     public void moveRight();
