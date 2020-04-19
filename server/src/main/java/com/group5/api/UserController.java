@@ -2,6 +2,7 @@ package com.group5.api;
 
 import com.group5.model.User;
 import com.group5.model.Score;
+import com.group5.service.ScoreService;
 import com.group5.service.UserService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +18,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private ScoreService scoreService;
 
     @PostMapping("/signup")
     public ResponseEntity<User> addUser(@RequestBody User user){

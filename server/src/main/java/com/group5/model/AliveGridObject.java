@@ -1,7 +1,6 @@
 package com.group5.model;
 
 import com.group5.helper.Vector2D;
-import java.util.List;
 
 
 public abstract class AliveGridObject extends GridObject {

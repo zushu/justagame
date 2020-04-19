@@ -1,7 +1,6 @@
 package com.group5.service;
 
 import com.group5.model.Score;
-import org.json.JSONObject;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package com.group5.api;
 
 import com.group5.model.Score;
 import com.group5.service.ScoreService;
+import com.group5.service.UserService;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +16,8 @@ import java.util.List;
 public class ScoreController {
     @Autowired
     private ScoreService scoreService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/add")
     public ResponseEntity<Score> addScore(@RequestBody Score score){

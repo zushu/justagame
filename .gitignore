@@ -3,5 +3,9 @@
 /server/target/
 /server/.idea
 /server/demo.iml
+/server/group5.iml
+/client/client.iml
+/client/out
+/client/.idea
 # Except this file
 !.gitignore
