@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.com.group5.controllers.IndexController">
+   <children>
+      <Button fx:id="login" layoutX="233.0" layoutY="504.0" mnemonicParsing="false" onAction="#gotoLoginPage" prefWidth="64.0" text="Login" />
+      <Button layoutX="303.0" layoutY="504.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="64.0" onAction="#gotoSignupPage" text="Signup" />
+      <Button layoutX="235.0" layoutY="540.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" onAction="#gotoLeaderboardPage" text="Leaderboard" />
+   </children>
+</AnchorPane>
