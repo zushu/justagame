@@ -7,5 +7,6 @@
 /client/client.iml
 /client/out
 /client/.idea
+/client/target
 # Except this file
 !.gitignore
