@@ -8,12 +8,11 @@ import java.io.IOException;
 public class IndexController {
 
     public void gotoLoginPage(ActionEvent event) throws IOException {
-        System.out.println("login button clicked");
         MainClientApplication.setRoot("login");
     }
 
-    public void gotoSignupPage(ActionEvent event){
-        System.out.println("signup button clicked");
+    public void gotoSignupPage(ActionEvent event) throws IOException {
+        MainClientApplication.setRoot("signup");
     }
 
     public void gotoLeaderboardPage(ActionEvent event){

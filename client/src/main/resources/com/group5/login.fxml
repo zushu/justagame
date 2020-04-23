@@ -25,5 +25,6 @@
             <Font size="10.0" />
          </font>
       </Label>
+      <Label fx:id="connectionErrorLabel" layoutX="198.0" layoutY="769.0" prefHeight="17.0" prefWidth="204.0" text="Can not connect to server..." textFill="RED" visible="false" />
     </children>
 </AnchorPane>
