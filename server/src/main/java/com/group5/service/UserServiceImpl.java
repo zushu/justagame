@@ -130,22 +130,22 @@ public class UserServiceImpl implements UserService {
     /**
      * This method is used for login with given user credentials.
      * @param user Name and Password for login.
-     * @return Boolean true if login successful, false otherwise.
+     * @return String returns "false" if login fails, return "userid" otherwise.
      */
     @Override
-    public Boolean login(User user){
+    public String login(User user){
         try {
             User userRecord = findUserByName(user.getName());
 
             String hashedPassword = hashSha256((user.getPassword()));
 
             if (userRecord.getPassword().equals(hashedPassword)){
-                return true;
+                return Integer.toString(userRecord.getId());
             }else{
-                return false;
+                return "false";
             }
         } catch (Exception e) {
-            return false;
+            return "false";
         }
     }
 

@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -66,31 +67,36 @@ public class SingupController {
             }
         }
 
-        JSONObject loginFormJson = new JSONObject();
-        loginFormJson.put("name", usernameInput.getText() );
-        loginFormJson.put("password", passwordInput.getText() );
-        System.out.println(loginFormJson);
+        JSONObject signupFormJson = new JSONObject();
+        signupFormJson.put("name", usernameInput.getText() );
+        signupFormJson.put("password", passwordInput.getText() );
+        System.out.println(signupFormJson);
 
         HttpHeaders header =  new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(loginFormJson.toString(), header);
+        HttpEntity<String> request = new HttpEntity<>(signupFormJson.toString(), header);
 
         RestTemplate restTemplate = new RestTemplate();
         try {
             ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/api/user/signup", request, String.class);
             System.out.println(response.getBody());
 
-            //response şöyle ise login olmuş gibi oyuna yönlendir {"id":8,"name":"test","password":"8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"}
+            JSONObject userRecord = new JSONObject(response.getBody());
+            System.out.println(userRecord);
+
+            MainClientApplication.setLoggedUserId((Integer) userRecord.get("id"));
+            MainClientApplication.setRoot("index");                             //redirects like logged in after singup
+
         } catch (ResourceAccessException e) {
             connectionErrorLabel.setVisible(true);
             System.out.println(e.getMessage());
         }catch (Exception e) {
+            connectionErrorLabel.setVisible(true);
             e.printStackTrace();
         }
     }
 
-    public void backToMenu(ActionEvent event) throws IOException {
-        System.out.println("mainmenu button clicked");
-        MainClientApplication.setRoot("index");
+    public void backToLogin(ActionEvent event) throws IOException {
+        MainClientApplication.setRoot("login");
     }
 }

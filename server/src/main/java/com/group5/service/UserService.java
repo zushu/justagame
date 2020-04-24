@@ -13,6 +13,6 @@ public interface UserService {
     List<User> findUser(JSONObject jsonUser);
     List<Score> getUsersScoreList(Integer userId);
 
-    Boolean login(User user);
+    String login(User user);
     Boolean changePassword(JSONObject jsonPassword);
 }

@@ -15,10 +15,11 @@ import java.io.IOException;
 public class MainClientApplication extends Application {
 
     private static Scene scene;
+    private static Integer loggedUserId = 0;
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("index"));
+        scene = new Scene(loadFXML("login"));
         stage.setTitle("Just a Game");
         stage.setScene(scene);
         stage.show();
@@ -32,6 +33,15 @@ public class MainClientApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainClientApplication.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
+
+    public static Integer getLoggedUserId(){
+        return loggedUserId;
+    }
+
+    public static void setLoggedUserId(Integer userId){
+        loggedUserId = userId;
+    }
+
 
     public static void main(String[] args) {
         launch();

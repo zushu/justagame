@@ -30,9 +30,12 @@ public class LoginController {
 
     @FXML
     private Label connectionErrorLabel;
+    @FXML
+    private Label loginErrorLabel;
 
     public void requestLogin(ActionEvent event){
         connectionErrorLabel.setVisible(false);
+        loginErrorLabel.setVisible(false);
 
         if(usernameInput.getText().isEmpty() || passwordInput.getText().isEmpty()){
             if(usernameInput.getText().isEmpty()) {
@@ -66,6 +69,14 @@ public class LoginController {
             ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/api/user/login", request, String.class);
             System.out.println(response.getBody());
 
+            if(response.getBody().equals("false")){
+                loginErrorLabel.setText("Username or password is incorrect!");
+                loginErrorLabel.setVisible(true);
+            }else{
+                MainClientApplication.setLoggedUserId(Integer.parseInt(response.getBody()));
+                MainClientApplication.setRoot("index");
+            }
+
         } catch (ResourceAccessException e) {
             connectionErrorLabel.setVisible(true);
             System.out.println(e.getMessage());
@@ -74,9 +85,12 @@ public class LoginController {
         }
     }
 
-    public void backToMenu(ActionEvent event) throws IOException {
-        System.out.println("mainmenu button clicked");
-        MainClientApplication.setRoot("index");
+    public void gotoSignupPage(ActionEvent event) throws IOException {
+        MainClientApplication.setRoot("signup");
+    }
+
+    public void gotoLeaderboardPage(ActionEvent event) throws IOException {
+        MainClientApplication.setRoot("leaderboard");
     }
 
 }

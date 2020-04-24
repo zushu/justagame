@@ -7,15 +7,21 @@ import java.io.IOException;
 
 public class IndexController {
 
-    public void gotoLoginPage(ActionEvent event) throws IOException {
+    public void logout(ActionEvent event) throws IOException {
+        MainClientApplication.setLoggedUserId(0);
         MainClientApplication.setRoot("login");
     }
 
-    public void gotoSignupPage(ActionEvent event) throws IOException {
-        MainClientApplication.setRoot("signup");
+    public void gotoPasswordChangePage(ActionEvent event) throws IOException {
+        MainClientApplication.setRoot("passwordChange");
     }
 
-    public void gotoLeaderboardPage(ActionEvent event){
-        System.out.println("leaderboard button clicked");
+    public void gotoLeaderboardPage(ActionEvent event) throws IOException {
+        MainClientApplication.setRoot("leaderboard");
+    }
+
+    //TODO: implement game initialization
+    public void playGame(ActionEvent event) throws IOException {
+        System.out.println("playGame button clicked");
     }
 }
