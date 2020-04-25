@@ -18,8 +18,16 @@ import java.util.List;
 public class LevelOneController {
     private Stage stage;
     private Scene sceneLevelOne;
+    private Scene sceneLevelTwo;
+    private Scene sceneLevelThree;
+    private Scene sceneLevelFour;
     private Pane rootOne = new Pane();
+    private Pane rootTwo = new Pane();
+    private Pane rootThree = new Pane();
+    private Pane rootFour = new Pane();
     //private GraphicsContext gfxContext; // canvas for our screen, we will draw objects on it
+
+    private double time = 0;
 
     AnimationTimer timer;
 
