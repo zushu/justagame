@@ -16,9 +16,11 @@ public class MainClientApplication extends Application {
 
     private static Scene scene;
     private static Integer loggedUserId = 0;
+    public static Stage mainStage;
 
     @Override
     public void start(Stage stage) throws IOException {
+        mainStage = stage;
         scene = new Scene(loadFXML("login"));
         stage.setTitle("Just a Game");
         stage.setScene(scene);

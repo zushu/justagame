@@ -4,23 +4,32 @@ import com.group5.MainClientApplication;
 import com.group5.game.*;
 import com.group5.helper.Vector2D;
 import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 // TODO: OBJECTS WILL BE CANVAS OBJECTS
 public class GameController implements Initializable {
 
     @FXML private AnchorPane gameGrid;
     @FXML private Label healthLabel;
+    @FXML private Label scoreLabel;
+
+    private Double gameScore=0.0;
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Color.BLUE,1,new Vector2D(0,0),1000,10);
     private List<IAlien> alienList = new ArrayList<>();
@@ -29,11 +38,77 @@ public class GameController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gameGrid.prefHeight(800);
         gameGrid.prefWidth(600);
+
         healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
+        scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());
 
         gameGrid.getChildren().add(spaceShip);
         setFirstLevelAliens();
 
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                TranslateTransition tt = new TranslateTransition(Duration.millis(250), (Node)spaceShip);
+                Point mouse = MouseInfo.getPointerInfo().getLocation();
+
+                double newXCoordinate = mouse.getX()-MainClientApplication.mainStage.getX()-(spaceShip.getWidth()/2)-5;
+                double newYCoordinate = mouse.getY()-MainClientApplication.mainStage.getY()-(spaceShip.getHeight()/2)-30;
+
+                if(newXCoordinate < 0){
+                    newXCoordinate=0;
+                }else if(newXCoordinate > gameGrid.getPrefWidth()-spaceShip.getWidth()){
+                    newXCoordinate = gameGrid.getPrefWidth()-spaceShip.getWidth();
+                }
+                if(newYCoordinate < 0){
+                    newYCoordinate=0;
+                }else if(newYCoordinate > gameGrid.getPrefHeight()-spaceShip.getHeight()){
+                    newYCoordinate = gameGrid.getPrefHeight()-spaceShip.getHeight();
+                }
+                spaceShip.setTranslateX(newXCoordinate);
+                spaceShip.setTranslateY(newYCoordinate);
+
+                update();
+            }
+        };
+        timer.start();
+
+    }
+
+    private List<IAlien> Aliens() {
+        return gameGrid.getChildren().stream().map(node -> (Alien)node).collect(Collectors.toList());           //Casting hatası veriyor
+    }
+
+    private void update(){
+        gameScore += 0.25;
+        scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
+
+        alienList.stream().filter(e -> e.getAlive()).forEach(alien -> {
+            if (spaceShip.getBoundsInParent().intersects(((Node)alien).getBoundsInParent())) {
+                alien.setAlive(false);
+                System.out.println("collision");
+                //spaceShip.setAlive(false);
+            }
+        });
+        alienList.removeIf(alien -> {
+            return !alien.getAlive();
+        });
+        System.out.println(alienList.size());
+
+//        Aliens().stream().filter(e -> e.getAlive()).forEach(alien -> {
+//            if (spaceShip.getBoundsInParent().intersects(((Node)alien).getBoundsInParent())) {
+//                alien.setAlive(false);
+//                System.out.println("collision");
+//                //spaceShip.setAlive(false);
+//            }
+//        });
+//        gameGrid.getChildren().removeIf(node -> {
+//            Alien alien = (Alien) node;
+//            return !alien.getAlive();
+//        });
+//        root.getChildren().removeIf(n -> {
+//            Sprite s = (Sprite) n;
+//            return s.dead;
+//        });
     }
 
     /**

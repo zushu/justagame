@@ -21,5 +21,15 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <Label layoutX="6.0" layoutY="776.0" text="Score :" textFill="#d3000b">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="scoreLabel" layoutX="58.0" layoutY="776.0" prefHeight="20.0" prefWidth="103.0" textFill="#d3000b">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
