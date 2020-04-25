@@ -86,4 +86,9 @@ public class LoginController {
         MainClientApplication.setRoot("leaderboard");
     }
 
+    //TODO do not forget to delete after game development finishes
+    public void testGame(ActionEvent event) throws IOException{
+        MainClientApplication.setRoot("game");
+    }
+
 }

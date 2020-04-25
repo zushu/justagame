@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="gameGrid" prefHeight="800.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group5.controllers.GameController">
+   <children>
+      <Label layoutX="274.0" layoutY="2.0" prefHeight="24.0" prefWidth="52.0" text="LEVEL 1" textFill="#970909">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="499.0" layoutY="776.0" prefHeight="20.0" prefWidth="52.0" text="Health :" textFill="#21b207">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="healthLabel" layoutX="551.0" layoutY="776.0" prefHeight="20.0" prefWidth="43.0" textFill="#21b207">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

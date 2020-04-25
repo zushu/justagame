@@ -20,8 +20,8 @@ public class IndexController {
         MainClientApplication.setRoot("leaderboard");
     }
 
-    //TODO: implement game initialization
     public void playGame(ActionEvent event) throws IOException {
-        System.out.println("playGame button clicked");
+        System.out.println("play button pressed");
+        MainClientApplication.setRoot("game");
     }
 }
