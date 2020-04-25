@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.Iterator;
 
-// TODO: OBJECTS WILL BE CANVAS OBJECTS
 public class GameController implements Initializable {
 
     @FXML private AnchorPane gameGrid;
@@ -78,7 +77,7 @@ public class GameController implements Initializable {
     public ArrayList<IAlien> Aliens() {
         ArrayList<IAlien> aliens = new ArrayList<>();
         for (Object object : gameGrid.getChildren()) {
-            if (object instanceof Alien) {
+            if (object instanceof IAlien) {
                 aliens.add((Alien) object);
             }
         }
@@ -112,7 +111,7 @@ public class GameController implements Initializable {
         Iterator<Node> iter = gameGrid.getChildren().iterator();
         while (iter.hasNext()) {
             Object o = iter.next();
-            if (o instanceof Alien) {
+            if (o instanceof IAlien) {
                 IAlien alien = (Alien) o;
                 if (!alien.getAlive()) {
                     iter.remove();
