@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.Iterator;
 
 // TODO: OBJECTS WILL BE CANVAS OBJECTS
 public class GameController implements Initializable {
@@ -74,8 +75,14 @@ public class GameController implements Initializable {
 
     }
 
-    private List<IAlien> Aliens() {
-        return gameGrid.getChildren().stream().map(node -> (Alien)node).collect(Collectors.toList());           //Casting hatası veriyor
+    public ArrayList<IAlien> Aliens() {
+        ArrayList<IAlien> aliens = new ArrayList<>();
+        for (Object object : gameGrid.getChildren()) {
+            if (object instanceof Alien) {
+                aliens.add((Alien) object);
+            }
+        }
+        return aliens;
     }
 
     private void update(){
@@ -94,21 +101,24 @@ public class GameController implements Initializable {
         });
         System.out.println(alienList.size());
 
-//        Aliens().stream().filter(e -> e.getAlive()).forEach(alien -> {
-//            if (spaceShip.getBoundsInParent().intersects(((Node)alien).getBoundsInParent())) {
-//                alien.setAlive(false);
-//                System.out.println("collision");
-//                //spaceShip.setAlive(false);
-//            }
-//        });
-//        gameGrid.getChildren().removeIf(node -> {
-//            Alien alien = (Alien) node;
-//            return !alien.getAlive();
-//        });
-//        root.getChildren().removeIf(n -> {
-//            Sprite s = (Sprite) n;
-//            return s.dead;
-//        });
+        Aliens().stream().filter(e -> e.getAlive()).forEach(alien -> {
+            if (spaceShip.getBoundsInParent().intersects(((Node)alien).getBoundsInParent())) {
+                alien.setAlive(false);
+                System.out.println("collision");
+                //spaceShip.setAlive(false);
+            }
+        });
+
+        Iterator<Node> iter = gameGrid.getChildren().iterator();
+        while (iter.hasNext()) {
+            Object o = iter.next();
+            if (o instanceof Alien) {
+                IAlien alien = (Alien) o;
+                if (!alien.getAlive()) {
+                    iter.remove();
+                }
+            }
+        }
     }
 
     /**
