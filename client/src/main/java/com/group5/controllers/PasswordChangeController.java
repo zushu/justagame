@@ -1,5 +1,6 @@
 package com.group5.controllers;
 
+import com.group5.Constants;
 import com.group5.MainClientApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,24 +17,16 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 
 public class PasswordChangeController {
-    @FXML
-    private PasswordField oldPasswordInput;
-    @FXML
-    private PasswordField newPasswordInput;
-    @FXML
-    private PasswordField newPasswordInput2;
+    @FXML private PasswordField oldPasswordInput;
+    @FXML private PasswordField newPasswordInput;
+    @FXML private PasswordField newPasswordInput2;
 
-    @FXML
-    private Label oldPasswordRequired;
-    @FXML
-    private Label newPasswordRequired;
-    @FXML
-    private Label newPasswordRequired2;
+    @FXML private Label oldPasswordRequired;
+    @FXML private Label newPasswordRequired;
+    @FXML private Label newPasswordRequired2;
 
-    @FXML
-    private Label connectionErrorLabel;
-    @FXML
-    private Label passwordChangeErrorLabel;
+    @FXML private Label connectionErrorLabel;
+    @FXML private Label passwordChangeErrorLabel;
 
     public void changePassword(ActionEvent event){
         connectionErrorLabel.setVisible(false);
@@ -81,7 +74,7 @@ public class PasswordChangeController {
 
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/api/user/passwordchange", request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(Constants.SERVER_USER_API_URL + "/passwordchange", request, String.class);
             System.out.println(response.getBody());
 
             if(response.getBody().equals("true")){

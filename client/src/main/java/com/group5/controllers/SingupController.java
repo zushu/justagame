@@ -1,11 +1,11 @@
 package com.group5.controllers;
 
+import com.group5.Constants;
 import com.group5.MainClientApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,22 +17,15 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 
 public class SingupController {
-    @FXML
-    private TextField usernameInput;
-    @FXML
-    private TextField passwordInput;
-    @FXML
-    private TextField passwordInput2;
+    @FXML private TextField usernameInput;
+    @FXML private TextField passwordInput;
+    @FXML private TextField passwordInput2;
 
-    @FXML
-    private Label usernameRequired;
-    @FXML
-    private Label passwordRequired;
-    @FXML
-    private Label passwordRequired2;
+    @FXML private Label usernameRequired;
+    @FXML private Label passwordRequired;
+    @FXML private Label passwordRequired2;
 
-    @FXML
-    private Label connectionErrorLabel;
+    @FXML private Label connectionErrorLabel;
 
     public void requestSignup(ActionEvent event){
         connectionErrorLabel.setVisible(false);
@@ -78,14 +71,16 @@ public class SingupController {
 
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/api/user/signup", request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(Constants.SERVER_USER_API_URL + "/signup", request, String.class);
             System.out.println(response.getBody());
 
             JSONObject userRecord = new JSONObject(response.getBody());
             System.out.println(userRecord);
 
             MainClientApplication.setLoggedUserId((Integer) userRecord.get("id"));
-            MainClientApplication.setRoot("index");                             //redirects like logged in after singup
+
+            //redirect like logged in after signup
+            MainClientApplication.setRoot("index");
 
         } catch (ResourceAccessException e) {
             connectionErrorLabel.setVisible(true);

@@ -7,6 +7,7 @@ module com.group5 {
 
     opens com.group5 to javafx.fxml;
     opens com.group5.controllers to javafx.fxml;
+    opens com.group5.models to javafx.base;
     exports com.group5;
 
 }

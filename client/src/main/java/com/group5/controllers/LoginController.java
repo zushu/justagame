@@ -1,5 +1,6 @@
 package com.group5.controllers;
 
+import com.group5.Constants;
 import com.group5.MainClientApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,24 +15,16 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.ConnectException;
-
 
 public class LoginController {
-    @FXML
-    private TextField usernameInput;
-    @FXML
-    private TextField passwordInput;
+    @FXML private TextField usernameInput;
+    @FXML private TextField passwordInput;
 
-    @FXML
-    private Label usernameRequired;
-    @FXML
-    private Label passwordRequired;
+    @FXML private Label usernameRequired;
+    @FXML private Label passwordRequired;
 
-    @FXML
-    private Label connectionErrorLabel;
-    @FXML
-    private Label loginErrorLabel;
+    @FXML private Label connectionErrorLabel;
+    @FXML private Label loginErrorLabel;
 
     public void requestLogin(ActionEvent event){
         connectionErrorLabel.setVisible(false);
@@ -66,7 +59,7 @@ public class LoginController {
 
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/api/user/login", request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(Constants.SERVER_USER_API_URL + "/login", request, String.class);
             System.out.println(response.getBody());
 
             if(response.getBody().equals("false")){

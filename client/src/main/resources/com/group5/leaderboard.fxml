@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.group5.controllers.LeaderboardController"
-            prefHeight="800.0" prefWidth="600.0">
-    <Button fx:id="back" layoutX="325.0" layoutY="566.0" mnemonicParsing="false" onAction="#backToLogin" text="Main Menu" />
+<AnchorPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group5.controllers.LeaderboardController">
+    <Button fx:id="back" layoutX="262.0" layoutY="664.0" mnemonicParsing="false" onAction="#backToLogin" text="Main Menu" />
+   <TableView fx:id="table" layoutX="100.0" layoutY="200.0" prefHeight="400.0" prefWidth="400.0">
+     <columns>
+       <TableColumn fx:id="rank" prefWidth="48.0" text="Rank" />
+       <TableColumn fx:id="username" prefWidth="250.0" text="Username" />
+       <TableColumn fx:id="score" prefWidth="100.0" text="Score" />
+     </columns>
+   </TableView>
+    <Label fx:id="connectionErrorLabel" layoutX="198.0" layoutY="769.0" prefHeight="17.0" prefWidth="204.0" text="Can not connect to server..." textFill="RED" visible="false" />
+   <ComboBox fx:id="scoreCombobox" layoutX="100.0" layoutY="140.0" onAction="#comboboxChanged" prefWidth="150.0" promptText="Select Interval" />
 </AnchorPane>
