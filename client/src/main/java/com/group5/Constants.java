@@ -1,5 +1,7 @@
 package com.group5;
 
+import javafx.scene.paint.Color;
+
 public class Constants {
     public static final String SERVER_SCORE_API_URL = "http://localhost:8080/api/score";
     public static final String SERVER_USER_API_URL = "http://localhost:8080/api/user";
@@ -32,6 +34,11 @@ public class Constants {
     public static final double ROW_PADDING = 60.0d;
     public static final Integer ROW_COUNT = 4;
     public static final Integer COLUMN_COUNT = 6;
+
+    public static final Color NORMAL_ALIEN_COLOR = Color.RED;
+    public static final Color DEFENSIVE_ALIEN_COLOR = Color.YELLOW;
+    public static final Color SHOOTING_ALIEN_COLOR = Color.GREEN;
+    public static final Color HARD_ALIEN_COLOR = Color.ORANGE;
 
 
 

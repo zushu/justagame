@@ -133,7 +133,15 @@ public class GameController implements Initializable {
                 updateForLevelThree();
             }
         }
-        //else if (levelNo == 4){
+        else if (levelNo == 4){
+            if (levelInitializationFlag == true) {
+                levelTransition(4);
+                setFourthLevelAliens();
+            }
+            else {
+                updateForLevelFour();
+            }
+        }
 
         //}
     }
@@ -163,7 +171,7 @@ public class GameController implements Initializable {
             if (currentLevelNo == 3 || currentLevelNo == 4) {
                 for (Alien alien : Aliens()) {
                     // shooting or defensive-shooting
-                    if (alien.getAlive() && (alien.getColor() == Color.GREEN || alien.getColor() == Color.ORANGE)) {
+                    if (alien.getAlive() && (alien.getColor() == Constants.SHOOTING_ALIEN_COLOR || alien.getColor() == Constants.HARD_ALIEN_COLOR)) {
                         Bullet alienBullet = new Bullet((int) (alien.getTranslateX() + alien.getWidth() / 2 - 2), (int) alien.getTranslateY(), Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Color.VIOLET, 5.0d, new Vector2D(0, 1), Constants.ALIEN_BULLET_DAMAGE);
                         gameGrid.getChildren().add(alienBullet);
                     }
@@ -287,30 +295,30 @@ public class GameController implements Initializable {
      */
     public void setFirstLevelAliens(){
         for (int i = 0; i < Constants.ROW_COUNT; i++) {
-            setAliens(Color.RED, Constants.NORMAL_ALIEN_HEALTH, i+1);
+            setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, i+1);
         }
     }
     /**
      * This method creates the aliens of the grid for the second level of the game.
      */
     public void setThirdLevelAliens(){
-        setAliens(Color.RED, Constants.NORMAL_ALIEN_HEALTH, 1);
-        setAliens(Color.RED, Constants.NORMAL_ALIEN_HEALTH, 2);
-        setAliens(Color.YELLOW, Constants.DEFENSIVE_ALIEN_HEALTH, 3);
-        setAliens(Color.GREEN, Constants.SHOOTING_ALIEN_HEALTH, 4);
+        setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 1);
+        setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 2);
+        setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 3);
+        setAliens(Constants.SHOOTING_ALIEN_COLOR, Constants.SHOOTING_ALIEN_HEALTH, 4);
     }
 
     public void setFourthLevelAliens() {
-        setAliens(Color.RED, Constants.NORMAL_ALIEN_HEALTH, 1);
-        setAliens(Color.YELLOW, Constants.DEFENSIVE_ALIEN_HEALTH, 2);
-        setAliens(Color.GREEN, Constants.SHOOTING_ALIEN_HEALTH, 3);
-        setAliens(Color.ORANGE, Constants.DEFENSIVE_ALIEN_HEALTH, 4);
+        setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 1);
+        setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 2);
+        setAliens(Constants.SHOOTING_ALIEN_COLOR, Constants.SHOOTING_ALIEN_HEALTH, 3);
+        setAliens(Constants.HARD_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 4);
     }
 
     public void setSecondLevelAliens(){
         for (int i = 0; i < Constants.ROW_COUNT / 2; i++) {
-            setAliens(Color.RED, Constants.NORMAL_ALIEN_HEALTH, i+1);
-            setAliens(Color.YELLOW, Constants.DEFENSIVE_ALIEN_HEALTH, i + Constants.ROW_COUNT / 2 + 1);
+            setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, i+1);
+            setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, i + Constants.ROW_COUNT / 2 + 1);
         }
     }
 
