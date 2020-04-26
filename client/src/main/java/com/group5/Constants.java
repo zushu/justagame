@@ -19,17 +19,14 @@ public class Constants {
     public static final int BULLET_WIDTH = 5;
     public static final int BULLET_HEIGHT = 15;
     public static final double ALIEN_BULLET_DAMAGE = 10;
-    public static final double SPACESHIP_BULLET_DAMAGE = 100;
+    public static final double SPACESHIP_BULLET_DAMAGE = 100;       //TODO test için 100'e çıkardım
     public static final double SPACESHIP_HEALTH = 1000.0d;
-    public static final double NORMAL_ALIEN_HEALTH = 200.0d;
+    public static final double NORMAL_ALIEN_HEALTH = 100.0d;
     public static final double DEFENSIVE_ALIEN_HEALTH = 400.0d;
-    public static final double SHOOTING_ALIEN_HEALTH = 100.0d;
+    public static final double SHOOTING_ALIEN_HEALTH = 200.0d;
     public static final int GRID_HEIGHT = 800;
     public static final int GRID_WIDTH = 600;
-    public static final double LEVEL1_SCORE_INCREMENT = 0.25;
-    public static final double LEVEL2_SCORE_INCREMENT = 0.5;
-    public static final double LEVEL3_SCORE_INCREMENT = 1;
-    public static final double LEVEL4_SCORE_INCREMENT = 2;
+
     public static final int BULLET_SPEED = 5;
 
     public static final double ROW_PADDING = 60.0d;

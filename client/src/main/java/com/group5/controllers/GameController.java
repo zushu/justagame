@@ -6,7 +6,6 @@ import com.group5.MainClientApplication;
 import com.group5.game.*;
 import com.group5.helper.Vector2D;
 import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -16,21 +15,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import java.util.Iterator;
 
 public class GameController implements Initializable {
 
     @FXML private AnchorPane gameGrid;
+    @FXML private Label levelNumberLabel;
     @FXML private Label healthLabel;
     @FXML private Label scoreLabel;
     @FXML private Label gameoverLabel;
@@ -38,12 +35,14 @@ public class GameController implements Initializable {
     @FXML private Label gameoverScore;
     @FXML private Button playAgainButton;
     @FXML private Button exitButton;
+    @FXML private Label levelTransitionLabel;
 
-    private Double gameScore = 0.0d;
+    private Integer gameScore = 0;
     private Integer levelNo = 1;
     private Boolean isGameOver = false;
-    private boolean entry = true; // to add aliens to the grid before updating it at every frame
-    private boolean finishedGame = false; // finished all 4 levels
+    //private int level = 1;
+    private boolean levelInitializationFlag = true; // to add aliens to the grid before updating it at every frame
+    private boolean levelTransitionFlag = true;     // this flag blocks firing while level transitions
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Color.BLUE, 1, new Vector2D(0, 0), 1000, 10);
     List<Vector2D> positionsList = createUniformAlienPositions( Constants.ROW_COUNT, Constants.COLUMN_COUNT, Constants.ROW_PADDING);
@@ -60,10 +59,10 @@ public class GameController implements Initializable {
         exitButton.setVisible(false);
 
         levelNo = 1;
-        spaceShip.setHealth(Constants.SPACESHIP_HEALTH);   //TODO move to constants
+        spaceShip.setHealth(Constants.SPACESHIP_HEALTH);
         healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
-        gameScore = 0.0;
-        scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());
+        gameScore = 0;
+        scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
         setFirstLevelAliens();
         isGameOver = false;
     }
@@ -77,15 +76,13 @@ public class GameController implements Initializable {
         gameGrid.prefWidth(Constants.GRID_WIDTH);
 
         healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
-        scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());
+        scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
 
         gameGrid.getChildren().add(spaceShip);
-        setFirstLevelAliens();
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                //TranslateTransition tt = new TranslateTransition(Duration.millis(250), (Node)spaceShip);
                 if (isGameOver) {
                     gameOverHandler();
                 }
@@ -112,55 +109,47 @@ public class GameController implements Initializable {
 
     private void update() {
         if (levelNo == 1){
-            if (entry == true) {
+            if (levelInitializationFlag == true) {
+                levelTransition(1);
                 setFirstLevelAliens();
-                entry = false;
             }
             else {
-                gameScore += Constants.LEVEL1_SCORE_INCREMENT;
-                scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
                 updateForLevelOne();
             }
-
         }else if (levelNo == 2){
-            if (entry == true) {
+            if (levelInitializationFlag == true) {
+                levelTransition(2);
                 setSecondLevelAliens();
-                entry = false;
             }
             else {
-                gameScore += Constants.LEVEL2_SCORE_INCREMENT;
                 updateForLevelTwo();
             }
-
-
         }else if (levelNo == 3){
-            if (entry == true) {
+            if (levelInitializationFlag == true) {
+                levelTransition(3);
                 setThirdLevelAliens();
-                entry = false;
             }
             else {
-                gameScore += Constants.LEVEL3_SCORE_INCREMENT;
                 updateForLevelThree();
             }
-
-
         }
-        else if (levelNo == 4){
-            if (entry == true) {
-                setFourthLevelAliens();
-                entry = false;
-            }
-            else {
-                gameScore += Constants.LEVEL4_SCORE_INCREMENT;
-                updateForLevelFour();
-            }
+        //else if (levelNo == 4){
 
-
-        }
+        //}
     }
 
     public void updateGeneral(int currentLevelNo, double customTimerIncrement) {
-        customTimer += customTimerIncrement;         //TODO level2 de ateş hızını artırmak için bu değişkenle oynanabilir
+        if (levelTransitionFlag && customTimer<15){
+            customTimer += 0.1d;
+            return;
+        }else{
+            levelTransitionFlag = false;
+            levelTransitionLabel.setVisible(false);
+        }
+        gameScore += currentLevelNo;
+        scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
+
+        customTimer += customTimerIncrement;
         if (customTimer > 1) {
             customTimer = 0.0d;
             Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)) - 2, (int) spaceShip.getTranslateY(), Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Color.BLACK, 5.0d, new Vector2D(0, -1), Constants.SPACESHIP_BULLET_DAMAGE);
@@ -179,7 +168,6 @@ public class GameController implements Initializable {
                         gameGrid.getChildren().add(alienBullet);
                     }
                 }
-
             }
         }
 
@@ -217,6 +205,7 @@ public class GameController implements Initializable {
                             Alien alien = it_alien.next();
                             if (bullet.getBoundsInParent().intersects(((Node) alien).getBoundsInParent())) {
                                 alien.getHit(bullet.getDamage());
+                                gameScore +=  Integer.valueOf((int)(bullet.getDamage()/5));      //update score as bullets hit aliens
                                 it.remove();
                                 if (alien.getHealth() <= 0) {
                                     alien.setAlive(false);
@@ -257,20 +246,20 @@ public class GameController implements Initializable {
         if (!isGameOver && Aliens().isEmpty()) {
             if (currentLevelNo == 1) {
                 levelNo = 2;
-                entry = true;
+                levelInitializationFlag = true;
             }
-            if (currentLevelNo == 2) {
+            else if (currentLevelNo == 2) {
                 levelNo = 3;
-                entry = true;
+                levelInitializationFlag = true;
             }
-            if (currentLevelNo == 3) {
+            else if (currentLevelNo == 3) {
                 levelNo = 4;
-                entry = true;
+                levelInitializationFlag = true;
             }
-            if (currentLevelNo == 4) {
-                //timer.stop();
-                finishedGame = true;
-            }
+        /*else if (currentLevelNo == 4) {
+            levelNo = 5;
+            levelInitializationFlag = true;
+        }*/
 
 
         }
@@ -282,13 +271,11 @@ public class GameController implements Initializable {
     }
 
     public void updateForLevelTwo() {
-        // changed to 0.05 only for observe the death of defensive aliens
         updateGeneral(2, Constants.LEVEL2_TIMESTEP_INCREMENT);
     }
 
     public void updateForLevelThree() {
         updateGeneral(3, Constants.LEVEL3_TIMESTEP_INCREMENT);
-
     }
 
     public void updateForLevelFour() {
@@ -303,7 +290,6 @@ public class GameController implements Initializable {
             setAliens(Color.RED, Constants.NORMAL_ALIEN_HEALTH, i+1);
         }
     }
-
     /**
      * This method creates the aliens of the grid for the second level of the game.
      */
@@ -380,11 +366,30 @@ public class GameController implements Initializable {
     public void gameOverHandler(){
         gameoverLabel.setVisible(true);
         gameoverScoreLabel.setVisible(true);
-        gameoverScore.setText(Double.toString(gameScore));
+        gameoverScore.setText(Integer.toString(gameScore));
         gameoverScore.setVisible(true);
         playAgainButton.setVisible(true);
         exitButton.setVisible(true);
     }
 
+    public void clearRemainingBullets(){
+        Iterator<Node> it = gameGrid.getChildren().iterator();
+        while (it.hasNext()) {
+            Object o2 = it.next();
+            if (o2 instanceof Bullet) {
+                it.remove();
+            }
+        }
+    }
+
+    public void levelTransition(Integer newLevelNumber){
+        String levelNoString = "LEVEL "+newLevelNumber;
+        levelNumberLabel.setText(levelNoString);
+        levelInitializationFlag = false;
+        levelTransitionFlag = true;
+        clearRemainingBullets();
+        levelTransitionLabel.setText(levelNoString);
+        levelTransitionLabel.setVisible(true);
+    }
 
 }
