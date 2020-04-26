@@ -41,10 +41,9 @@ public class GameController implements Initializable {
     private Integer levelNo = 1;
     private Boolean isGameOver = false;
     //private int level = 1;
-    private boolean entry = true;
+    private boolean entry = true; // to add aliens to the grid before updating it at every frame
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Color.BLUE, 1, new Vector2D(0, 0), 1000, 10);
-    //private List<IAlien> alienList = new ArrayList<>();
 
     private double customTimer = 0.0d;
 
@@ -105,12 +104,27 @@ public class GameController implements Initializable {
 
     private void update() {
         if (levelNo == 1){
-            gameScore += 0.25;
-            scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
-            updateForLevelOne();
+            if (entry == true) {
+                setFirstLevelAliens();
+
+
+                entry = false;
+            }
+            else {
+                gameScore += 0.25;
+                scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
+                updateForLevelOne();
+            }
 
         }else if (levelNo == 2){
-            gameScore += 0.5;
+            if (entry == true) {
+                setSecondLevelAliens();
+                entry = false;
+            }
+            else {
+                gameScore += 0.5;
+                updateForLevelTwo();
+            }
 
 
         }else if (levelNo == 3){
@@ -125,11 +139,11 @@ public class GameController implements Initializable {
         }
     }
 
-    public void updateForLevelOne(){
-        customTimer += 0.1;         //TODO level2 de ateş hızını artırmak için bu değişkenle oynanabilir
+    public void updateGeneral(int currentLevelNo, double customTimerIncrement) {
+        customTimer += customTimerIncrement;         //TODO level2 de ateş hızını artırmak için bu değişkenle oynanabilir
         if ( customTimer > 1){
             customTimer = 0.0d;
-            Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2))-2, (int) spaceShip.getTranslateY(), 5, 15, Color.BLACK, 5.0d, new Vector2D(0, -1), 100.0d);
+            Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2))-2, (int) spaceShip.getTranslateY(), 5, 15, Color.BLACK, 5.0d, new Vector2D(0, -1), 20.0d);
             gameGrid.getChildren().add(spaceshipBullet);
         }
 
@@ -146,10 +160,6 @@ public class GameController implements Initializable {
                 }
             }
         });
-
-       /* alienList.removeIf(alien -> {
-            return !alien.getAlive();
-        });*/
 
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
@@ -172,7 +182,7 @@ public class GameController implements Initializable {
                             //it.remove();
                             if (alien.getHealth() <= 0) {
                                 alien.setAlive(false);
-                                it_alien.remove();
+                                //it_alien.remove();
                             }
                         }
                     }
@@ -186,6 +196,35 @@ public class GameController implements Initializable {
             }
         }
 
+        if (! isGameOver && Aliens().isEmpty()) {
+            if (currentLevelNo == 1) {
+                levelNo = 2;
+                entry = true;
+            }
+            if (currentLevelNo == 2) {
+                levelNo = 3;
+                entry = true;
+            }
+            if (currentLevelNo == 3) {
+                levelNo = 4;
+                entry = true;
+            }
+            /*if (currentLevelNo == 4) {
+                levelNo = 5;
+                entry = true;
+            }*/
+
+
+        }
+
+    }
+
+    public void updateForLevelOne() {
+        updateGeneral(1, 0.1);
+    }
+
+    public void updateForLevelTwo() {
+        updateGeneral(2, 0.05);
     }
 
     /**
@@ -203,7 +242,6 @@ public class GameController implements Initializable {
         List<Vector2D> positionsList = createUniformAlienPositions( rowCount, columnCount, rowPadding);
         for(int i=0; i<alienCount; i++){
             Alien newAlien = new Alien((int) positionsList.get(i).x, (int) positionsList.get(i).y, (int) alienWidth, (int) alienHeight, Color.RED, 0, downVector, 100.0d);
-            //alienList.add(newAlien);
 
             gameGrid.getChildren().add(newAlien);
         }
@@ -213,7 +251,6 @@ public class GameController implements Initializable {
      * This method creates the aliens of the grid for the second level of the game.
      */
     public void setSecondLevelAliens(){
-        //List<IAlien> alienList = new ArrayList<>();
         double alienWidth = 15.0d;
         double alienHeight = 15.0d;
         Vector2D downVector = new Vector2D(0.0, 1.0d);
@@ -225,15 +262,12 @@ public class GameController implements Initializable {
         for(int i=0; i<12; i++){
             //DefensiveAlien newAlien1 = new DefensiveAlien(new Alien((int) positionsList.get(i).x, (int) positionsList.get(i).y, (int) alienWidth, (int) alienHeight, Color.YELLOW, 0, downVector, 200.0d));
             IAlien newAlien1 = new Alien((int) positionsList.get(i).x, (int) positionsList.get(i).y, (int) alienWidth, (int) alienHeight, Color.YELLOW, 0, downVector, 400.0d);
-            //newAlien1 = (IAlien) newAlien1;
 
-            //alienList.add(newAlien1);
             gameGrid.getChildren().add((Node) newAlien1);
 
         }
         for(int i=0; i<12; i++){
             IAlien newAlien = new Alien((int) positionsList.get(12+i).x, (int) positionsList.get(12+i).y, (int) alienWidth, (int) alienHeight, Color.RED, 0, downVector, 200.0d);
-            //alienList.add(newAlien);
             gameGrid.getChildren().add((Node) newAlien);
         }
 

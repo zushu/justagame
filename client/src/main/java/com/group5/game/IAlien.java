@@ -3,6 +3,7 @@ package com.group5.game;
 import com.group5.helper.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 // alien interface for decorator design pattern
 public interface IAlien {
@@ -11,6 +12,7 @@ public interface IAlien {
     public double getSpeed();
     public double getWidth();
     public double getHeight();
+    public Color getColor();
     public void updateBoundaries(Vector2D newPosition);
     public double getLeftBoundary();
     public double getRightBoundary();
@@ -21,6 +23,7 @@ public interface IAlien {
     public void setSpeed(double speed);
     public void setWidth(double width);
     public void setHeight(double height);
+    public void setColor(Color color);
     public void move(Vector2D newStep);
     public void moveLeft();
     public void moveRight();

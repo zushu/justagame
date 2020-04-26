@@ -51,6 +51,8 @@ public abstract class GridObject extends Rectangle {
         return speed;
     }
 
+    public Color getColor() { return color; }
+
     /*public double getWidth() {
         return width;
     }
@@ -87,6 +89,8 @@ public abstract class GridObject extends Rectangle {
     public void setSpeed(double speed) {
         this.speed = speed;
     }
+
+    public void setColor(Color color) { this.color = color; }
 
     /*public void setWidth(double width) {
         this.width = width;
