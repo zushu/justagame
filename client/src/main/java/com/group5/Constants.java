@@ -9,16 +9,17 @@ public class Constants {
 
     public static final double CUSTOM_TIME_STEP_SPACESHIP_BULLET = 0.2;
     public static final double CUSTOM_TIME_STEP_ALIEN_BULLET = 0.01;
-    public static final double LEVEL1_TIMESTEP_INCREMENT = 0.2;
-    public static final double LEVEL2_TIMESTEP_INCREMENT = 0.1;
-    public static final double LEVEL3_TIMESTEP_INCREMENT = 0.1;
+    public static final double LEVEL1_TIMESTEP_INCREMENT = 0.5;
+    public static final double LEVEL2_TIMESTEP_INCREMENT = 0.4;
+    public static final double LEVEL3_TIMESTEP_INCREMENT = 0.4;
+    public static final double LEVEL4_TIMESTEP_INCREMENT = 0.4;
 
 
     public static final double TOTAL_TIME = 1;
     public static final int BULLET_WIDTH = 5;
     public static final int BULLET_HEIGHT = 15;
     public static final double ALIEN_BULLET_DAMAGE = 10;
-    public static final double SPACESHIP_BULLET_DAMAGE = 50;
+    public static final double SPACESHIP_BULLET_DAMAGE = 100;
     public static final double SPACESHIP_HEALTH = 1000.0d;
     public static final double NORMAL_ALIEN_HEALTH = 200.0d;
     public static final double DEFENSIVE_ALIEN_HEALTH = 400.0d;
