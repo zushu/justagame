@@ -31,17 +31,17 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="gameoverLabel" alignment="TOP_CENTER" layoutY="236.0" opacity="0.77" prefHeight="205.0" prefWidth="601.0" style="-fx-background-color: red;" text="GAMEOVER" textFill="WHITE" visible="false">
+      <Label fx:id="gameoverLabel" alignment="TOP_CENTER" layoutY="236.0" opacity="0.77" prefHeight="205.0" prefWidth="601.0" style="-fx-background-color: darkred;" text="GAMEOVER" textFill="WHITE" visible="false">
          <font>
             <Font name="System Bold" size="96.0" />
          </font>
       </Label>
-      <Label fx:id="gameoverScoreLabel" layoutX="160.0" layoutY="374.0" prefHeight="53.0" prefWidth="140.0" text="SCORE: " textFill="YELLOW" visible="false">
+      <Label fx:id="gameoverScoreLabel" layoutX="178.0" layoutY="374.0" prefHeight="53.0" prefWidth="140.0" text="SCORE: " textFill="#ffff0099" visible="false">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
       </Label>
-      <Label fx:id="gameoverScore" layoutX="300.0" layoutY="374.0" prefHeight="53.0" prefWidth="255.0" textFill="YELLOW" visible="false">
+      <Label fx:id="gameoverScore" layoutX="301.0" layoutY="374.0" prefHeight="53.0" prefWidth="254.0" textFill="#ffff00e5" visible="false">
          <font>
             <Font size="36.0" />
          </font>
@@ -52,7 +52,7 @@
          </font>
       </Button>
       <Button fx:id="exitButton" layoutX="283.0" layoutY="518.0" mnemonicParsing="false" onAction="#exitButtonPressed" text="Exit" visible="false" />
-      <Label fx:id="levelTransitionLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="279.0" opacity="0.67" prefHeight="141.0" prefWidth="601.0" style="-fx-background-color: black;" text="LEVEL 1" textAlignment="CENTER" textFill="#3bd03b">
+      <Label fx:id="levelTransitionLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="279.0" opacity="0.67" prefHeight="141.0" prefWidth="602.0" style="-fx-background-color: black;" text="LEVEL 1" textAlignment="CENTER" textFill="#3bd03b">
          <font>
             <Font size="96.0" />
          </font>
