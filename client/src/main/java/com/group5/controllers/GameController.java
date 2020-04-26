@@ -77,9 +77,8 @@ public class GameController implements Initializable {
     public ArrayList<IAlien> Aliens() {
         ArrayList<IAlien> aliens = new ArrayList<>();
         for (Object object : gameGrid.getChildren()) {
-            if (object instanceof IAlien) {
-                aliens.add((Alien) object);
-            }
+            if (object instanceof IAlien)
+                aliens.add((IAlien) object);
         }
         return aliens;
     }
@@ -112,7 +111,7 @@ public class GameController implements Initializable {
         while (iter.hasNext()) {
             Object o = iter.next();
             if (o instanceof IAlien) {
-                IAlien alien = (Alien) o;
+                IAlien alien = (IAlien) o;
                 if (!alien.getAlive()) {
                     iter.remove();
                 }
