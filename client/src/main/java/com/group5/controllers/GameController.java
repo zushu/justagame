@@ -29,6 +29,7 @@ import java.util.Iterator;
 public class GameController implements Initializable {
 
     @FXML private AnchorPane gameGrid;
+    @FXML private Label levelNumberLabel;
     @FXML private Label healthLabel;
     @FXML private Label scoreLabel;
     @FXML private Label gameoverLabel;
@@ -105,6 +106,7 @@ public class GameController implements Initializable {
     private void update() {
         if (levelNo == 1){
             if (entry == true) {
+                levelNumberLabel.setText("LEVEL 1");
                 setFirstLevelAliens();
 
 
@@ -118,6 +120,7 @@ public class GameController implements Initializable {
 
         }else if (levelNo == 2){
             if (entry == true) {
+                levelNumberLabel.setText("LEVEL 2");
                 setSecondLevelAliens();
                 entry = false;
             }
@@ -129,6 +132,7 @@ public class GameController implements Initializable {
 
         }else if (levelNo == 3){
             if (entry == true) {
+                levelNumberLabel.setText("LEVEL 3");
                 setThirdLevelAliens();
                 entry = false;
             }
@@ -149,7 +153,7 @@ public class GameController implements Initializable {
         customTimer += customTimerIncrement;         //TODO level2 de ateş hızını artırmak için bu değişkenle oynanabilir
         if (customTimer > 1) {
             customTimer = 0.0d;
-            Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)) - 2, (int) spaceShip.getTranslateY(), 5, 15, Color.BLACK, 5.0d, new Vector2D(0, -1), 20.0d);
+            Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)) - 2, (int) spaceShip.getTranslateY(), 5, 15, Color.BLACK, 5.0d, new Vector2D(0, -1), 100.0d);
             gameGrid.getChildren().add(spaceshipBullet);
         }
 
@@ -190,6 +194,7 @@ public class GameController implements Initializable {
                             IAlien alien = it_alien.next();
                             if (bullet.getBoundsInParent().intersects(((Node) alien).getBoundsInParent())) {
                                 alien.getHit(bullet.getDamage());
+                                gameScore += bullet.getDamage()/5;      //update score as bullets hit aliens
                                 it.remove();
                                 if (alien.getHealth() <= 0) {
                                     alien.setAlive(false);
@@ -255,7 +260,7 @@ public class GameController implements Initializable {
 
     public void updateForLevelTwo() {
         // changed to 0.05 only for observe the death of defensive aliens
-        updateGeneral(2, 0.05);
+        updateGeneral(2, 0.2);
     }
 
     //public void updateForLevelThree() {
@@ -284,7 +289,7 @@ public class GameController implements Initializable {
     }
 
     /**
-     * This method creates the aliens of the grid for the second level of the game.
+     * This method creates the aliens of the grid for the third level of the game.
      */
     public void setThirdLevelAliens(){
         double alienWidth = 15.0d;
@@ -315,6 +320,9 @@ public class GameController implements Initializable {
 
     }
 
+    /**
+     * This method creates the aliens of the grid for the second level of the game.
+     */
     public void setSecondLevelAliens(){
         double alienWidth = 15.0d;
         double alienHeight = 15.0d;
