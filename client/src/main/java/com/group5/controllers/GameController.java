@@ -33,6 +33,8 @@ public class GameController implements Initializable {
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Color.BLUE,1,new Vector2D(0,0),1000,10);
     private List<IAlien> alienList = new ArrayList<>();
+    private List<Bullet> spaceShipBullets = new ArrayList<>();
+    private List<Bullet> bulletsToRemove = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -88,17 +90,39 @@ public class GameController implements Initializable {
         gameScore += 0.25;
         scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
 
+        Bullet spaceshipBullet = new Bullet((int)(spaceShip.getTranslateX()+(spaceShip.getWidth()/2)),(int)spaceShip.getTranslateY(),5,15,Color.BLACK,5.0d,new Vector2D(0,-1),100.0d);
+        gameGrid.getChildren().add(spaceshipBullet);
+        spaceShipBullets.add(spaceshipBullet);
+
+        spaceShipBullets.forEach(bullet->{
+            bullet.setTranslateY(bullet.getTranslateY() - 5);
+            alienList.stream().forEach(alien ->{
+                if(bullet.getTranslateY() <= 0){
+                    //spaceShipBullets.remove(bullet);
+                    bulletsToRemove.add(bullet);
+                }
+                else if(bullet.getBoundsInParent().intersects(((Node)alien).getBoundsInParent())){
+                    alien.getHit(bullet.getDamage());
+                    if (alien.getHealth() <= 0){
+                        alien.setAlive(false);
+                    }
+                    //spaceShipBullets.remove(bullet);
+                    bulletsToRemove.add(bullet);
+                }
+            });
+        });
+
         alienList.stream().filter(e -> e.getAlive()).forEach(alien -> {
             if (spaceShip.getBoundsInParent().intersects(((Node)alien).getBoundsInParent())) {
                 alien.setAlive(false);
                 System.out.println("collision");
                 //spaceShip.setAlive(false);
             }
+
         });
         alienList.removeIf(alien -> {
             return !alien.getAlive();
         });
-        System.out.println(alienList.size());
 
         Aliens().stream().filter(e -> e.getAlive()).forEach(alien -> {
             if (spaceShip.getBoundsInParent().intersects(((Node)alien).getBoundsInParent())) {
