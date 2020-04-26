@@ -11,11 +11,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +28,45 @@ import java.util.Iterator;
 
 public class GameController implements Initializable {
 
-    @FXML
-    private AnchorPane gameGrid;
-    @FXML
-    private Label healthLabel;
-    @FXML
-    private Label scoreLabel;
+    @FXML private AnchorPane gameGrid;
+    @FXML private Label healthLabel;
+    @FXML private Label scoreLabel;
+    @FXML private Label gameoverLabel;
+    @FXML private Label gameoverScoreLabel;
+    @FXML private Label gameoverScore;
+    @FXML private Button playAgainButton;
+    @FXML private Button exitButton;
 
-    private Double gameScore = 0.0;
-    private int level = 1;
+    private Double gameScore = 0.0d;
+    private Integer levelNo = 1;
+    private Boolean isGameOver = false;
+    //private int level = 1;
     private boolean entry = true;
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Color.BLUE, 1, new Vector2D(0, 0), 1000, 10);
     private List<IAlien> alienList = new ArrayList<>();
-    private List<Bullet> spaceShipBullets = new ArrayList<>();
-    private List<Bullet> bulletsToRemove = new ArrayList<>();
+
+    private double customTimer = 0.0d;
+
+    public void playAgainButtonPressed(){
+        gameoverLabel.setVisible(false);
+        gameoverScoreLabel.setVisible(false);
+        gameoverScore.setText("");
+        gameoverScore.setVisible(false);
+        playAgainButton.setVisible(false);
+        exitButton.setVisible(false);
+
+        levelNo = 1;
+        spaceShip.setHealth(1000.0d);   //TODO move to constants
+        healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
+        gameScore = 0.0;
+        scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());
+        setFirstLevelAliens();
+        isGameOver = false;
+    }
+    public void exitButtonPressed() throws IOException {
+        MainClientApplication.setRoot("index");
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -55,30 +82,16 @@ public class GameController implements Initializable {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                TranslateTransition tt = new TranslateTransition(Duration.millis(250), (Node) spaceShip);
-                Point mouse = MouseInfo.getPointerInfo().getLocation();
-
-                double newXCoordinate = mouse.getX() - MainClientApplication.mainStage.getX() - (spaceShip.getWidth() / 2) - 5;
-                double newYCoordinate = mouse.getY() - MainClientApplication.mainStage.getY() - (spaceShip.getHeight() / 2) - 30;
-
-                if (newXCoordinate < 0) {
-                    newXCoordinate = 0;
-                } else if (newXCoordinate > gameGrid.getPrefWidth() - spaceShip.getWidth()) {
-                    newXCoordinate = gameGrid.getPrefWidth() - spaceShip.getWidth();
+                //TranslateTransition tt = new TranslateTransition(Duration.millis(250), (Node)spaceShip);
+                if (isGameOver) {
+                    gameOverHandler();
+                }else{
+                    moveSpaceShipWithMouse();
+                    update();
                 }
-                if (newYCoordinate < 0) {
-                    newYCoordinate = 0;
-                } else if (newYCoordinate > gameGrid.getPrefHeight() - spaceShip.getHeight()) {
-                    newYCoordinate = gameGrid.getPrefHeight() - spaceShip.getHeight();
-                }
-                spaceShip.setTranslateX(newXCoordinate);
-                spaceShip.setTranslateY(newYCoordinate);
-
-                update();
             }
         };
         timer.start();
-
     }
 
     public ArrayList<IAlien> Aliens() {
@@ -91,65 +104,62 @@ public class GameController implements Initializable {
     }
 
     private void update() {
+        if (levelNo == 1){
+            gameScore += 0.25;
+            scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
+            updateForLevelOne();
 
-        if (entry == true) {
-            setAliens(level);
-            entry = false;
+        }else if (levelNo == 2){
+            gameScore += 0.5;
+
+
+        }else if (levelNo == 3){
+            gameScore += 1;
+
+
         }
-        else {
-            if (level == 1) {
-                updateLevel1();
-            }
-            else if (level == 2) {
-                updateLevel2();
-            }
+        else if (levelNo == 4){
+            gameScore += 2;
 
-            if (alienList.isEmpty()) {
-                // go to next level
-                if (level == 1) {
-                    level = 2;
-                    entry = true;
-                    //setSecondLevelAliens();
+
+        }
+    }
+
+    public void updateForLevelOne(){
+        customTimer += 0.1;         //TODO level2 de ateş hızını artırmak için bu değişkenle oynanabilir
+        if ( customTimer > 1){
+            customTimer = 0.0d;
+            Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2))-2, (int) spaceShip.getTranslateY(), 5, 15, Color.BLACK, 5.0d, new Vector2D(0, -1), 100.0d);
+            gameGrid.getChildren().add(spaceshipBullet);
+        }
+
+        alienList.stream().filter(e -> e.getAlive()).forEach(alien -> {
+            if (spaceShip.getBoundsInParent().intersects(((Node) alien).getBoundsInParent())) {
+                System.out.println("collision!!");
+                alien.setAlive(false);
+                spaceShip.getHit(alien.getHealth());        //SpaceShip gets damage as much as aliens health when a collision occurs
+                healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
+                if(spaceShip.getHealth() <= 0){
+                    spaceShip.setAlive(false);
+                    isGameOver = true;
+                    System.out.println("GAMEOVER");
                 }
             }
-        }
-    }
+        });
 
-    public void setAliens(int level) {
-        if (level == 1) {
-            setFirstLevelAliens();
-        }
-        if (level == 2) {
-            setSecondLevelAliens();
-        }
-    }
+        alienList.removeIf(alien -> {
+            return !alien.getAlive();
+        });
 
-    public void updateLevel1() {
-        gameScore += 0.25;
-        scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
-
-        Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)), (int) spaceShip.getTranslateY(), 5, 15, Color.BLACK, 5.0d, new Vector2D(0, -1), 100.0d);
-        gameGrid.getChildren().add(spaceshipBullet);
-        spaceShipBullets.add(spaceshipBullet);
-
-        /* TODO: CHECK: WE ADD BULLETS TO gameGrid ANYWAY, IS spaceShipBullets NECESSARY?
-        IT IS NOT USED ANYWHERE ELSE, WE CAN REMOVE spaceShipBullets LIST IF IT IS NOT TO BE USED LATER.
-        I DELETED BULLETS FROM gameGrid.
-        */
-        //Iterator<Bullet> it = spaceShipBullets.iterator();
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
             Object o2 = it.next();
-            if (o2 instanceof IAlien) {
-                IAlien alien2 = (IAlien) o2;
-                if (!alien2.getAlive()) {
-                    it.remove();
-                }
+            if (isGameOver && ((o2 instanceof Bullet) || (o2 instanceof IAlien))){
+                it.remove();
             }
             else if (o2 instanceof Bullet) {
                 Bullet bullet = (Bullet) o2;
                 bullet.setTranslateY(bullet.getTranslateY() - 5);
-                // TODO: FIX, <= -15 might not be the best solution, it works for now
                 if (bullet.getTranslateY() <= -15) {
                     it.remove();
                 }
@@ -168,38 +178,13 @@ public class GameController implements Initializable {
                     }
                 }
             }
+            else if (o2 instanceof IAlien) {
+                IAlien alien2 = (IAlien) o2;
+                if (!alien2.getAlive()) {
+                    it.remove();
+                }
+            }
         }
-
-        alienList.stream().filter(e -> e.getAlive()).forEach(alien -> {
-            if (spaceShip.getBoundsInParent().intersects(((Node) alien).getBoundsInParent())) {
-                alien.setAlive(false);
-                System.out.println("collision");
-                //spaceShip.setAlive(false);
-            }
-
-        });
-        alienList.removeIf(alien -> {
-            return !alien.getAlive();
-        });
-
-        Aliens().stream().filter(e -> e.getAlive()).forEach(alien -> {
-            if (spaceShip.getBoundsInParent().intersects(((Node) alien).getBoundsInParent())) {
-                alien.setAlive(false);
-                System.out.println("collision");
-                //spaceShip.setAlive(false);
-            }
-        });
-    }
-
-    public void updateInitial() {
-        gameScore += 0.25;
-        scoreLabel.textProperty().bind(new SimpleDoubleProperty(gameScore).asString());     //increases score as time passes
-        Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)), (int) spaceShip.getTranslateY(), 5, 15, Color.BLACK, 5.0d, new Vector2D(0, -1), 100.0d);
-        gameGrid.getChildren().add(spaceshipBullet);
-    }
-
-
-    public void updateLevel2() {
 
     }
 
@@ -217,11 +202,10 @@ public class GameController implements Initializable {
         Integer alienCount = rowCount * columnCount;
         List<Vector2D> positionsList = createUniformAlienPositions( rowCount, columnCount, rowPadding);
         for(int i=0; i<alienCount; i++){
-            //alienList.add(new Alien(positionsList.get(i), downVector, 0.0d, alienWidth, alienHeight, 200.0d));
-            IAlien newAlien = new Alien((int) positionsList.get(i).x, (int) positionsList.get(i).y, (int) alienWidth, (int) alienHeight, Color.RED, 0, downVector, 200.0d);
+            Alien newAlien = new Alien((int) positionsList.get(i).x, (int) positionsList.get(i).y, (int) alienWidth, (int) alienHeight, Color.RED, 0, downVector, 100.0d);
             alienList.add(newAlien);
 
-            gameGrid.getChildren().add((Node) newAlien);   //TODO bunu burda yapmak yerine initialize methodunda alienList'i kullanarak yap
+            gameGrid.getChildren().add(newAlien);
         }
     }
 
@@ -272,4 +256,34 @@ public class GameController implements Initializable {
         }
         return positionsList;
     }
+
+    public void moveSpaceShipWithMouse(){
+        Point mouse = MouseInfo.getPointerInfo().getLocation();
+
+        double newXCoordinate = mouse.getX()-MainClientApplication.mainStage.getX()-(spaceShip.getWidth()/2)-5;
+        double newYCoordinate = mouse.getY()-MainClientApplication.mainStage.getY()-(spaceShip.getHeight()/2)-30;
+
+        if(newXCoordinate < 0){
+            newXCoordinate=0;
+        }else if(newXCoordinate > gameGrid.getPrefWidth()-spaceShip.getWidth()){
+            newXCoordinate = gameGrid.getPrefWidth()-spaceShip.getWidth();
+        }
+        if(newYCoordinate < 0){
+            newYCoordinate=0;
+        }else if(newYCoordinate > gameGrid.getPrefHeight()-spaceShip.getHeight()){
+            newYCoordinate = gameGrid.getPrefHeight()-spaceShip.getHeight();
+        }
+        spaceShip.setTranslateX(newXCoordinate);
+        spaceShip.setTranslateY(newYCoordinate);
+    }
+    public void gameOverHandler(){
+        gameoverLabel.setVisible(true);
+        gameoverScoreLabel.setVisible(true);
+        gameoverScore.setText(Double.toString(gameScore));
+        gameoverScore.setVisible(true);
+        playAgainButton.setVisible(true);
+        exitButton.setVisible(true);
+    }
+
+
 }

@@ -31,5 +31,27 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <Label fx:id="gameoverLabel" layoutX="32.0" layoutY="186.0" prefHeight="214.0" prefWidth="538.0" text="GAMEOVER" textFill="#ab0000" visible="false">
+         <font>
+            <Font name="System Bold" size="96.0" />
+         </font>
+      </Label>
+      <Label fx:id="gameoverScoreLabel" layoutX="174.0" layoutY="374.0" prefHeight="53.0" prefWidth="126.0" text="SCORE: " textFill="RED" visible="false">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label fx:id="gameoverScore" layoutX="300.0" layoutY="374.0" prefHeight="53.0" prefWidth="255.0" textFill="RED" visible="false">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Button fx:id="playAgainButton" layoutX="238.0" layoutY="463.0" mnemonicParsing="false" onAction="#playAgainButtonPressed" prefHeight="39.0" prefWidth="126.0" text="Play Again" textFill="#008609" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="exitButton" layoutX="283.0" layoutY="518.0" mnemonicParsing="false" onAction="#exitButtonPressed" text="Exit" visible="false" />
+
    </children>
 </AnchorPane>
