@@ -44,7 +44,7 @@ public class GameController implements Initializable {
     private boolean entry = true;
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Color.BLUE, 1, new Vector2D(0, 0), 1000, 10);
-    private List<IAlien> alienList = new ArrayList<>();
+    //private List<IAlien> alienList = new ArrayList<>();
 
     private double customTimer = 0.0d;
 
@@ -133,7 +133,7 @@ public class GameController implements Initializable {
             gameGrid.getChildren().add(spaceshipBullet);
         }
 
-        alienList.stream().filter(e -> e.getAlive()).forEach(alien -> {
+        Aliens().stream().filter(e -> e.getAlive()).forEach(alien -> {
             if (spaceShip.getBoundsInParent().intersects(((Node) alien).getBoundsInParent())) {
                 System.out.println("collision!!");
                 alien.setAlive(false);
@@ -147,9 +147,9 @@ public class GameController implements Initializable {
             }
         });
 
-        alienList.removeIf(alien -> {
+       /* alienList.removeIf(alien -> {
             return !alien.getAlive();
-        });
+        });*/
 
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
@@ -203,7 +203,7 @@ public class GameController implements Initializable {
         List<Vector2D> positionsList = createUniformAlienPositions( rowCount, columnCount, rowPadding);
         for(int i=0; i<alienCount; i++){
             Alien newAlien = new Alien((int) positionsList.get(i).x, (int) positionsList.get(i).y, (int) alienWidth, (int) alienHeight, Color.RED, 0, downVector, 100.0d);
-            alienList.add(newAlien);
+            //alienList.add(newAlien);
 
             gameGrid.getChildren().add(newAlien);
         }
@@ -213,7 +213,7 @@ public class GameController implements Initializable {
      * This method creates the aliens of the grid for the second level of the game.
      */
     public void setSecondLevelAliens(){
-        List<IAlien> alienList = new ArrayList<>();
+        //List<IAlien> alienList = new ArrayList<>();
         double alienWidth = 15.0d;
         double alienHeight = 15.0d;
         Vector2D downVector = new Vector2D(0.0, 1.0d);
@@ -227,13 +227,13 @@ public class GameController implements Initializable {
             IAlien newAlien1 = new Alien((int) positionsList.get(i).x, (int) positionsList.get(i).y, (int) alienWidth, (int) alienHeight, Color.YELLOW, 0, downVector, 400.0d);
             //newAlien1 = (IAlien) newAlien1;
 
-            alienList.add(newAlien1);
+            //alienList.add(newAlien1);
             gameGrid.getChildren().add((Node) newAlien1);
 
         }
         for(int i=0; i<12; i++){
             IAlien newAlien = new Alien((int) positionsList.get(12+i).x, (int) positionsList.get(12+i).y, (int) alienWidth, (int) alienHeight, Color.RED, 0, downVector, 200.0d);
-            alienList.add(newAlien);
+            //alienList.add(newAlien);
             gameGrid.getChildren().add((Node) newAlien);
         }
 
