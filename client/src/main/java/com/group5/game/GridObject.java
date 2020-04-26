@@ -28,6 +28,7 @@ public abstract class GridObject extends Rectangle {
         setTranslateY(y);
         this.speed = speed;
         this.direction = direction;
+        this.color = color;
 
     }
     public GridObject(Vector2D position, Vector2D direction, double speed, double width, double height) {
