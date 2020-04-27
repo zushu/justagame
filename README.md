@@ -28,5 +28,8 @@ Client side was built using JavaFX.
 Users can sign up, sign in and play the game using the interface. After a game is finished, the score of the user is added to the database and shown in the leaderboard. 
 
 ### Run Commands
+<<<<<<< HEAD
 
+=======
+>>>>>>> a24cebafe037ab053a50d2e3f412adde7bc8c2f6
 
