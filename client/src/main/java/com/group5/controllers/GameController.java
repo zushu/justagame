@@ -24,6 +24,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Iterator;
 
+/**
+ * This class is a controller for the game the user starts to play after logging in.
+ * There are 4 levels in the game.
+ * Four types of aliens are distributed in 4 levels.
+ * Before each level starts, a level transition scene is shown for a short period of time.
+ */
+
 public class GameController implements Initializable {
 
     @FXML private AnchorPane gameGrid;
@@ -97,6 +104,11 @@ public class GameController implements Initializable {
         timer.start();
     }
 
+    /**
+     *
+     * @return list of references to alien objects in the scene
+     */
+
     public ArrayList<Alien> Aliens() {
         ArrayList<Alien> aliens = new ArrayList<>();
         for (Object object : gameGrid.getChildren()) {
@@ -105,6 +117,10 @@ public class GameController implements Initializable {
         }
         return aliens;
     }
+
+    /**
+     * this function adds aliens to the scene and calls update functions of each level .
+     */
 
     private void update() {
         if (levelNo == 1){
@@ -138,6 +154,11 @@ public class GameController implements Initializable {
             }
         }
     }
+
+    /**
+     * collisions, movements and scores are handled here
+     * @param customTimerIncrement
+     */
 
     public void updateGeneral( double customTimerIncrement) {
         if (levelTransitionFlag && customTimer<15){
@@ -177,14 +198,12 @@ public class GameController implements Initializable {
 
         Aliens().stream().filter(e -> e.getAlive()).forEach(alien -> {
             if (spaceShip.getBoundsInParent().intersects(((Node) alien).getBoundsInParent())) {
-                System.out.println("collision!!");
                 alien.setAlive(false);
                 spaceShip.getHit(alien.getHealth());        //SpaceShip gets damage as much as aliens health when a collision occurs
                 healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
                 if (spaceShip.getHealth() <= 0) {
                     spaceShip.setAlive(false);
                     isGameOver = true;
-                    System.out.println("GAMEOVER");
                 }
             }
         });
@@ -226,13 +245,11 @@ public class GameController implements Initializable {
                     else {
                         if (bullet.getBoundsInParent().intersects(((Node) spaceShip).getBoundsInParent())) {
                             it.remove();
-                            System.out.println("collision!!");
                             spaceShip.getHit(bullet.getDamage());        //SpaceShip gets damaged by alien bullet
                             healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
                             if (spaceShip.getHealth() <= 0) {
                                 spaceShip.setAlive(false);
                                 isGameOver = true;
-                                System.out.println("GAMEOVER");
                             }
                         }
                     }
@@ -267,7 +284,7 @@ public class GameController implements Initializable {
         }
     }
     /**
-     * This method creates the aliens of the grid for the second level of the game.
+     * This method creates the aliens of the grid for the third level of the game.
      */
     public void setThirdLevelAliens(){
         setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 1);
@@ -289,6 +306,13 @@ public class GameController implements Initializable {
             setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, i + Constants.ROW_COUNT / 2 + 1);
         }
     }
+
+    /**
+     * create custom aliens and fill a row of the scene with them
+     * @param color
+     * @param health
+     * @param rowNumber
+     */
 
     public void setAliens(Color color, double health, int rowNumber) {
         int alienWidth = 15;
@@ -320,6 +344,10 @@ public class GameController implements Initializable {
         return positionsList;
     }
 
+    /**
+     * this function handles the mouse events and updates spaceship position accordingly.
+     */
+
     public void moveSpaceShipWithMouse(){
         Point mouse = MouseInfo.getPointerInfo().getLocation();
 
@@ -339,6 +367,8 @@ public class GameController implements Initializable {
         spaceShip.setTranslateX(newXCoordinate);
         spaceShip.setTranslateY(newYCoordinate);
     }
+
+
     public void gameOverHandler(){
         gameoverLabel.setVisible(true);
         gameoverScoreLabel.setVisible(true);
