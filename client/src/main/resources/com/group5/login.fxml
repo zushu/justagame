@@ -33,6 +33,5 @@
 
       <Label fx:id="connectionErrorLabel" layoutX="198.0" layoutY="769.0" prefHeight="17.0" prefWidth="204.0" text="Can not connect to server..." textFill="RED" visible="false" />
       <Label fx:id="loginErrorLabel" layoutX="198.0" layoutY="447.0" prefHeight="17.0" prefWidth="204.0" textFill="RED" />
-      <Button layoutX="197.0" layoutY="99.0" mnemonicParsing="false" onAction="#testGame" prefHeight="65.0" prefWidth="207.0" text="Test Game (sonradan silinecek)" />
     </children>
 </AnchorPane>

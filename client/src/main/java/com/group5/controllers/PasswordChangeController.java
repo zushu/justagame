@@ -28,6 +28,10 @@ public class PasswordChangeController {
     @FXML private Label connectionErrorLabel;
     @FXML private Label passwordChangeErrorLabel;
 
+    /**
+     * Validates form input and sends password change request to the server
+     * @param event
+     */
     public void changePassword(ActionEvent event){
         connectionErrorLabel.setVisible(false);
         passwordChangeErrorLabel.setVisible(false);
@@ -92,6 +96,11 @@ public class PasswordChangeController {
         }
     }
 
+    /**
+     * Redirects window to the main menu
+     * @param event
+     * @throws IOException
+     */
     public void backToLogin(ActionEvent event) throws IOException {
         MainClientApplication.setRoot("index");
     }

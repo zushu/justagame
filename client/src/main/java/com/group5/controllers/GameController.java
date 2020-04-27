@@ -8,7 +8,6 @@ import com.group5.helper.Vector2D;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -60,7 +59,7 @@ public class GameController implements Initializable {
     private Boolean isGameFinished = false;
     private boolean levelInitializationFlag = true; // to add aliens to the grid before updating it at every frame
     private boolean levelTransitionFlag = true;     // this flag blocks firing while level transitions
-    private boolean waitingForPlayAgainFlag = false;
+    private boolean waitingForPlayAgainFlag = false;    // this flag is to wait game while game is ended or game is over
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Constants.SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
     List<Vector2D> positionsList = createUniformAlienPositions( Constants.ROW_COUNT, Constants.COLUMN_COUNT, Constants.ROW_PADDING);
@@ -70,6 +69,10 @@ public class GameController implements Initializable {
 
     final KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.DIGIT9,KeyCombination.CONTROL_DOWN,KeyCombination.SHIFT_DOWN);
 
+    /**
+     * This is to increment level with ctrl+shift+9 combination
+     * @param scene Our main scene in MainClientApplication.java
+     */
     private void addKeyHandler(Scene scene){
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
             if (keyComb1.match(keyEvent)) {
@@ -85,6 +88,9 @@ public class GameController implements Initializable {
         });
     }
 
+    /**
+     * When playAgainButton is pressed this method starts game again
+     */
     public void playAgainButtonPressed(){
         connectionErrorLabel.setVisible(false);
         waitingForPlayAgainFlag = false;
@@ -106,6 +112,11 @@ public class GameController implements Initializable {
         isGameOver = false;
         isGameFinished = false;
     }
+
+    /**
+     * When exitButton is pressed this methods redirects to main menu namely index page
+     * @throws IOException
+     */
     public void exitButtonPressed() throws IOException {
         MainClientApplication.setRoot("index");
     }
@@ -125,10 +136,10 @@ public class GameController implements Initializable {
             @Override
             public void handle(long now) {
                 if (isGameOver && !waitingForPlayAgainFlag) {
-                    gameOverHandler();                  //TODO score will be send to database
+                    gameOverHandler();
                     waitingForPlayAgainFlag = true;
                 }else if(isGameFinished && !waitingForPlayAgainFlag){
-                    gameFinishedHandler();              //TODO score will be send to database
+                    gameFinishedHandler();
                     waitingForPlayAgainFlag = true;
                 }else{
                     if(waitingForPlayAgainFlag){
@@ -142,6 +153,10 @@ public class GameController implements Initializable {
         timer.start();
     }
 
+    /**
+     * This method returns list of all the aliens in the gameGrid
+     * @return  all aliens in the gameGrid
+     */
     public ArrayList<Alien> Aliens() {
         ArrayList<Alien> aliens = new ArrayList<>();
         for (Object object : gameGrid.getChildren()) {
@@ -151,6 +166,9 @@ public class GameController implements Initializable {
         return aliens;
     }
 
+    /**
+     * Runs continuously to update gameGrid
+     */
     private void update() {
         if (levelNo == 1){
             if (levelInitializationFlag == true) {
@@ -184,6 +202,10 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * This method is used at every level to update objects.
+     * @param customTimerIncrement  At each update we increase our timer this much. Fire rate of spaceShip increases along with it.
+     */
     public void updateGeneral( double customTimerIncrement) {
         if (levelTransitionFlag && customTimer<15){
             customTimer += 0.1d;
@@ -331,7 +353,7 @@ public class GameController implements Initializable {
     }
 
     /**
-     * his method creates the aliens of the grid for the fourth level of the game.
+     * This method creates the aliens of the grid for the fourth level of the game.
      */
     public void setFourthLevelAliens() {
         setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 1);
@@ -340,6 +362,12 @@ public class GameController implements Initializable {
         setAliens(Constants.HARD_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 4);
     }
 
+    /**
+     * This method is used to create and place aliens to the gameGrid
+     * @param color Color of the created aliens
+     * @param health Health of the created aliens
+     * @param rowNumber Place created aliens to this row
+     */
     public void setAliens(Color color, double health, int rowNumber) {
         int alienWidth = 15;
         int alienHeight = 15;
@@ -370,6 +398,9 @@ public class GameController implements Initializable {
         return positionsList;
     }
 
+    /**
+     * This method makes our SpaceShip to follow mouse
+     */
     public void moveSpaceShipWithMouse(){
         Point mouse = MouseInfo.getPointerInfo().getLocation();
 
@@ -389,6 +420,9 @@ public class GameController implements Initializable {
         spaceShip.setTranslateX(newXCoordinate);
         spaceShip.setTranslateY(newYCoordinate);
     }
+    /**
+     * This method is called when isGameOver flag is true. It sends score to server.
+     */
     public void gameOverHandler(){
         gameoverLabel.setVisible(true);
         gameoverScoreLabel.setVisible(true);
@@ -398,7 +432,9 @@ public class GameController implements Initializable {
         exitButton.setVisible(true);
         sendScoreToServer();
     }
-
+    /**
+     * This method removes remaining bullets from the AnchorPane named gameGrid
+     */
     public void clearRemainingBullets(){
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
@@ -408,7 +444,9 @@ public class GameController implements Initializable {
             }
         }
     }
-
+    /**
+     * This method removes remaining aliens from the AnchorPane named gameGrid
+     */
     public void clearRemainingAliens(){
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
@@ -419,6 +457,10 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * This method shows a label on level transitions
+     * @param newLevelNumber The new level number
+     */
     public void levelTransition(Integer newLevelNumber){
         String levelNoString = "LEVEL "+newLevelNumber;
         levelNumberLabel.setText(levelNoString);
@@ -429,8 +471,10 @@ public class GameController implements Initializable {
         levelTransitionLabel.setVisible(true);
     }
 
+    /**
+     * This method is called when isGameFinished flag is true. Sends final score to the server.
+     */
     public void gameFinishedHandler(){
-
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
             Object o2 = it.next();
@@ -449,6 +493,9 @@ public class GameController implements Initializable {
         sendScoreToServer();
     }
 
+    /**
+     * This method sends gameScore to the server in order to save it in database
+     */
     public void sendScoreToServer(){
         if ( MainClientApplication.getLoggedUserId() == 0){
             return;

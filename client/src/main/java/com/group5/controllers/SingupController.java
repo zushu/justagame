@@ -27,6 +27,10 @@ public class SingupController {
 
     @FXML private Label connectionErrorLabel;
 
+    /**
+     * Validates form input and sends signup request. If request is successful, makes that new user logged in and redirects window to main menu
+     * @param event
+     */
     public void requestSignup(ActionEvent event){
         connectionErrorLabel.setVisible(false);
         if(usernameInput.getText().isEmpty()) {
@@ -91,6 +95,11 @@ public class SingupController {
         }
     }
 
+    /**
+     * Redirect window to login
+     * @param event
+     * @throws IOException
+     */
     public void backToLogin(ActionEvent event) throws IOException {
         MainClientApplication.setRoot("login");
     }

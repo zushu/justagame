@@ -26,6 +26,10 @@ public class LoginController {
     @FXML private Label connectionErrorLabel;
     @FXML private Label loginErrorLabel;
 
+    /**
+     * This method validates form input and sends authorization request to the server
+     * @param event
+     */
     public void requestLogin(ActionEvent event){
         connectionErrorLabel.setVisible(false);
         loginErrorLabel.setVisible(false);
@@ -78,17 +82,22 @@ public class LoginController {
         }
     }
 
+    /**
+     * Redirect window to signup page
+     * @param event
+     * @throws IOException
+     */
     public void gotoSignupPage(ActionEvent event) throws IOException {
         MainClientApplication.setRoot("signup");
     }
 
+    /**
+     * Redirect window to leaderboard
+     * @param event
+     * @throws IOException
+     */
     public void gotoLeaderboardPage(ActionEvent event) throws IOException {
         MainClientApplication.setRoot("leaderboard");
-    }
-
-    //TODO do not forget to delete after game development finishes
-    public void testGame(ActionEvent event) throws IOException{
-        MainClientApplication.setRoot("game");
     }
 
 }

@@ -53,6 +53,10 @@ public class LeaderboardController implements Initializable {
         fillTable(Constants.ALL_TIMES_DATE_STRING);
     }
 
+    /**
+     * This method fills Leaderboard for the data existing after the given date
+     * @param dateStr Leaderboard will be filled with the data starting from dateStr until now.
+     */
     public void fillTable(String dateStr){
         list.clear();
 
@@ -79,6 +83,10 @@ public class LeaderboardController implements Initializable {
         }
     }
 
+    /**
+     * When the comboBox for choosing time interval changes, this method updates Leaderboard accordingly
+     * @param event
+     */
     public void comboboxChanged(ActionEvent event){
         String selectedInterval = scoreCombobox.getValue();
         if(selectedInterval.equals("Last 7 days")){
@@ -90,6 +98,11 @@ public class LeaderboardController implements Initializable {
         }
     }
 
+    /**
+     * If a user is logged in redirect to main menu, else redirect to login
+     * @param event
+     * @throws IOException
+     */
     public void backToLogin(ActionEvent event) throws IOException {
         if (MainClientApplication.getLoggedUserId()==0){
             MainClientApplication.setRoot("login");
