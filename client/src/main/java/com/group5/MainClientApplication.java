@@ -11,12 +11,20 @@ import java.io.IOException;
 
 /**
  * JavaFX App
+ * Main class to start the game
  */
 public class MainClientApplication extends Application {
 
     private static Scene scene;
     private static Integer loggedUserId = 0;
     public static Stage mainStage;
+
+    /**
+     * mainStage is the first scene shown to the user.
+     * The first scene is the login page.
+     * @param stage
+     * @throws IOException
+     */
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -31,6 +39,12 @@ public class MainClientApplication extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
+    /**
+     * loads fxml file to the scene
+     * @param fxml
+     * @return Parent
+     * @throws IOException
+     */
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainClientApplication.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
