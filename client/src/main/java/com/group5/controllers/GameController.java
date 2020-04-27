@@ -8,17 +8,32 @@ import com.group5.helper.Vector2D;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -36,12 +51,16 @@ public class GameController implements Initializable {
     @FXML private Button playAgainButton;
     @FXML private Button exitButton;
     @FXML private Label levelTransitionLabel;
+    @FXML private Label gameFinishedLabel;
+    @FXML private Label connectionErrorLabel;
 
     private Integer gameScore = 0;
     private Integer levelNo = 1;
     private Boolean isGameOver = false;
+    private Boolean isGameFinished = false;
     private boolean levelInitializationFlag = true; // to add aliens to the grid before updating it at every frame
     private boolean levelTransitionFlag = true;     // this flag blocks firing while level transitions
+    private boolean waitingForPlayAgainFlag = false;
 
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Constants.SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
     List<Vector2D> positionsList = createUniformAlienPositions( Constants.ROW_COUNT, Constants.COLUMN_COUNT, Constants.ROW_PADDING);
@@ -49,7 +68,28 @@ public class GameController implements Initializable {
     private double customTimer = 0.0d;
     private double customTimer2 = 0;
 
+    final KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.DIGIT9,KeyCombination.CONTROL_DOWN,KeyCombination.SHIFT_DOWN);
+
+    private void addKeyHandler(Scene scene){
+        scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
+            if (keyComb1.match(keyEvent)) {
+                System.out.println("skip level!!");
+                if(levelNo < 4){
+                    levelInitializationFlag = true;
+                    levelNo++;
+                    clearRemainingAliens();
+                }else if (levelNo == 4){
+                    isGameFinished = true;
+                }
+            }
+        });
+    }
+
     public void playAgainButtonPressed(){
+        connectionErrorLabel.setVisible(false);
+        waitingForPlayAgainFlag = false;
+        gameGrid.getChildren().add(spaceShip);
+        gameFinishedLabel.setVisible(false);
         gameoverLabel.setVisible(false);
         gameoverScoreLabel.setVisible(false);
         gameoverScore.setText("");
@@ -64,6 +104,7 @@ public class GameController implements Initializable {
         scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
         setFirstLevelAliens();
         isGameOver = false;
+        isGameFinished = false;
     }
     public void exitButtonPressed() throws IOException {
         MainClientApplication.setRoot("index");
@@ -71,6 +112,7 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        addKeyHandler(MainClientApplication.getScene());
         gameGrid.prefHeight(Constants.GRID_HEIGHT);
         gameGrid.prefWidth(Constants.GRID_WIDTH);
 
@@ -82,13 +124,16 @@ public class GameController implements Initializable {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (isGameOver) {
-                    gameOverHandler();      //TODO score will be send to database
-                }
-                /*if (finishedGame) {
-                    timer.stop();
-                }*/
-                else{
+                if (isGameOver && !waitingForPlayAgainFlag) {
+                    gameOverHandler();                  //TODO score will be send to database
+                    waitingForPlayAgainFlag = true;
+                }else if(isGameFinished && !waitingForPlayAgainFlag){
+                    gameFinishedHandler();              //TODO score will be send to database
+                    waitingForPlayAgainFlag = true;
+                }else{
+                    if(waitingForPlayAgainFlag){
+                        return;
+                    }
                     moveSpaceShipWithMouse();
                     update();
                 }
@@ -192,7 +237,7 @@ public class GameController implements Initializable {
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
             Object o2 = it.next();
-            if (isGameOver && ((o2 instanceof Bullet) || (o2 instanceof Alien))) {
+            if (isGameOver && ((o2 instanceof Bullet) || (o2 instanceof Alien) || (o2 instanceof SpaceShip))) {
                 it.remove();
             } else if (o2 instanceof Bullet) {
                 Bullet bullet = (Bullet) o2;
@@ -246,13 +291,13 @@ public class GameController implements Initializable {
             }
         }
 
+        // If no aliens left increase level or finish game
         if (!isGameOver && Aliens().isEmpty()) {
             if(levelNo != 4){
                 levelNo += 1;
                 levelInitializationFlag = true;
             }else if(levelNo == 4){
-                //TODO game finished screen will be shown
-                //TODO score will be send to database
+                isGameFinished = true;
             }
 
         }
@@ -269,6 +314,15 @@ public class GameController implements Initializable {
     /**
      * This method creates the aliens of the grid for the second level of the game.
      */
+    public void setSecondLevelAliens(){
+        for (int i = 0; i < Constants.ROW_COUNT / 2; i++) {
+            setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, i+1);
+            setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, i + Constants.ROW_COUNT / 2 + 1);
+        }
+    }
+    /**
+     * This method creates the aliens of the grid for the third level of the game.
+     */
     public void setThirdLevelAliens(){
         setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 1);
         setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 2);
@@ -276,18 +330,14 @@ public class GameController implements Initializable {
         setAliens(Constants.SHOOTING_ALIEN_COLOR, Constants.SHOOTING_ALIEN_HEALTH, 4);
     }
 
+    /**
+     * his method creates the aliens of the grid for the fourth level of the game.
+     */
     public void setFourthLevelAliens() {
         setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, 1);
         setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 2);
         setAliens(Constants.SHOOTING_ALIEN_COLOR, Constants.SHOOTING_ALIEN_HEALTH, 3);
         setAliens(Constants.HARD_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 4);
-    }
-
-    public void setSecondLevelAliens(){
-        for (int i = 0; i < Constants.ROW_COUNT / 2; i++) {
-            setAliens(Constants.NORMAL_ALIEN_COLOR, Constants.NORMAL_ALIEN_HEALTH, i+1);
-            setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, i + Constants.ROW_COUNT / 2 + 1);
-        }
     }
 
     public void setAliens(Color color, double health, int rowNumber) {
@@ -346,6 +396,7 @@ public class GameController implements Initializable {
         gameoverScore.setVisible(true);
         playAgainButton.setVisible(true);
         exitButton.setVisible(true);
+        sendScoreToServer();
     }
 
     public void clearRemainingBullets(){
@@ -353,6 +404,16 @@ public class GameController implements Initializable {
         while (it.hasNext()) {
             Object o2 = it.next();
             if (o2 instanceof Bullet) {
+                it.remove();
+            }
+        }
+    }
+
+    public void clearRemainingAliens(){
+        Iterator<Node> it = gameGrid.getChildren().iterator();
+        while (it.hasNext()) {
+            Object o2 = it.next();
+            if (o2 instanceof IAlien) {
                 it.remove();
             }
         }
@@ -366,6 +427,58 @@ public class GameController implements Initializable {
         clearRemainingBullets();
         levelTransitionLabel.setText(levelNoString);
         levelTransitionLabel.setVisible(true);
+    }
+
+    public void gameFinishedHandler(){
+
+        Iterator<Node> it = gameGrid.getChildren().iterator();
+        while (it.hasNext()) {
+            Object o2 = it.next();
+            if( o2 instanceof Bullet || o2 instanceof IAlien || o2 instanceof SpaceShip){
+                it.remove();
+            }
+        }
+
+        levelTransitionLabel.setVisible(false);
+        gameFinishedLabel.setVisible(true);
+        gameoverScoreLabel.setVisible(true);
+        gameoverScore.setText(Integer.toString(gameScore));
+        gameoverScore.setVisible(true);
+        playAgainButton.setVisible(true);
+        exitButton.setVisible(true);
+        sendScoreToServer();
+    }
+
+    public void sendScoreToServer(){
+        if ( MainClientApplication.getLoggedUserId() == 0){
+            return;
+        }
+        JSONObject userAsJson = new JSONObject();
+        userAsJson.put("id", MainClientApplication.getLoggedUserId());
+
+        JSONObject scoreAsJson = new JSONObject();
+        scoreAsJson.put("score", Integer.toString(gameScore) );
+        String endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.SCOREBOARD_DATE_FORMAT_STRING));
+        scoreAsJson.put("endTime", endTime );
+        String userString = "{\"id\" : \"" +MainClientApplication.getLoggedUserId()+ "\"}";
+        scoreAsJson.put("user",userAsJson);
+        System.out.println(scoreAsJson);
+
+        HttpHeaders header =  new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(scoreAsJson.toString(), header);
+
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(Constants.SERVER_SCORE_API_URL + "/add", request, String.class);
+            System.out.println(response.getBody());
+
+        } catch (ResourceAccessException e) {
+            connectionErrorLabel.setVisible(true);
+            System.out.println(e.getMessage());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
