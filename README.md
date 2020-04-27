@@ -28,5 +28,6 @@ Client side was built using JavaFX.
 Users can sign up, sign in and play the game using the interface. After a game is finished, the score of the user is added to the database and shown in the leaderboard. 
 
 ### Run Commands
-To run the frontend application: execute **./mvnw clean javafx:run** command under group5/client/ folder.
+* To run the **frontend application** execute **./mvnw clean javafx:run** command under group5/client/ folder.
+* In order to sign up and log in to start the game, back-end should be run in parallel.
 
