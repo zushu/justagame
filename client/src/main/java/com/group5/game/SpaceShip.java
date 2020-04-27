@@ -20,7 +20,7 @@ public class SpaceShip extends AliveGridObject {
                     List<Bullet> bulletList, double shootFrequency, double health, Bullet bulletType)
     {
         super(position, direction, speed, width, height, health);
-        this.bulletList = bulletList; // TODO: check, is it correct ???     this may make just references equal, so we may need deep copy
+        this.bulletList = bulletList;
         this.shootFrequency = shootFrequency;
         this.bulletType = bulletType;
     }

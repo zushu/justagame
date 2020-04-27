@@ -9,7 +9,6 @@ public class Constants {
     public static final String ALL_TIMES_DATE_STRING = "1970-01-01T00:00:00";
     public static final String SCOREBOARD_DATE_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
 
-    public static final double CUSTOM_TIME_STEP_SPACESHIP_BULLET = 0.2;
     public static final double CUSTOM_TIME_STEP_ALIEN_BULLET = 0.01;
     public static final double LEVEL1_TIMESTEP_INCREMENT = 0.05;
     public static final double LEVEL2_TIMESTEP_INCREMENT = 0.09;
@@ -21,7 +20,7 @@ public class Constants {
     public static final int BULLET_WIDTH = 5;
     public static final int BULLET_HEIGHT = 15;
     public static final double ALIEN_BULLET_DAMAGE = 20;
-    public static final double SPACESHIP_BULLET_DAMAGE = 100;       //TODO test için 100'e çıkardım
+    public static final double SPACESHIP_BULLET_DAMAGE = 100;
     public static final double SPACESHIP_HEALTH = 1000.0d;
     public static final double NORMAL_ALIEN_HEALTH = 100.0d;
     public static final double DEFENSIVE_ALIEN_HEALTH = 400.0d;
