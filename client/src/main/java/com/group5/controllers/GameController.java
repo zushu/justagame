@@ -213,6 +213,7 @@ public class GameController implements Initializable {
         else if (levelNo == 5){
             if (levelInitializationFlag == true) {
                 levelTransition(5);
+                setFifthLevelAlien();
                 multiplayerLevelInitialize();
             }else {
                 updateGeneral( Constants.LEVEL4_TIMESTEP_INCREMENT);
@@ -376,6 +377,13 @@ public class GameController implements Initializable {
         setAliens(Constants.HARD_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 4);
     }
 
+    public void setFifthLevelAlien()
+    {
+        Vector2D downVector = new Vector2D(0.0d, -1.0d);
+        Alien newAlien = new Alien(((int) (Constants.COLUMN_COUNT / 2)), (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
+        gameGrid.getChildren().add((Node) newAlien);
+    }
+
     public void multiplayerLevelInitialize(){
         gameGrid.getChildren().add(rivalSpaceShip);
         DataInputStream fromServer;
@@ -400,6 +408,12 @@ public class GameController implements Initializable {
                 MultiplayerMessage msgFromServer = (MultiplayerMessage)fromServerObj.readObject();
 
                 System.out.println(msgFromServer.getName()+"  "+msgFromServer.getHealth()+"  "+msgFromServer.getPosition()+"  "+msgFromServer.getGameStatus());
+
+                rivalSpaceShip.setTranslateX(msgFromServer.getPosition().x);
+                rivalSpaceShip.setTranslateY(msgFromServer.getPosition().y);
+
+
+                //msgFromServer.getPosition()
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -411,6 +425,8 @@ public class GameController implements Initializable {
         }
 
     }
+
+
 
     /**
      * This method is used to create and place aliens to the gameGrid

@@ -35,6 +35,11 @@ public class Constants {
     public static final int GRID_HEIGHT = 800;
     public static final int GRID_WIDTH = 600;
 
+    public static final double FINAL_ALIEN_HEALTH = 500;
+    public static final int FINAL_ALIEN_WIDTH = 30;
+    public static final int FINAL_ALIEN_HEIGHT = 30;
+    public static final double FINAL_ALIEN_BULLET_DAMAGE = 40;
+
     public static final int BULLET_SPEED = 5;
 
     public static final double ROW_PADDING = 60.0d;
@@ -50,6 +55,7 @@ public class Constants {
     public static final Color DEFENSIVE_ALIEN_COLOR = Color.YELLOW;
     public static final Color SHOOTING_ALIEN_COLOR = Color.RED;
     public static final Color HARD_ALIEN_COLOR = Color.DARKRED;
+    public static final Color FINAL_ALIEN_COLOR = Color.DEEPPINK;
 
 
 
