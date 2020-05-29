@@ -29,7 +29,10 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.awt.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -71,6 +74,8 @@ public class GameController implements Initializable {
     private SpaceShip spaceShip = new SpaceShip(280, 720, 30, 30, Constants.SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
     List<Vector2D> positionsList = createUniformAlienPositions( Constants.ROW_COUNT, Constants.COLUMN_COUNT, Constants.ROW_PADDING);
 
+    private SpaceShip rivalSpaceShip = new SpaceShip(280, 720, 30, 30, Constants.RIVAL_SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
+
     private double customTimer = 0.0d;
     private double customTimer2 = 0;
 
@@ -84,11 +89,11 @@ public class GameController implements Initializable {
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
             if (keyComb1.match(keyEvent)) {
                 System.out.println("skip level!!");
-                if(levelNo < 4){
+                if(levelNo < 5){
                     levelInitializationFlag = true;
                     levelNo++;
                     clearRemainingAliens();
-                }else if (levelNo == 4){
+                }else if (levelNo == 5){
                     isGameFinished = true;
                 }
             }
@@ -207,6 +212,14 @@ public class GameController implements Initializable {
                 updateGeneral( Constants.LEVEL4_TIMESTEP_INCREMENT);
             }
         }
+        else if (levelNo == 5){
+            if (levelInitializationFlag == true) {
+                levelTransition(5);
+                multiplayerLevelInitialize();
+            }else {
+                updateGeneral( Constants.LEVEL4_TIMESTEP_INCREMENT);
+            }
+        }
     }
 
     /**
@@ -214,7 +227,7 @@ public class GameController implements Initializable {
      * @param customTimerIncrement  At each update we increase our timer this much. Fire rate of spaceShip increases along with it.
      */
     public void updateGeneral( double customTimerIncrement) {
-        if (levelTransitionFlag && customTimer<15){
+        if (levelTransitionFlag && customTimer<15){     //this if block provides busy wait for a while at level transitions.
             customTimer += 0.1d;
             return;
         }else{
@@ -363,6 +376,27 @@ public class GameController implements Initializable {
         setAliens(Constants.DEFENSIVE_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 2);
         setAliens(Constants.SHOOTING_ALIEN_COLOR, Constants.SHOOTING_ALIEN_HEALTH, 3);
         setAliens(Constants.HARD_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 4);
+    }
+
+    public void multiplayerLevelInitialize(){
+        gameGrid.getChildren().add(rivalSpaceShip);
+        DataInputStream fromServer;
+        DataOutputStream toServer;
+        try {
+            Socket socket = new Socket("127.0.0.1", 9999);
+            fromServer = new DataInputStream(socket.getInputStream());
+            toServer = new DataOutputStream(socket.getOutputStream());
+
+            String response = fromServer.readUTF();
+            String message = new String(response.getBytes(), "UTF-8");
+            System.out.println(message);
+
+            new DataOutputStream(toServer).writeUTF("response from CLIENT CLIENT CLIENT CLIENT");
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     /**

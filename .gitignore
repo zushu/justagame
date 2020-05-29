@@ -10,5 +10,7 @@
 /client/out
 /client/.idea
 /client/target
+/multiplayer-server/out
+
 # Except this file
 !.gitignore

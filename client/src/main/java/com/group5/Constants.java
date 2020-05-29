@@ -36,6 +36,8 @@ public class Constants {
 
     public static final Color SPACESHIP_COLOR = Color.DARKBLUE;
     public static final Color SPACESHIP_BULLET_COLOR = Color.BLACK;
+    public static final Color RIVAL_SPACESHIP_COLOR = Color.DARKRED;
+    public static final Color RIVAL_SPACESHIP_BULLET_COLOR = Color.ORANGE;
     public static final Color ALIEN_BULLET_COLOR = Color.VIOLET;
     public static final Color NORMAL_ALIEN_COLOR = Color.GREEN;
     public static final Color DEFENSIVE_ALIEN_COLOR = Color.YELLOW;
