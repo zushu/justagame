@@ -22,6 +22,10 @@ public class MultiplayerMessage implements Serializable {
         this.gameStatus = gameStatus;
     }
 
+    public void print(){
+        System.out.println(this.name+"  "+this.health+"  "+this.position+"  "+this.gameStatus);
+    }
+
     public String getName() {
         return name;
     }

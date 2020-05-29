@@ -1,0 +1,45 @@
+package com.group5.game;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+public class Player {
+    private Socket socket;
+
+    private ObjectInputStream receiveStream;
+    private ObjectOutputStream sendStream;
+
+    private MultiplayerMessage msgReceived;
+    private MultiplayerMessage msgSent;
+
+    public Player(Socket socket){
+        this.socket = socket;
+        try {
+            this.receiveStream = new ObjectInputStream(socket.getInputStream());
+            this.sendStream = new ObjectOutputStream(socket.getOutputStream());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public MultiplayerMessage ReceiveMessage(){
+        try {
+            this.msgReceived = (MultiplayerMessage)((this.receiveStream).readObject());
+            return this.msgReceived;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void SendMessage(MultiplayerMessage message){
+        try {
+            this.msgSent = message;
+            sendStream.writeObject(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+}
