@@ -6,6 +6,13 @@ public class Constants {
     public static final String SERVER_SCORE_API_URL = "http://localhost:8080/api/score";
     public static final String SERVER_USER_API_URL = "http://localhost:8080/api/user";
 
+    public static final String MULTIPLAYER_SERVER_IP  = "127.0.0.1";
+    public static final int MULTIPLAYER_SERVER_PORT = 9998;
+
+    public static final int STATUS_CONTINUING = 0;
+    public static final int STATUS_WON = 1;
+    public static final int STATUS_LOST = 2;
+
     public static final String ALL_TIMES_DATE_STRING = "1970-01-01T00:00:00";
     public static final String SCOREBOARD_DATE_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
 

@@ -29,9 +29,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.awt.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -383,15 +381,30 @@ public class GameController implements Initializable {
         DataInputStream fromServer;
         DataOutputStream toServer;
         try {
-            Socket socket = new Socket("127.0.0.1", 9999);
-            fromServer = new DataInputStream(socket.getInputStream());
-            toServer = new DataOutputStream(socket.getOutputStream());
+            Socket socket = new Socket(Constants.MULTIPLAYER_SERVER_IP, Constants.MULTIPLAYER_SERVER_PORT);
+//            fromServer = new DataInputStream(socket.getInputStream());
+//            toServer = new DataOutputStream(socket.getOutputStream());
+//
+//            String response = fromServer.readUTF();
+//            String message = new String(response.getBytes(), "UTF-8");
+//            System.out.println(message);
+//
+//            new DataOutputStream(toServer).writeUTF("response from CLIENT CLIENT CLIENT CLIENT");
 
-            String response = fromServer.readUTF();
-            String message = new String(response.getBytes(), "UTF-8");
-            System.out.println(message);
+            ObjectOutputStream toServerObj = new ObjectOutputStream(socket.getOutputStream());
+            MultiplayerMessage msgToServer = new MultiplayerMessage("client", 888, new Point(222,333), Constants.STATUS_CONTINUING);
+            toServerObj.writeObject(msgToServer);
 
-            new DataOutputStream(toServer).writeUTF("response from CLIENT CLIENT CLIENT CLIENT");
+            try {
+                ObjectInputStream fromServerObj = new ObjectInputStream(socket.getInputStream());
+                MultiplayerMessage msgFromServer = (MultiplayerMessage)fromServerObj.readObject();
+
+                System.out.println(msgFromServer.getName()+"  "+msgFromServer.getHealth()+"  "+msgFromServer.getPosition()+"  "+msgFromServer.getGameStatus());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
         }
         catch (Exception ex) {
             ex.printStackTrace();
