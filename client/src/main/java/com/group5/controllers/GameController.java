@@ -73,6 +73,11 @@ public class GameController implements Initializable {
     List<Vector2D> positionsList = createUniformAlienPositions( Constants.ROW_COUNT, Constants.COLUMN_COUNT, Constants.ROW_PADDING);
 
     private SpaceShip rivalSpaceShip = new SpaceShip(280, 720, 30, 30, Constants.RIVAL_SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
+    private Socket socket;
+    private ObjectInputStream receiveStream;
+    private ObjectOutputStream sendStream;
+    private MultiplayerMessage msgReceived;
+    private MultiplayerMessage msgSent;
 
     private double customTimer = 0.0d;
     private double customTimer2 = 0;
@@ -216,7 +221,7 @@ public class GameController implements Initializable {
                 setFifthLevelAlien();
                 multiplayerLevelInitialize();
             }else {
-                updateGeneral( Constants.LEVEL4_TIMESTEP_INCREMENT);
+                updateMultiplayerLevel();
             }
         }
     }
@@ -341,6 +346,39 @@ public class GameController implements Initializable {
     }
 
     /**
+     * This method is used to update multiplayer level grid objects
+     */
+    public void updateMultiplayerLevel(){
+        customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
+        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), Constants.STATUS_CONTINUING));
+        ReceiveMessage();
+        rivalSpaceShip.setHealth(this.msgReceived.getHealth());
+        setShipPosition(rivalSpaceShip,msgReceived.getPosition());
+    }
+
+    public Point transformVector2DtoPoint(Vector2D position){
+        return new Point((int)position.x,(int)position.y);
+    }
+    public MultiplayerMessage ReceiveMessage(){
+        try {
+            this.msgReceived = (MultiplayerMessage)((this.receiveStream).readObject());
+            return this.msgReceived;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void SendMessage(MultiplayerMessage message){
+        try {
+            this.msgSent = message;
+            sendStream.writeObject(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * This method creates the aliens of the grid for the first level of the game.
      */
     public void setFirstLevelAliens(){
@@ -386,26 +424,28 @@ public class GameController implements Initializable {
 
     public void multiplayerLevelInitialize(){
         gameGrid.getChildren().add(rivalSpaceShip);
+
         DataInputStream fromServer;
         DataOutputStream toServer;
         try {
-            Socket socket = new Socket(Constants.MULTIPLAYER_SERVER_IP, Constants.MULTIPLAYER_SERVER_PORT);
-//            fromServer = new DataInputStream(socket.getInputStream());
-//            toServer = new DataOutputStream(socket.getOutputStream());
-//
-//            String response = fromServer.readUTF();
-//            String message = new String(response.getBytes(), "UTF-8");
-//            System.out.println(message);
-//
-//            new DataOutputStream(toServer).writeUTF("response from CLIENT CLIENT CLIENT CLIENT");
+            this.socket = new Socket(Constants.MULTIPLAYER_SERVER_IP, Constants.MULTIPLAYER_SERVER_PORT);
 
-            ObjectOutputStream toServerObj = new ObjectOutputStream(socket.getOutputStream());
-            MultiplayerMessage msgToServer = new MultiplayerMessage("client", 888, new Point(222,333), Constants.STATUS_CONTINUING);
-            toServerObj.writeObject(msgToServer);
+            this.sendStream = new ObjectOutputStream(socket.getOutputStream());
+            //MultiplayerMessage msgToServer = new MultiplayerMessage("client", 888, new Point(222,333), Constants.STATUS_CONTINUING);
+            //sendStream.writeObject(msgToServer);
 
             try {
-                ObjectInputStream fromServerObj = new ObjectInputStream(socket.getInputStream());
-                MultiplayerMessage msgFromServer = (MultiplayerMessage)fromServerObj.readObject();
+                //Read 2 messages, use the first one for the spaceShip, second one for the rivalSpaceShip initialization
+                this.receiveStream = new ObjectInputStream(socket.getInputStream());
+                MultiplayerMessage msgFromServer = ReceiveMessage();
+                setShipPosition(spaceShip,msgFromServer.getPosition());
+                spaceShip.setHealth(msgFromServer.getHealth());
+                msgFromServer.print();
+
+                msgFromServer = ReceiveMessage();
+                setShipPosition(rivalSpaceShip,msgFromServer.getPosition());
+                rivalSpaceShip.setHealth(msgFromServer.getHealth());
+                msgFromServer.print();
 
                 System.out.println(msgFromServer.getName()+"  "+msgFromServer.getHealth()+"  "+msgFromServer.getPosition()+"  "+msgFromServer.getGameStatus());
 
@@ -418,12 +458,10 @@ public class GameController implements Initializable {
                 e.printStackTrace();
             }
 
-
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
 
@@ -470,8 +508,17 @@ public class GameController implements Initializable {
     public void moveSpaceShipWithMouse(){
         Point mouse = MouseInfo.getPointerInfo().getLocation();
 
-        double newXCoordinate = mouse.getX()-MainClientApplication.mainStage.getX()-(spaceShip.getWidth()/2)-5;
-        double newYCoordinate = mouse.getY()-MainClientApplication.mainStage.getY()-(spaceShip.getHeight()/2)-30;
+        setShipPosition(spaceShip, mouse);
+    }
+
+    /**
+     * This method is used to set position of spaceships on the grid
+     * @param spaceShip The ship to reposition
+     * @param point New position
+     */
+    public void setShipPosition(SpaceShip spaceShip, Point point){
+        double newXCoordinate = point.getX()-MainClientApplication.mainStage.getX()-(spaceShip.getWidth()/2)-5;
+        double newYCoordinate = point.getY()-MainClientApplication.mainStage.getY()-(spaceShip.getHeight()/2)-30;
 
         if(newXCoordinate < 0){
             newXCoordinate=0;
@@ -483,6 +530,7 @@ public class GameController implements Initializable {
         }else if(newYCoordinate > gameGrid.getPrefHeight()-spaceShip.getHeight()){
             newYCoordinate = gameGrid.getPrefHeight()-spaceShip.getHeight();
         }
+        spaceShip.setPosition(new Vector2D(newXCoordinate,newYCoordinate));
         spaceShip.setTranslateX(newXCoordinate);
         spaceShip.setTranslateY(newYCoordinate);
     }
