@@ -381,7 +381,8 @@ public class GameController implements Initializable {
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
         setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
 
-        if (rivalSpaceShip.getHealth() == 0 || this.msgReceived.getGameStatus() != 0)
+        //if (rivalSpaceShip.getHealth() == 0 || this.msgReceived.getGameStatus() != 0)
+        if (this.msgReceived.getGameStatus() != Constants.STATUS_CONTINUING)
         {
             isGameFinished = true;
             isGameOver = true;
@@ -396,6 +397,7 @@ public class GameController implements Initializable {
             return;
         }
 
+        // to get the reference for the final alien
         Alien finalAlien = new Alien();
         for (Object obj : gameGrid.getChildren())
         {
@@ -582,11 +584,13 @@ public class GameController implements Initializable {
     public void setFifthLevelAlien()
     {
         Vector2D downVector = new Vector2D(0.0d, -1.0d);
-        Alien newAlien = new Alien(((int) (Constants.COLUMN_COUNT / 2)), (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
+        Alien newAlien = new Alien(((int) (Constants.GRID_WIDTH / 2)), (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
         gameGrid.getChildren().add((Node) newAlien);
     }
 
     public void multiplayerLevelInitialize(){
+        isGameFinished = false;
+        isGameOver = false;
         gameScore = 0;
         gameGrid.getChildren().add(rivalSpaceShip);
 
