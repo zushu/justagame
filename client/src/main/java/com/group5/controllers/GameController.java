@@ -77,6 +77,9 @@ public class GameController implements Initializable {
     List<Vector2D> positionsList = createUniformAlienPositions( Constants.ROW_COUNT, Constants.COLUMN_COUNT, Constants.ROW_PADDING);
 
     private SpaceShip rivalSpaceShip = new SpaceShip(280, 720, 30, 30, Constants.RIVAL_SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
+    private Integer rivalGameScore = 0;
+    private int gameStatus = Constants.STATUS_CONTINUING;
+
     private Socket socket;
     private ObjectInputStream receiveStream;
     private ObjectOutputStream sendStream;
@@ -354,11 +357,44 @@ public class GameController implements Initializable {
      * This method is used to update multiplayer level grid objects
      */
     public void updateMultiplayerLevel(){
+        // game is over
+        if (isGameOver)
+        {
+            isGameFinished = true;
+            // player wins
+            if (gameScore > rivalGameScore)
+            {
+                gameStatus = Constants.STATUS_WON;
+            }
+            // rival wins
+            else
+            {
+                gameStatus = Constants.STATUS_LOST;
+            }
+
+        }
+
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
-        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), Constants.STATUS_CONTINUING,0)); //HERE SEND SCORE AND HEALTH ALSO
+        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), gameStatus, gameScore)); //HERE SEND SCORE AND HEALTH ALSO
         ReceiveMessage();
+        rivalGameScore = this.msgReceived.getScore();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
         setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
+
+        if (rivalSpaceShip.getHealth() == 0 || this.msgReceived.getGameStatus() != 0)
+        {
+            isGameFinished = true;
+            isGameOver = true;
+            if (gameScore > rivalGameScore)
+            {
+                gameStatus = Constants.STATUS_WON;
+            }
+            else
+            {
+                gameStatus = Constants.STATUS_LOST;
+            }
+            return;
+        }
 
         Alien finalAlien = new Alien();
         for (Object obj : gameGrid.getChildren())
@@ -371,12 +407,18 @@ public class GameController implements Initializable {
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
+
+        // spaceShip bullets
         if (customTimer > 1) {
             customTimer = 0.0d;
+            // add bullets to grid
             Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)) - 2, (int) spaceShip.getTranslateY(),
                     Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.SPACESHIP_BULLET_COLOR, 5.0d, new Vector2D(0, -1), Constants.SPACESHIP_BULLET_DAMAGE);
             gameGrid.getChildren().add(spaceshipBullet);
+            Bullet rivalBullet = new Bullet((int) (rivalSpaceShip.getTranslateX() + (rivalSpaceShip.getWidth() / 2)) - 2, (int) rivalSpaceShip.getTranslateY(), Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.RIVAL_SPACESHIP_BULLET_COLOR, 5.0d, new Vector2D(0, -1), Constants.SPACESHIP_BULLET_DAMAGE);
+            gameGrid.getChildren().add(rivalBullet);
         }
+
 
         customTimer2 += Constants.CUSTOM_TIME_STEP_ALIEN_BULLET;
         if (customTimer2 > Constants.TOTAL_TIME) {
@@ -384,6 +426,7 @@ public class GameController implements Initializable {
 
             if (finalAlien.getAlive())
             {
+                // add alien bullet to grid
                 Bullet alienBullet = new Bullet((int) (finalAlien.getTranslateX() + finalAlien.getWidth() / 2 - 2), (int) finalAlien.getTranslateY(),
                         Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.ALIEN_BULLET_COLOR, 5.0d, new Vector2D(0, 1), Constants.FINAL_ALIEN_BULLET_DAMAGE);
                 gameGrid.getChildren().add(alienBullet);
@@ -391,6 +434,7 @@ public class GameController implements Initializable {
 
         }
 
+        // TODO: should i check rival's collision with alien?
         if (spaceShip.getBoundsInParent().intersects(finalAlien.getBoundsInParent())) {
             //finalAlien.getHit();
             spaceShip.getHit(finalAlien.getHealth());        //SpaceShip gets damage as much as aliens health when a collision occurs
@@ -402,10 +446,14 @@ public class GameController implements Initializable {
             }
         }
 
+
+
+
         // TODO: check, do I need the first if statement in this loop?
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
             Object o2 = it.next();
+            // delete all objects when game is over
             if (isGameOver && ((o2 instanceof Bullet) || (o2 instanceof Alien) || (o2 instanceof SpaceShip))) {
                 it.remove();
             }
@@ -413,7 +461,7 @@ public class GameController implements Initializable {
             else if (o2 instanceof Bullet) {
                 Bullet bullet = (Bullet) o2;
 
-                // spaceship bullet motion
+                // spaceship bullet motion - both rival and player
                 if (bullet.getDirection().y == -1) {
                     bullet.setTranslateY(bullet.getTranslateY() - Constants.BULLET_SPEED);
                     if (bullet.getTranslateY() <= -15) {
@@ -428,11 +476,11 @@ public class GameController implements Initializable {
                                 // player 1 earns point
                                 gameScore = gameScore + (int) Constants.SPACESHIP_BULLET_DAMAGE;
                             }
-                            else
+                            /*else
                             {
                                 // rival earns point
-                            }
-                            //gameScore += Integer.valueOf((int) (bullet.getDamage() / 5));      //update score as bullets hit aliens
+                            }*/
+                            // remove bullet
                             it.remove();
                             if (finalAlien.getHealth() <= 0)
                             {
@@ -440,6 +488,26 @@ public class GameController implements Initializable {
                                 isGameOver = true;
                                 break; // TODO: CHECK
                                 // TODO: send info to server
+                            }
+                        }
+                    }
+                }
+                else { // alien bullet
+                    // alien bullet motion
+                    bullet.setTranslateY(bullet.getTranslateY() + Constants.BULLET_SPEED);
+                    if (bullet.getTranslateY() >= gameGrid.getPrefHeight() + 15)
+                    {
+                        it.remove();
+                    }
+                    else
+                    {
+                        if (bullet.getBoundsInParent().intersects(((Node) spaceShip).getBoundsInParent())) {
+                            it.remove();
+                            spaceShip.getHit(bullet.getDamage());        //SpaceShip gets damaged by alien bullet
+                            healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
+                            if (spaceShip.getHealth() <= 0) {
+                                spaceShip.setAlive(false);
+                                isGameOver = true;
                             }
                         }
                     }
