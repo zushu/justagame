@@ -312,7 +312,8 @@ public class GameController implements Initializable {
                     if (bullet.getTranslateY() >= gameGrid.getPrefHeight() + 15) {
                         it.remove();
                     }
-                    else {
+                    else
+                        {
                         if (bullet.getBoundsInParent().intersects(((Node) spaceShip).getBoundsInParent())) {
                             it.remove();
                             spaceShip.getHit(bullet.getDamage());        //SpaceShip gets damaged by alien bullet
@@ -354,6 +355,97 @@ public class GameController implements Initializable {
         ReceiveMessage();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
         setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
+
+        Alien finalAlien = new Alien();
+        for (Object obj : gameGrid.getChildren())
+        {
+            if (obj instanceof Alien)
+            {
+                finalAlien = (Alien) obj;
+                break;
+            }
+        }
+
+        customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
+        if (customTimer > 1) {
+            customTimer = 0.0d;
+            Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)) - 2, (int) spaceShip.getTranslateY(),
+                    Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.SPACESHIP_BULLET_COLOR, 5.0d, new Vector2D(0, -1), Constants.SPACESHIP_BULLET_DAMAGE);
+            gameGrid.getChildren().add(spaceshipBullet);
+        }
+
+        customTimer2 += Constants.CUSTOM_TIME_STEP_ALIEN_BULLET;
+        if (customTimer2 > Constants.TOTAL_TIME) {
+            customTimer2 = 0.0d;
+
+            if (finalAlien.getAlive())
+            {
+                Bullet alienBullet = new Bullet((int) (finalAlien.getTranslateX() + finalAlien.getWidth() / 2 - 2), (int) finalAlien.getTranslateY(),
+                        Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.ALIEN_BULLET_COLOR, 5.0d, new Vector2D(0, 1), Constants.FINAL_ALIEN_BULLET_DAMAGE);
+                gameGrid.getChildren().add(alienBullet);
+            }
+
+        }
+
+        if (spaceShip.getBoundsInParent().intersects(finalAlien.getBoundsInParent())) {
+            //finalAlien.getHit();
+            spaceShip.getHit(finalAlien.getHealth());        //SpaceShip gets damage as much as aliens health when a collision occurs
+            healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
+            if (spaceShip.getHealth() <= 0) {
+                spaceShip.setAlive(false);
+                isGameOver = true;
+                // TODO: send game over info to server
+            }
+        }
+
+        // TODO: check, do I need the first if statement in this loop?
+        Iterator<Node> it = gameGrid.getChildren().iterator();
+        while (it.hasNext()) {
+            Object o2 = it.next();
+            if (isGameOver && ((o2 instanceof Bullet) || (o2 instanceof Alien) || (o2 instanceof SpaceShip))) {
+                it.remove();
+            }
+
+            else if (o2 instanceof Bullet) {
+                Bullet bullet = (Bullet) o2;
+
+                // spaceship bullet motion
+                if (bullet.getDirection().y == -1) {
+                    bullet.setTranslateY(bullet.getTranslateY() - Constants.BULLET_SPEED);
+                    if (bullet.getTranslateY() <= -15) {
+                        it.remove();
+                    }
+
+                    else {
+                        if (bullet.getBoundsInParent().intersects(finalAlien.getBoundsInParent())) {
+                            finalAlien.getHit(bullet.getDamage());
+                            if (bullet.getColor() == Constants.SPACESHIP_BULLET_COLOR)
+                            {
+                                // player 1 earns point
+                                gameScore = gameScore + (int) Constants.SPACESHIP_BULLET_DAMAGE;
+                            }
+                            else
+                            {
+                                // rival earns point
+                            }
+                            //gameScore += Integer.valueOf((int) (bullet.getDamage() / 5));      //update score as bullets hit aliens
+                            it.remove();
+                            if (finalAlien.getHealth() <= 0)
+                            {
+                                finalAlien.setAlive(false);
+                                isGameOver = true;
+                                break; // TODO: CHECK
+                                // TODO: send info to server
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
+        }
+
     }
 
     public Point transformVector2DtoPoint(Vector2D position){
@@ -423,6 +515,7 @@ public class GameController implements Initializable {
     }
 
     public void multiplayerLevelInitialize(){
+        gameScore = 0;
         gameGrid.getChildren().add(rivalSpaceShip);
 
         try {
