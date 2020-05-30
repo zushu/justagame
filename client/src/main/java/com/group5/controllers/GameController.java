@@ -60,6 +60,10 @@ public class GameController implements Initializable {
     @FXML private Label levelTransitionLabel;
     @FXML private Label gameFinishedLabel;
     @FXML private Label connectionErrorLabel;
+    @FXML private Label rivalScoreLabel;
+    @FXML private Label rivalHealthLabel;
+    @FXML private Label rivalScore;
+    @FXML private Label rivalHealth;
 
     private Integer gameScore = 0;
     private Integer levelNo = 1;
@@ -349,7 +353,7 @@ public class GameController implements Initializable {
      */
     public void updateMultiplayerLevel(){
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
-        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), Constants.STATUS_CONTINUING));
+        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), Constants.STATUS_CONTINUING,0)); //HERE SEND SCORE AND HEALTH ALSO
         ReceiveMessage();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
         setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
@@ -421,7 +425,7 @@ public class GameController implements Initializable {
             this.socket = new Socket(Constants.MULTIPLAYER_SERVER_IP, Constants.MULTIPLAYER_SERVER_PORT);
 
             this.sendStream = new ObjectOutputStream(socket.getOutputStream());
-            MultiplayerMessage sendUsernameToServerMsg = new MultiplayerMessage(MainClientApplication.getLoggedUserName(), 0, new Point(0,0), Constants.STATUS_CONTINUING);
+            MultiplayerMessage sendUsernameToServerMsg = new MultiplayerMessage(MainClientApplication.getLoggedUserName(), 0, new Point(0,0), Constants.STATUS_CONTINUING,0);
             SendMessage(sendUsernameToServerMsg);
 
             try {
@@ -431,6 +435,8 @@ public class GameController implements Initializable {
                 setShipPosition(spaceShip,msgFromServer.getPosition(),true);
                 spaceShip.setHealth(msgFromServer.getHealth());
                 MainClientApplication.setRivalUserName(msgFromServer.getName());
+                rivalHealthLabel.textProperty().bind(new SimpleDoubleProperty(msgFromServer.getHealth()).asString());
+                rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(msgFromServer.getScore()).asString());
                 msgFromServer.print();
 
                 msgFromServer = ReceiveMessage();
@@ -569,6 +575,14 @@ public class GameController implements Initializable {
         clearRemainingBullets();
         levelTransitionLabel.setText(levelNoString);
         levelTransitionLabel.setVisible(true);
+    }
+
+    public void multiplayerLevelTransition(){           //is not completed yet. This will be used instead of      levelTransition(5);  above
+        clearRemainingBullets();
+        rivalHealth.setVisible(true);
+        rivalScore.setVisible(true);
+        rivalScoreLabel.setVisible(true);
+        rivalHealthLabel.setVisible(true);
     }
 
     /**
