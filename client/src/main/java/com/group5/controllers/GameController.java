@@ -429,9 +429,12 @@ public class GameController implements Initializable {
             if (finalAlien.getAlive())
             {
                 // add alien bullet to grid
-                Bullet alienBullet = new Bullet((int) (finalAlien.getTranslateX() + finalAlien.getWidth() / 2 - 2), (int) finalAlien.getTranslateY(),
-                        Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.ALIEN_BULLET_COLOR, 5.0d, new Vector2D(0, 1), Constants.FINAL_ALIEN_BULLET_DAMAGE);
-                gameGrid.getChildren().add(alienBullet);
+                for (int i = 0; i < 5; i++)
+                {
+                    Bullet alienBullet = new Bullet((int) (finalAlien.getTranslateX() + (finalAlien.getWidth()/5) * (i+1) - (finalAlien.getWidth()/5)/2), (int) (finalAlien.getTranslateY() + finalAlien.getWidth()),
+                            Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.ALIEN_BULLET_COLOR, 5.0d, new Vector2D(0, 1), Constants.FINAL_ALIEN_BULLET_DAMAGE);
+                    gameGrid.getChildren().add(alienBullet);
+                }
             }
 
         }
@@ -459,6 +462,12 @@ public class GameController implements Initializable {
             if (isGameOver && ((o2 instanceof Bullet) || (o2 instanceof Alien) || (o2 instanceof SpaceShip))) {
                 it.remove();
             }
+            // move alien right and left continuously
+            /*if (o2 instanceof Alien)
+            {
+                Alien alien = (Alien) o2;
+                alien.setTranslateX(alien.getTranslateX());
+            }*/
 
             else if (o2 instanceof Bullet) {
                 Bullet bullet = (Bullet) o2;
@@ -584,7 +593,7 @@ public class GameController implements Initializable {
     public void setFifthLevelAlien()
     {
         Vector2D downVector = new Vector2D(0.0d, -1.0d);
-        Alien newAlien = new Alien(((int) (Constants.GRID_WIDTH / 2)), (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
+        Alien newAlien = new Alien(((int) (Constants.GRID_WIDTH / 2)) - Constants.FINAL_ALIEN_WIDTH/2, (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
         gameGrid.getChildren().add((Node) newAlien);
     }
 
