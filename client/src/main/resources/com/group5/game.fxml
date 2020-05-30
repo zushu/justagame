@@ -63,5 +63,25 @@
          </font>
       </Label>
       <Label fx:id="connectionErrorLabel" layoutX="198.0" layoutY="769.0" prefHeight="17.0" prefWidth="204.0" text="Can not connect to server..." textFill="RED" visible="false" />
+      <Label fx:id="rivalScore" layoutX="6.0" layoutY="4.0" prefHeight="20.0" prefWidth="79.0" text="Rival Score:" textFill="#d3000b" visible="false">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="rivalScoreLabel" layoutX="85.0" layoutY="4.0" prefHeight="20.0" prefWidth="93.0" textFill="#d3000b">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="rivalHealth" layoutX="471.0" layoutY="4.0" text="Rival Health:" textFill="#21b207" visible="false">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="rivalHealthLabel" layoutX="555.0" layoutY="4.0" prefHeight="17.0" prefWidth="43.0" textFill="#21b207">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

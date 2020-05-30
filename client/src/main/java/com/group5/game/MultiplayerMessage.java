@@ -10,20 +10,22 @@ public class MultiplayerMessage implements Serializable {
     private double health;
     private Point position;
     private int gameStatus;
-
+    private int score;
+    
     public MultiplayerMessage(){
         this.gameStatus = Constants.STATUS_CONTINUING;
     }
 
-    public MultiplayerMessage(String name, double health, Point position, int gameStatus){
+    public MultiplayerMessage(String name, double health, Point position, int gameStatus, int score){
         this.name = name;
         this.health = health;
         this.position = position;
         this.gameStatus = gameStatus;
+        this.score = score;
     }
 
     public void print(){
-        System.out.println(this.name+"  "+this.health+"  "+this.position+"  "+this.gameStatus);
+        System.out.println(this.name+"  "+this.health+"  "+this.position+"  "+this.gameStatus+"  "+this.score);
     }
 
     public String getName() {
@@ -56,5 +58,13 @@ public class MultiplayerMessage implements Serializable {
 
     public void setGameStatus(int gameStatus) {
         this.gameStatus = gameStatus;
+    }
+
+    public int getScore(){
+        return this.score;
+    }
+
+    public void setScore(int score){
+        this.score = score;
     }
 }
