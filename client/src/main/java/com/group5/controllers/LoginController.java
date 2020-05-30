@@ -53,7 +53,8 @@ public class LoginController {
 
 
         JSONObject loginFormJson = new JSONObject();
-        loginFormJson.put("name", usernameInput.getText() );
+        String userName = usernameInput.getText();
+        loginFormJson.put("name", userName );
         loginFormJson.put("password", passwordInput.getText() );
         System.out.println(loginFormJson);
 
@@ -71,6 +72,7 @@ public class LoginController {
                 loginErrorLabel.setVisible(true);
             }else{
                 MainClientApplication.setLoggedUserId(Integer.parseInt(response.getBody()));
+                MainClientApplication.setLoggedUserName(userName);
                 MainClientApplication.setRoot("index");
             }
 

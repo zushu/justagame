@@ -17,6 +17,8 @@ public class MainClientApplication extends Application {
 
     private static Scene scene;
     private static Integer loggedUserId = 0;
+    private static String loggedUserName = "";
+    private static String rivalUserName = "";
     public static Stage mainStage;
 
     /**
@@ -61,6 +63,12 @@ public class MainClientApplication extends Application {
     public static void setLoggedUserId(Integer userId){
         loggedUserId = userId;
     }
+
+    public static String getLoggedUserName(){ return  loggedUserName;}
+    public static void setLoggedUserName(String username){ loggedUserName = username;}
+
+    public static String getRivalUserName(){ return rivalUserName;}
+    public static void setRivalUserName(String rivalName){ rivalUserName = rivalName;}
 
     public static void main(String[] args) {
         launch();

@@ -353,7 +353,7 @@ public class GameController implements Initializable {
         SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), Constants.STATUS_CONTINUING));
         ReceiveMessage();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
-        setShipPosition(rivalSpaceShip,msgReceived.getPosition());
+        setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
     }
 
     public Point transformVector2DtoPoint(Vector2D position){
@@ -425,25 +425,24 @@ public class GameController implements Initializable {
     public void multiplayerLevelInitialize(){
         gameGrid.getChildren().add(rivalSpaceShip);
 
-        DataInputStream fromServer;
-        DataOutputStream toServer;
         try {
             this.socket = new Socket(Constants.MULTIPLAYER_SERVER_IP, Constants.MULTIPLAYER_SERVER_PORT);
 
             this.sendStream = new ObjectOutputStream(socket.getOutputStream());
-            //MultiplayerMessage msgToServer = new MultiplayerMessage("client", 888, new Point(222,333), Constants.STATUS_CONTINUING);
-            //sendStream.writeObject(msgToServer);
+            MultiplayerMessage sendUsernameToServerMsg = new MultiplayerMessage(MainClientApplication.getLoggedUserName(), 0, new Point(0,0), Constants.STATUS_CONTINUING);
+            SendMessage(sendUsernameToServerMsg);
 
             try {
                 //Read 2 messages, use the first one for the spaceShip, second one for the rivalSpaceShip initialization
                 this.receiveStream = new ObjectInputStream(socket.getInputStream());
                 MultiplayerMessage msgFromServer = ReceiveMessage();
-                setShipPosition(spaceShip,msgFromServer.getPosition());
+                setShipPosition(spaceShip,msgFromServer.getPosition(),true);
                 spaceShip.setHealth(msgFromServer.getHealth());
+                MainClientApplication.setRivalUserName(msgFromServer.getName());
                 msgFromServer.print();
 
                 msgFromServer = ReceiveMessage();
-                setShipPosition(rivalSpaceShip,msgFromServer.getPosition());
+                setShipPosition(rivalSpaceShip,msgFromServer.getPosition(),true);
                 rivalSpaceShip.setHealth(msgFromServer.getHealth());
                 msgFromServer.print();
 
@@ -508,7 +507,7 @@ public class GameController implements Initializable {
     public void moveSpaceShipWithMouse(){
         Point mouse = MouseInfo.getPointerInfo().getLocation();
 
-        setShipPosition(spaceShip, mouse);
+        setShipPosition(spaceShip, mouse, false);
     }
 
     /**
@@ -516,9 +515,13 @@ public class GameController implements Initializable {
      * @param spaceShip The ship to reposition
      * @param point New position
      */
-    public void setShipPosition(SpaceShip spaceShip, Point point){
-        double newXCoordinate = point.getX()-MainClientApplication.mainStage.getX()-(spaceShip.getWidth()/2)-5;
-        double newYCoordinate = point.getY()-MainClientApplication.mainStage.getY()-(spaceShip.getHeight()/2)-30;
+    public void setShipPosition(SpaceShip spaceShip, Point point, boolean isSocketData){
+        double newXCoordinate = point.getX();
+        double newYCoordinate = point.getY();
+        if(!isSocketData){
+            newXCoordinate = newXCoordinate-MainClientApplication.mainStage.getX()-(spaceShip.getWidth()/2)-5;
+            newYCoordinate = newYCoordinate-MainClientApplication.mainStage.getY()-(spaceShip.getHeight()/2)-30;
+        }
 
         if(newXCoordinate < 0){
             newXCoordinate=0;

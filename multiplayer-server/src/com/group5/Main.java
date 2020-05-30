@@ -1,11 +1,9 @@
 package com.group5;
 
-import com.group5.Constants;
 import com.group5.game.Match;
 import com.group5.game.MultiplayerMessage;
 import com.group5.game.Player;
 
-import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,10 +17,16 @@ public class Main {
             Socket p1Socket = serverSocket.accept();
             System.out.println("Player1 connected.");
             Player player1 = new Player(p1Socket);
+            MultiplayerMessage receivePlayerNames = player1.ReceiveMessage();
+            player1.setUsername(receivePlayerNames.getName());
+            receivePlayerNames.print();
 
             Socket p2Socket = serverSocket.accept();
             System.out.println("Player2 connected.");
             Player player2 = new Player(p2Socket);
+            receivePlayerNames = player2.ReceiveMessage();
+            player2.setUsername(receivePlayerNames.getName());
+            receivePlayerNames.print();
 
             new Thread(new Match(player1,player2)).start();
         }

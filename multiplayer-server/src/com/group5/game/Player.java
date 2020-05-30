@@ -7,6 +7,7 @@ import java.net.Socket;
 
 public class Player {
     private Socket socket;
+    private String username;
 
     private ObjectInputStream receiveStream;
     private ObjectOutputStream sendStream;
@@ -41,5 +42,12 @@ public class Player {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public String getUsername(){
+        return this.username;
+    }
+    public void setUsername(String username){
+        this.username = username;
     }
 }
