@@ -70,6 +70,7 @@ public class GameController implements Initializable {
     @FXML private Label multiplayerLevelLabel;
 
     private Integer gameScore = 0;
+    private Integer totalScore = 0;
     private Double finalAlienHealth = Constants.FINAL_ALIEN_HEALTH;
     private Integer levelNo = 1;
     private Boolean isGameOver = false;
@@ -377,19 +378,25 @@ public class GameController implements Initializable {
             clearRemainingAliens();
             isGameFinished = true;
             // player wins
-            if (gameScore > rivalGameScore)
-            {
-                gameStatus = Constants.STATUS_WON;
-                gameScore += Constants.BONUS_POINT;
+            if(finalAlien.getHealth() <=0){
+                if (gameScore > rivalGameScore)
+                {
+                    gameStatus = Constants.STATUS_WON;
+                    gameScore += Constants.BONUS_POINT;
+                    scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
+                }
+                // rival wins
+                else
+                {
+                    gameStatus = Constants.STATUS_LOST;
+                }
             }
-            // rival wins
-            else
-            {
-                gameStatus = Constants.STATUS_LOST;
-            }
+            totalScore = gameScore + this.msgReceived.getScore();       //TODO SHOW SHOW SHOW SHOW SHOW SHOW totalScore
+
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
+
         SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), gameStatus, gameScore, finalAlienHealth));
         ReceiveMessage();
         rivalGameScore = this.msgReceived.getScore();
