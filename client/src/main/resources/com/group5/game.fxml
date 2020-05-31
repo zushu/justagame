@@ -31,17 +31,17 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="gameoverLabel" alignment="TOP_CENTER" layoutY="236.0" opacity="0.77" prefHeight="205.0" prefWidth="601.0" style="-fx-background-color: darkred;" text="GAMEOVER" textFill="WHITE" visible="false">
+      <Label fx:id="gameoverLabel" alignment="TOP_CENTER" layoutY="174.0" opacity="0.77" prefHeight="267.0" prefWidth="601.0" style="-fx-background-color: darkred;" text="GAMEOVER" textFill="WHITE" visible="false">
          <font>
             <Font name="System Bold" size="96.0" />
          </font>
       </Label>
-      <Label fx:id="gameFinishedLabel" alignment="TOP_CENTER" layoutX="-1.0" layoutY="236.0" opacity="0.9" prefHeight="205.0" prefWidth="602.0" style="-fx-background-color: #004300;" text="GAME FINISHED" textFill="#91ed91cd" visible="false">
+      <Label fx:id="gameFinishedLabel" alignment="TOP_CENTER" layoutX="-1.0" layoutY="197.0" opacity="0.9" prefHeight="244.0" prefWidth="602.0" style="-fx-background-color: #004300;" text="YOU WON" textAlignment="CENTER" textFill="#91ed91cd" visible="false">
          <font>
             <Font name="System Bold" size="72.0" />
          </font>
       </Label>
-      <Label fx:id="gameoverScoreLabel" layoutX="178.0" layoutY="374.0" prefHeight="53.0" prefWidth="140.0" text="SCORE: " textFill="#ffff0099" visible="false">
+      <Label fx:id="gameoverScoreLabel" layoutX="72.0" layoutY="374.0" prefHeight="53.0" prefWidth="246.0" text="YOUR SCORE: " textFill="#ffff0099" visible="false">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
@@ -57,11 +57,6 @@
          </font>
       </Button>
       <Button fx:id="exitButton" layoutX="283.0" layoutY="518.0" mnemonicParsing="false" onAction="#exitButtonPressed" text="Exit" visible="false" />
-      <Label fx:id="levelTransitionLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="279.0" opacity="0.67" prefHeight="141.0" prefWidth="602.0" style="-fx-background-color: black;" text="LEVEL 1" textAlignment="CENTER" textFill="#3bd03b">
-         <font>
-            <Font size="96.0" />
-         </font>
-      </Label>
       <Label fx:id="connectionErrorLabel" layoutX="198.0" layoutY="769.0" prefHeight="17.0" prefWidth="204.0" text="Can not connect to server..." textFill="RED" visible="false" />
       <Label fx:id="rivalScore" layoutX="6.0" layoutY="4.0" prefHeight="20.0" prefWidth="79.0" text="Rival Score:" textFill="#d3000b" visible="false">
          <font>
@@ -96,6 +91,21 @@
       <Label fx:id="multiplayerLevelLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="279.0" opacity="0.67" prefHeight="152.0" prefWidth="601.0" style="-fx-background-color: black;" text="Waiting for a rival.." textAlignment="CENTER" textFill="#3bd03b" visible="false">
          <font>
             <Font name="System Bold" size="48.0" />
+         </font>
+      </Label>
+      <Label fx:id="totalScoreLabel" layoutX="55.0" layoutY="312.0" text="TOTAL SCORE:" textFill="YELLOW" visible="false">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      <Label fx:id="levelTransitionLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="279.0" opacity="0.67" prefHeight="141.0" prefWidth="602.0" style="-fx-background-color: black;" text="LEVEL 1" textAlignment="CENTER" textFill="#3bd03b">
+         <font>
+            <Font size="96.0" />
+         </font>
+      </Label>
+      <Label fx:id="totalScoreOfGame" layoutX="305.0" layoutY="312.0" prefHeight="53.0" prefWidth="155.0" textFill="YELLOW">
+         <font>
+            <Font size="36.0" />
          </font>
       </Label>
    </children>

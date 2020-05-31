@@ -68,6 +68,8 @@ public class GameController implements Initializable {
     @FXML private Label alienHealth;
     @FXML private Label alienHealthLabel;
     @FXML private Label multiplayerLevelLabel;
+    @FXML private Label totalScoreLabel;
+    @FXML private Label totalScoreOfGame;
 
     private Integer gameScore = 0;
     private Integer totalScore = 0;
@@ -75,6 +77,8 @@ public class GameController implements Initializable {
     private Integer levelNo = 1;
     private Boolean isGameOver = false;
     private Boolean isGameFinished = false;
+    private Boolean isMultiplayerLevelFinished = false;
+    private Boolean isFinishingMessageSent = false;
     private boolean levelInitializationFlag = true; // to add aliens to the grid before updating it at every frame
     private boolean levelTransitionFlag = true;     // this flag blocks firing while level transitions
     private boolean waitingForPlayAgainFlag = false;    // this flag is to wait game while game is ended or game is over
@@ -115,6 +119,7 @@ public class GameController implements Initializable {
                     levelTransitionLabel.setVisible(false);
                     levelNo++;
                     clearRemainingAliens();
+                    clearRemainingBullets();
                 }
 //                else if (levelNo == 5){
 //                    isGameFinished = true;
@@ -146,6 +151,16 @@ public class GameController implements Initializable {
         setFirstLevelAliens();
         isGameOver = false;
         isGameFinished = false;
+        isMultiplayerLevelFinished = false;
+        alienHealthLabel.setVisible(false);
+        alienHealth.setVisible(false);
+        rivalScore.setVisible(false);
+        rivalHealth.setVisible(false);
+        rivalScoreLabel.setVisible(false);
+        rivalHealthLabel.setVisible(false);
+        multiplayerLevelLabel.setText("Waiting for a rival..");
+        totalScoreOfGame.setVisible(false);
+        totalScoreLabel.setVisible(false);
     }
 
     /**
@@ -170,7 +185,11 @@ public class GameController implements Initializable {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (isGameOver && !waitingForPlayAgainFlag) {
+                if (isMultiplayerLevelFinished && isFinishingMessageSent && !waitingForPlayAgainFlag){
+                    multiplayerGameEndHandler();
+                    waitingForPlayAgainFlag = true;
+                }
+                else if (isGameOver && !waitingForPlayAgainFlag) {
                     gameOverHandler();
                     waitingForPlayAgainFlag = true;
                 }else if(isGameFinished && !waitingForPlayAgainFlag){
@@ -372,11 +391,8 @@ public class GameController implements Initializable {
     public void updateMultiplayerLevel(){
 
         // game is over
-        if (isGameOver)
+        if (isMultiplayerLevelFinished)
         {
-            clearRemainingBullets();
-            clearRemainingAliens();
-            isGameFinished = true;
             // player wins
             if(finalAlien.getHealth() <=0){
                 if (gameScore > rivalGameScore)
@@ -391,13 +407,20 @@ public class GameController implements Initializable {
                     gameStatus = Constants.STATUS_LOST;
                 }
             }
-            totalScore = gameScore + this.msgReceived.getScore();       //TODO SHOW SHOW SHOW SHOW SHOW SHOW totalScore
+            if(spaceShip.getHealth()<=0){
+                gameStatus = Constants.STATUS_LOST;
+            }
+            totalScore = gameScore + this.msgReceived.getScore();
+            totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
 
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
-
         SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), gameStatus, gameScore, finalAlienHealth));
+        if (isMultiplayerLevelFinished){
+            isFinishingMessageSent = true;
+            return;
+        }
         ReceiveMessage();
         rivalGameScore = this.msgReceived.getScore();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
@@ -422,17 +445,21 @@ public class GameController implements Initializable {
         //if (rivalSpaceShip.getHealth() == 0 || this.msgReceived.getGameStatus() != 0)
         if (this.msgReceived.getGameStatus() != Constants.STATUS_CONTINUING)
         {
-            isGameFinished = true;
-            isGameOver = true;
             if (gameScore > rivalGameScore)
             {
                 gameStatus = Constants.STATUS_WON;
                 gameScore += Constants.BONUS_POINT;
+                scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
             }
+            // rival wins
             else
             {
                 gameStatus = Constants.STATUS_LOST;
             }
+            totalScore = gameScore + this.msgReceived.getScore();
+            totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
+            isMultiplayerLevelFinished = true;
+            isFinishingMessageSent = true;
             return;
         }
 
@@ -459,15 +486,14 @@ public class GameController implements Initializable {
             }
         }
 
-        // TODO: should i check rival's collision with alien?
         if (spaceShip.getBoundsInParent().intersects(finalAlien.getBoundsInParent())) {
             //finalAlien.getHit();
             spaceShip.getHit(finalAlien.getHealth());        //SpaceShip gets damage as much as aliens health when a collision occurs
             healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
             if (spaceShip.getHealth() <= 0) {
                 spaceShip.setAlive(false);
-                isGameOver = true;
-                // TODO: send game over info to server
+                //isGameOver = true;
+                isMultiplayerLevelFinished = true;
             }
         }
 
@@ -522,8 +548,10 @@ public class GameController implements Initializable {
                             if (finalAlien.getHealth() <= 0)
                             {
                                 finalAlien.setAlive(false);
-                                isGameOver = true;
-                                break; // TODO: CHECK
+                                //isGameOver = true;
+                                isMultiplayerLevelFinished = true;
+                                return;
+                                //break; // TODO: CHECK
                                 // TODO: send info to server
                             }
                         }
@@ -544,7 +572,8 @@ public class GameController implements Initializable {
                             healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
                             if (spaceShip.getHealth() <= 0) {
                                 spaceShip.setAlive(false);
-                                isGameOver = true;
+                                //isGameOver = true;
+                                isMultiplayerLevelFinished = true;
                             }
                         }
                     }
@@ -801,6 +830,37 @@ public class GameController implements Initializable {
         exitButton.setVisible(true);
         sendScoreToServer();
     }
+
+    /**
+     * This method is called when multiplayer level ends
+     */
+    public void multiplayerGameEndHandler(){
+
+        Iterator<Node> it = gameGrid.getChildren().iterator();
+        while (it.hasNext()) {
+            Object o2 = it.next();
+            if( o2 instanceof Bullet || o2 instanceof IAlien || o2 instanceof SpaceShip){
+                it.remove();
+            }
+        }
+
+        System.out.println("GameStatus: "+gameStatus);
+        if(gameStatus == Constants.STATUS_WON){
+            gameFinishedLabel.setVisible(true);
+        }else{
+            gameoverLabel.setVisible(true);
+        }
+        totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
+        totalScoreOfGame.setVisible(true);
+        totalScoreLabel.setVisible(true);
+        gameoverScoreLabel.setVisible(true);
+        gameoverScore.setText(Integer.toString(gameScore));
+        gameoverScore.setVisible(true);
+        playAgainButton.setVisible(true);
+        exitButton.setVisible(true);
+        sendScoreToServer();
+    }
+
     /**
      * This method removes remaining bullets from the AnchorPane named gameGrid
      */
@@ -838,14 +898,6 @@ public class GameController implements Initializable {
         clearRemainingBullets();
         levelTransitionLabel.setText(levelNoString);
         levelTransitionLabel.setVisible(true);
-    }
-
-    public void multiplayerLevelTransition(){           //is not completed yet. This will be used instead of      levelTransition(5);  above
-        clearRemainingBullets();
-        rivalHealth.setVisible(true);
-        rivalScore.setVisible(true);
-        rivalScoreLabel.setVisible(true);
-        rivalHealthLabel.setVisible(true);
     }
 
     /**
