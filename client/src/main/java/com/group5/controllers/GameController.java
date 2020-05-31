@@ -104,9 +104,10 @@ public class GameController implements Initializable {
                     levelInitializationFlag = true;
                     levelNo++;
                     clearRemainingAliens();
-                }else if (levelNo == 5){
-                    isGameFinished = true;
                 }
+//                else if (levelNo == 5){
+//                    isGameFinished = true;
+//                }
             }
         });
     }
@@ -373,7 +374,6 @@ public class GameController implements Initializable {
             {
                 gameStatus = Constants.STATUS_LOST;
             }
-
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
@@ -382,6 +382,9 @@ public class GameController implements Initializable {
         rivalFinalLevelScore = this.msgReceived.getScore();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
         setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
+
+        rivalHealthLabel.textProperty().bind(new SimpleDoubleProperty(this.msgReceived.getHealth()).asString());
+        rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(this.msgReceived.getScore()).asString());
 
         //if (rivalSpaceShip.getHealth() == 0 || this.msgReceived.getGameStatus() != 0)
         if (this.msgReceived.getGameStatus() != Constants.STATUS_CONTINUING)
@@ -439,7 +442,6 @@ public class GameController implements Initializable {
                     gameGrid.getChildren().add(alienBullet);
                 }
             }
-
         }
 
         // TODO: should i check rival's collision with alien?
@@ -453,9 +455,6 @@ public class GameController implements Initializable {
                 // TODO: send game over info to server
             }
         }
-
-
-
 
         // TODO: check, do I need the first if statement in this loop?
         Iterator<Node> it = gameGrid.getChildren().iterator();
@@ -526,11 +525,11 @@ public class GameController implements Initializable {
                         }
                     }
                 }
-
             }
-
-
         }
+
+        healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
+        scoreLabel.textProperty().bind(new SimpleIntegerProperty(finalLevelScore).asString());              //TODO use gameScore instead of finalLevelScore
 
     }
 
@@ -620,6 +619,8 @@ public class GameController implements Initializable {
                 setShipPosition(spaceShip,msgFromServer.getPosition(),true);
                 spaceShip.setHealth(msgFromServer.getHealth());
                 MainClientApplication.setRivalUserName(msgFromServer.getName());
+                rivalHealth.setVisible(true);
+                rivalScore.setVisible(true);
                 rivalHealthLabel.textProperty().bind(new SimpleDoubleProperty(msgFromServer.getHealth()).asString());
                 rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(msgFromServer.getScore()).asString());
                 msgFromServer.print();

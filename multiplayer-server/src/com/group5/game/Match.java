@@ -51,7 +51,6 @@ public class Match implements Runnable{
                 msgReceived = player.ReceiveMessage();
                 //msgReceived.print();
                 msgSent = msgReceived;
-                msgSent.setHealth(msgSent.getHealth()-1);
                 rival.SendMessage(msgSent);
             }
         }
