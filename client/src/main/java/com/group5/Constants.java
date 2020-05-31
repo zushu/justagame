@@ -35,7 +35,7 @@ public class Constants {
     public static final int GRID_HEIGHT = 800;
     public static final int GRID_WIDTH = 600;
 
-    public static final double FINAL_ALIEN_HEALTH = 11100;
+    public static final double FINAL_ALIEN_HEALTH = 20000;
     public static final int FINAL_ALIEN_WIDTH = 100;
     public static final int FINAL_ALIEN_HEIGHT = 100;
     public static final double FINAL_ALIEN_BULLET_DAMAGE = 40;

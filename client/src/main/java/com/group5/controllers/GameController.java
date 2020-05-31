@@ -6,6 +6,7 @@ import com.group5.MainClientApplication;
 import com.group5.game.*;
 import com.group5.helper.Vector2D;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -64,8 +65,12 @@ public class GameController implements Initializable {
     @FXML private Label rivalHealthLabel;
     @FXML private Label rivalScore;
     @FXML private Label rivalHealth;
+    @FXML private Label alienHealth;
+    @FXML private Label alienHealthLabel;
+    @FXML private Label multiplayerLevelLabel;
 
     private Integer gameScore = 0;
+    private Double finalAlienHealth = Constants.FINAL_ALIEN_HEALTH;
     private Integer levelNo = 1;
     private Boolean isGameOver = false;
     private Boolean isGameFinished = false;
@@ -78,9 +83,12 @@ public class GameController implements Initializable {
 
     private SpaceShip rivalSpaceShip = new SpaceShip(280, 720, 30, 30, Constants.RIVAL_SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
     private Integer finalLevelScore = 0;
-    //private Integer rivalFinalLevelScore = 0;
     private Integer rivalGameScore = 0;
     private int gameStatus = Constants.STATUS_CONTINUING;
+    Alien finalAlien = null;
+    private int finalAlienMovementFlag = 0;
+    private boolean finalAlienMovementDirectionFlag = true;         //true: right, false: left
+    private boolean isRivalFound = false;
 
     private Socket socket;
     private ObjectInputStream receiveStream;
@@ -103,11 +111,13 @@ public class GameController implements Initializable {
                 System.out.println("skip level!!");
                 if(levelNo < 5){
                     levelInitializationFlag = true;
+                    levelTransitionLabel.setVisible(false);
                     levelNo++;
                     clearRemainingAliens();
-                }else if (levelNo == 5){
-                    isGameFinished = true;
                 }
+//                else if (levelNo == 5){
+//                    isGameFinished = true;
+//                }
             }
         });
     }
@@ -226,10 +236,10 @@ public class GameController implements Initializable {
         }
         else if (levelNo == 5){
             if (levelInitializationFlag == true) {
-                levelTransition(5);
-                setFifthLevelAlien();
                 multiplayerLevelInitialize();
-            }else {
+                setFifthLevelAlien();
+            }else if(isRivalFound){
+                multiplayerLevelLabel.setText("Rival: "+MainClientApplication.getRivalUserName());
                 updateMultiplayerLevel();
             }
         }
@@ -345,7 +355,7 @@ public class GameController implements Initializable {
 
         // If no aliens left increase level or finish game
         if (!isGameOver && Aliens().isEmpty()) {
-            if(levelNo != 4){
+            if(levelNo != 5){
                 levelNo += 1;
                 levelInitializationFlag = true;
             }else if(levelNo == 4){
@@ -359,9 +369,12 @@ public class GameController implements Initializable {
      * This method is used to update multiplayer level grid objects
      */
     public void updateMultiplayerLevel(){
+
         // game is over
         if (isGameOver)
         {
+            clearRemainingBullets();
+            clearRemainingAliens();
             isGameFinished = true;
             // player wins
             if (gameScore > rivalGameScore)
@@ -374,15 +387,30 @@ public class GameController implements Initializable {
             {
                 gameStatus = Constants.STATUS_LOST;
             }
-
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
-        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), gameStatus, gameScore)); //HERE SEND SCORE AND HEALTH ALSO
+        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), gameStatus, gameScore, finalAlienHealth));
         ReceiveMessage();
         rivalGameScore = this.msgReceived.getScore();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
+        finalAlienHealth = this.msgReceived.getAlienHealth();
         setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
+
+        rivalHealthLabel.textProperty().bind(new SimpleDoubleProperty(this.msgReceived.getHealth()).asString());
+        rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(this.msgReceived.getScore()).asString());
+        alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(finalAlienHealth).asString());
+        customTimer = this.msgReceived.getTime();
+
+        if( levelTransitionFlag ){
+            if (customTimer < 40){
+                return;
+            }else{
+                System.out.println("levelTransitionFlag = false;");
+                levelTransitionFlag = false;
+                multiplayerLevelLabel.setVisible(false);
+            }
+        }
 
         //if (rivalSpaceShip.getHealth() == 0 || this.msgReceived.getGameStatus() != 0)
         if (this.msgReceived.getGameStatus() != Constants.STATUS_CONTINUING)
@@ -401,22 +429,8 @@ public class GameController implements Initializable {
             return;
         }
 
-        // to get the reference for the final alien
-        Alien finalAlien = new Alien();
-        for (Object obj : gameGrid.getChildren())
-        {
-            if (obj instanceof Alien)
-            {
-                finalAlien = (Alien) obj;
-                break;
-            }
-        }
-
-        customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
-
         // spaceShip bullets
-        if (customTimer > 1) {
-            customTimer = 0.0d;
+        if ((customTimer % 2.24) < 0.25) {
             // add bullets to grid
             Bullet spaceshipBullet = new Bullet((int) (spaceShip.getTranslateX() + (spaceShip.getWidth() / 2)) - 2, (int) spaceShip.getTranslateY(),
                     Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, Constants.SPACESHIP_BULLET_COLOR, 5.0d, new Vector2D(0, -1), Constants.SPACESHIP_BULLET_DAMAGE);
@@ -425,11 +439,7 @@ public class GameController implements Initializable {
             gameGrid.getChildren().add(rivalBullet);
         }
 
-
-        customTimer2 += Constants.CUSTOM_TIME_STEP_ALIEN_BULLET;
-        if (customTimer2 > Constants.TOTAL_TIME) {
-            customTimer2 = 0.0d;
-
+        if ((customTimer % 11.2) < 0.25) {
             if (finalAlien.getAlive())
             {
                 // add alien bullet to grid
@@ -440,7 +450,6 @@ public class GameController implements Initializable {
                     gameGrid.getChildren().add(alienBullet);
                 }
             }
-
         }
 
         // TODO: should i check rival's collision with alien?
@@ -455,8 +464,18 @@ public class GameController implements Initializable {
             }
         }
 
-
-
+        if ((customTimer % 0.96) < 0.25) {
+            if ( finalAlienMovementDirectionFlag ){
+                finalAlien.setTranslateX(finalAlien.getTranslateX()+2);
+                finalAlienMovementFlag += 1;
+            }else{
+                finalAlien.setTranslateX(finalAlien.getTranslateX()-2);
+                finalAlienMovementFlag -= 1;
+            }
+            if ( finalAlienMovementFlag == 40 || finalAlienMovementFlag == -40 ){
+                finalAlienMovementDirectionFlag = !finalAlienMovementDirectionFlag;
+            }
+        }
 
         // TODO: check, do I need the first if statement in this loop?
         Iterator<Node> it = gameGrid.getChildren().iterator();
@@ -466,12 +485,6 @@ public class GameController implements Initializable {
             if (isGameOver && ((o2 instanceof Bullet) || (o2 instanceof Alien) || (o2 instanceof SpaceShip))) {
                 it.remove();
             }
-            // move alien right and left continuously
-            /*if (o2 instanceof Alien)
-            {
-                Alien alien = (Alien) o2;
-                alien.setTranslateX(alien.getTranslateX());
-            }*/
 
             else if (o2 instanceof Bullet) {
                 Bullet bullet = (Bullet) o2;
@@ -486,6 +499,8 @@ public class GameController implements Initializable {
                     else {
                         if (bullet.getBoundsInParent().intersects(finalAlien.getBoundsInParent())) {
                             finalAlien.getHit(bullet.getDamage());
+                            finalAlienHealth -= bullet.getDamage();
+                            alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(finalAlienHealth).asString());
                             if (bullet.getColor() == Constants.SPACESHIP_BULLET_COLOR)
                             {
                                 // player 1 earns point
@@ -527,17 +542,26 @@ public class GameController implements Initializable {
                         }
                     }
                 }
-
             }
-
-
         }
 
+        healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
+        scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
     }
 
+    /**
+     * This is a helper method to transform Vector2D to Point
+     * @param position Vector2D object of a position
+     * @return Point object created by transforming Vector2D object
+     */
     public Point transformVector2DtoPoint(Vector2D position){
         return new Point((int)position.x,(int)position.y);
     }
+
+    /**
+     * This Method is used to receive messages from server
+     * @return The message received from the server
+     */
     public MultiplayerMessage ReceiveMessage(){
         try {
             this.msgReceived = (MultiplayerMessage)((this.receiveStream).readObject());
@@ -548,6 +572,10 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * This method is used to send MultiplayerMessage to the server over socket
+     * @param message The message to send to the server
+     */
     public void SendMessage(MultiplayerMessage message){
         try {
             this.msgSent = message;
@@ -594,57 +622,90 @@ public class GameController implements Initializable {
         setAliens(Constants.HARD_ALIEN_COLOR, Constants.DEFENSIVE_ALIEN_HEALTH, 4);
     }
 
+    /**
+     * This method creates one alien for the multiplayer level
+     */
     public void setFifthLevelAlien()
     {
         Vector2D downVector = new Vector2D(0.0d, -1.0d);
-        Alien newAlien = new Alien(((int) (Constants.GRID_WIDTH / 2)) - Constants.FINAL_ALIEN_WIDTH/2, (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
-        gameGrid.getChildren().add((Node) newAlien);
+        finalAlien = new Alien(((int) (Constants.GRID_WIDTH / 2)) - Constants.FINAL_ALIEN_WIDTH/2, (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
+        gameGrid.getChildren().add((Node) finalAlien);
     }
 
+    /**
+     * This level prepares environment for the multiplayer level
+     */
     public void multiplayerLevelInitialize(){
+        String levelNoString = "LEVEL 5";
+        levelNumberLabel.setText(levelNoString);
+        levelInitializationFlag = false;
+        levelTransitionFlag = true;
+        clearRemainingBullets();
+        multiplayerLevelLabel.setVisible(true);
+
+
         isGameFinished = false;
         isGameOver = false;
-        //gameScore = 0;
         gameGrid.getChildren().add(rivalSpaceShip);
 
-        try {
-            this.socket = new Socket(Constants.MULTIPLAYER_SERVER_IP, Constants.MULTIPLAYER_SERVER_PORT);
-
-            this.sendStream = new ObjectOutputStream(socket.getOutputStream());
-            MultiplayerMessage sendUsernameToServerMsg = new MultiplayerMessage(MainClientApplication.getLoggedUserName(), 0, new Point(0,0), Constants.STATUS_CONTINUING,0);
-            SendMessage(sendUsernameToServerMsg);
-
+        new Thread(() -> {
             try {
-                //Read 2 messages, use the first one for the spaceShip, second one for the rivalSpaceShip initialization
-                this.receiveStream = new ObjectInputStream(socket.getInputStream());
-                MultiplayerMessage msgFromServer = ReceiveMessage();
-                setShipPosition(spaceShip,msgFromServer.getPosition(),true);
-                spaceShip.setHealth(msgFromServer.getHealth());
-                MainClientApplication.setRivalUserName(msgFromServer.getName());
-                rivalHealthLabel.textProperty().bind(new SimpleDoubleProperty(msgFromServer.getHealth()).asString());
-                rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(msgFromServer.getScore()).asString());
-                msgFromServer.print();
+                this.socket = new Socket(Constants.MULTIPLAYER_SERVER_IP, Constants.MULTIPLAYER_SERVER_PORT);
 
-                msgFromServer = ReceiveMessage();
-                setShipPosition(rivalSpaceShip,msgFromServer.getPosition(),true);
-                rivalSpaceShip.setHealth(msgFromServer.getHealth());
-                msgFromServer.print();
+                this.sendStream = new ObjectOutputStream(socket.getOutputStream());
+                MultiplayerMessage sendUsernameToServerMsg = new MultiplayerMessage(MainClientApplication.getLoggedUserName(), 0, new Point(0,0), Constants.STATUS_CONTINUING,0,finalAlienHealth);
+                SendMessage(sendUsernameToServerMsg);
 
-                System.out.println(msgFromServer.getName()+"  "+msgFromServer.getHealth()+"  "+msgFromServer.getPosition()+"  "+msgFromServer.getGameStatus());
-
-                rivalSpaceShip.setTranslateX(msgFromServer.getPosition().x);
-                rivalSpaceShip.setTranslateY(msgFromServer.getPosition().y);
+                try {
+                    //Read 2 messages, use the first one for the spaceShip, second one for the rivalSpaceShip initialization
+                    this.receiveStream = new ObjectInputStream(socket.getInputStream());
+                    MultiplayerMessage msgFromServer = ReceiveMessage();
+                    setShipPosition(spaceShip,msgFromServer.getPosition(),true);
+                    spaceShip.setHealth(msgFromServer.getHealth());
+                    MainClientApplication.setRivalUserName(msgFromServer.getName());
 
 
-                //msgFromServer.getPosition()
-            }catch (Exception e){
-                e.printStackTrace();
+                    final MultiplayerMessage msg = msgFromServer;
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            rivalHealthLabel.textProperty().bind(new SimpleDoubleProperty(msg.getHealth()).asString());
+                            rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(msg.getScore()).asString());
+                            rivalHealth.setVisible(true);
+                            rivalScore.setVisible(true);
+                            rivalHealthLabel.setVisible(true);
+                            rivalScoreLabel.setVisible(true);
+                            alienHealth.setVisible(true);
+                            alienHealthLabel.setVisible(true);
+                        }
+                    });
+
+                    msgFromServer.print();
+
+                    msgFromServer = ReceiveMessage();
+                    setShipPosition(rivalSpaceShip,msgFromServer.getPosition(),true);
+                    rivalSpaceShip.setHealth(msgFromServer.getHealth());
+                    msgFromServer.print();
+
+                    System.out.println(msgFromServer.getName()+"  "+msgFromServer.getHealth()+"  "+msgFromServer.getPosition()+"  "+msgFromServer.getGameStatus());
+
+                    rivalSpaceShip.setTranslateX(msgFromServer.getPosition().x);
+                    rivalSpaceShip.setTranslateY(msgFromServer.getPosition().y);
+
+                    isRivalFound = true;
+                    System.out.println("Rival found the match is starting..");
+                    //msgFromServer.getPosition()
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }).start();
 
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
+
     }
 
 
