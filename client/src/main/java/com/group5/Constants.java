@@ -57,6 +57,8 @@ public class Constants {
     public static final Color HARD_ALIEN_COLOR = Color.DARKRED;
     public static final Color FINAL_ALIEN_COLOR = Color.DEEPPINK;
 
+    public static final Integer BONUS_POINT = 1000;
+
 
 
 

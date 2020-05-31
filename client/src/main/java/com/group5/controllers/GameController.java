@@ -78,7 +78,8 @@ public class GameController implements Initializable {
 
     private SpaceShip rivalSpaceShip = new SpaceShip(280, 720, 30, 30, Constants.RIVAL_SPACESHIP_COLOR, 1, new Vector2D(0, 0), 1000, 10);
     private Integer finalLevelScore = 0;
-    private Integer rivalFinalLevelScore = 0;
+    //private Integer rivalFinalLevelScore = 0;
+    private Integer rivalGameScore = 0;
     private int gameStatus = Constants.STATUS_CONTINUING;
 
     private Socket socket;
@@ -364,10 +365,10 @@ public class GameController implements Initializable {
         {
             isGameFinished = true;
             // player wins
-            if (finalLevelScore > rivalFinalLevelScore)
+            if (gameScore > rivalGameScore)
             {
                 gameStatus = Constants.STATUS_WON;
-                gameScore += finalLevelScore;
+                gameScore += Constants.BONUS_POINT;
             }
             // rival wins
             else
@@ -377,9 +378,9 @@ public class GameController implements Initializable {
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
-        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), gameStatus, finalLevelScore)); //HERE SEND SCORE AND HEALTH ALSO
+        SendMessage(new MultiplayerMessage("test", spaceShip.getHealth(), transformVector2DtoPoint(spaceShip.getPosition()), gameStatus, gameScore)); //HERE SEND SCORE AND HEALTH ALSO
         ReceiveMessage();
-        rivalFinalLevelScore = this.msgReceived.getScore();
+        rivalGameScore = this.msgReceived.getScore();
         rivalSpaceShip.setHealth(this.msgReceived.getHealth());
         setShipPosition(rivalSpaceShip,this.msgReceived.getPosition(),true);
 
@@ -391,10 +392,10 @@ public class GameController implements Initializable {
         {
             isGameFinished = true;
             isGameOver = true;
-            if (finalLevelScore > rivalFinalLevelScore)
+            if (gameScore > rivalGameScore)
             {
                 gameStatus = Constants.STATUS_WON;
-                gameScore += finalLevelScore;
+                gameScore += Constants.BONUS_POINT;
             }
             else
             {
@@ -487,7 +488,7 @@ public class GameController implements Initializable {
                             if (bullet.getColor() == Constants.SPACESHIP_BULLET_COLOR)
                             {
                                 // player 1 earns point
-                                finalLevelScore += (int) Constants.SPACESHIP_BULLET_DAMAGE;
+                                gameScore += (int) Constants.SPACESHIP_BULLET_DAMAGE;
                             }
                             /*else
                             {
