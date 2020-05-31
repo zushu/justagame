@@ -1,10 +1,16 @@
 # CENG453 Term Project
 
 ## Introduction
-This repository includes a single-player desktop game Alien Shooter. The player shoots aliens, avoids being shot by aliens and colliding with them. Currently, the game has 4 levels with increasing difficulties. 
+This repository includes a desktop game Alien Shooter. The player shoots aliens, avoids being shot by aliens and colliding with them. The game has 5 levels with increasing difficulties. The first 4 levels are single-player. The final level is multiplayer where two players try to kill one alien.
 
 ## Dependencies
 Java version 13 was used in implementation.
+
+## Building the project
+Go to `group5` directory and run the following commands:
+```
+sh build.sh
+```
 
 ## Back-end Implementation Notes
 
@@ -19,8 +25,8 @@ We have two simple tables for now. These are User and Score tables. User table w
 
 ### Run Commands
 
-* To run **spring-boot application** execute **./mvnw spring-boot:run** command under group5/server/ folder.
-* To run **unit tests** execute **./mvnw -Dtest=GameObjectTest test** command under group5/server/ folder.
+* To run the **server side** of the game, execute `java - jar server-program-group5.war` command under `group5/executables/` folder.
+* To run **unit tests** execute `./mvnw -Dtest=GameObjectTest test` command under `group5/server/` folder.
 
 ## Front-end Implementation Notes
 
@@ -28,6 +34,13 @@ Client side was built using JavaFX.
 Users can sign up, sign in and play the game using the interface. After a game is finished, the score of the user is added to the database and shown in the leaderboard. 
 
 ### Run Commands
-* To run the **frontend application** execute **./mvnw clean javafx:run** command under group5/client/ folder.
+* To run the **client side** of the game, execute `java -jar client-program-group5.jar` command under `group5/executables/` folder.
 * In order to sign up and log in to start the game, back-end should be run in parallel.
 
+## Multiplayer Level Implementation Notes
+
+In the multiplayer level, two players attack the same alien. When a player finishes the first four levels, they wait for a matching player who also finished the first four levels to join them and the final level starts. In order to play the multiplayer level, the user should run the following commands alongside with server and client programs **before starting the game**.
+
+### Run Commands
+
+* To run the **multiplayer server**, execute `java -jar multiplayer-program-group5.jar` command under `group5/executables/` folder. 
