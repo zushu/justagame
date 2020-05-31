@@ -39,7 +39,7 @@ Users can sign up, sign in and play the game using the interface. After a game i
 
 ## Multiplayer Level Implementation Notes
 
-In the multiplayer level, two players attack the same alien. When a player finishes the first four levels, they wait for a matching player who also finished the first four levels to join them and the final level starts. In order to play the multiplayer level, the user should run the following commands alongside with server and client programs to start the game.
+In the multiplayer level, two players attack the same alien. When a player finishes the first four levels, they wait for a matching player who also finished the first four levels to join them and the final level starts. In order to play the multiplayer level, the user should run the following commands alongside with server and client programs **before starting the game**.
 
 ### Run Commands
 
