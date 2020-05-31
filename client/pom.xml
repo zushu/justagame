@@ -52,6 +52,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>client-program-group5</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -70,6 +71,22 @@
                     <release>11</release>
                 </configuration>
             </plugin>
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <finalName>client-program-group5</finalName>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>target/classes/</classpathPrefix>
+                            <mainClass>com.group5.MainClientApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>-->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>

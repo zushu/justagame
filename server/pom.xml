@@ -8,8 +8,8 @@
 		<version>2.2.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com</groupId>
-	<artifactId>group5</artifactId>
+	<groupId>com.group5</groupId>
+	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>ceng453project</name>
@@ -70,11 +70,44 @@
 	</dependencies>
 
 	<build>
+		<finalName>server-program-group5</finalName> 
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <outputDirectory>../executables</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>target/classes/</classpathPrefix>
+                            <mainClass>com.group5.Ceng453projectApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin> -->
+			<!--
+			      <plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>3.2.3</version>
+					<configuration>
+						<outputDirectory>../executables</outputDirectory>
+						<finalName>server-program-group5</finalName> 
+						<archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>target/classes/</classpathPrefix>
+                            <mainClass>com.group5.Ceng453projectApplication</mainClass>
+                        </manifest>
+                    </archive>
+					</configuration>
+				</plugin> -->
 		</plugins>
 	</build>
 
