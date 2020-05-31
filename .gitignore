@@ -11,6 +11,8 @@
 /client/.idea
 /client/target
 /multiplayer-server/out
+/multiplayer-server/target/
+/executables
 
 # Except this file
 !.gitignore
