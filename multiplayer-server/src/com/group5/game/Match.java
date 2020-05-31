@@ -16,7 +16,7 @@ public class Match implements Runnable{
     public void run() {
         System.out.println("Match thread started.");
 
-        MultiplayerMessage initialSetupMsg = new MultiplayerMessage(player2.getUsername(),1000,Constants.INITIAL_POSITION_1,Constants.STATUS_CONTINUING,0);
+        MultiplayerMessage initialSetupMsg = new MultiplayerMessage(player2.getUsername(),1000,Constants.INITIAL_POSITION_1,Constants.STATUS_CONTINUING,0,0);
         player1.SendMessage(initialSetupMsg);
         initialSetupMsg.setPosition(Constants.INITIAL_POSITION_2);
         player1.SendMessage(initialSetupMsg);
@@ -51,6 +51,8 @@ public class Match implements Runnable{
                 msgReceived = player.ReceiveMessage();
                 //msgReceived.print();
                 msgSent = msgReceived;
+                player.incrementPlayerTime();
+                msgSent.setTime(player.getPlayerTime());
                 rival.SendMessage(msgSent);
             }
         }

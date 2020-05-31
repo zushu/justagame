@@ -1,13 +1,17 @@
 package com.group5.game;
 
+import com.group5.Constants;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.constant.Constable;
 import java.net.Socket;
 
 public class Player {
     private Socket socket;
     private String username;
+    private double playerTime = 0.0d;
 
     private ObjectInputStream receiveStream;
     private ObjectOutputStream sendStream;
@@ -49,5 +53,15 @@ public class Player {
     }
     public void setUsername(String username){
         this.username = username;
+    }
+
+    public void incrementPlayerTime(){
+        this.playerTime += Constants.FINAL_TICK_INTERVAL;
+        if(this.playerTime >= 24000){
+            this.playerTime = 0;
+        }
+    }
+    public double getPlayerTime(){
+        return this.playerTime;
     }
 }

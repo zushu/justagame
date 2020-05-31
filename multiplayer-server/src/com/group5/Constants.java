@@ -12,4 +12,6 @@ public class Constants {
     public static final double INITIAL_HEALTH = 1000.0d;
     public static Point INITIAL_POSITION_1 = new Point(240,720);
     public static Point INITIAL_POSITION_2 = new Point(320,720);
+
+    public static final double FINAL_TICK_INTERVAL = 0.24;
 }
