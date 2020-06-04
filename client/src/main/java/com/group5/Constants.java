@@ -6,7 +6,7 @@ public class Constants {
     public static final String SERVER_SCORE_API_URL = "http://localhost:8080/api/score";
     public static final String SERVER_USER_API_URL = "http://localhost:8080/api/user";
 
-    public static final String MULTIPLAYER_SERVER_IP  = "127.0.0.1";
+    public static final String MULTIPLAYER_SERVER_IP  = "144.122.71.144";
     public static final int MULTIPLAYER_SERVER_PORT = 8081;
 
     public static final int STATUS_CONTINUING = 0;
