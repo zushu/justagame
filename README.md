@@ -7,7 +7,7 @@ This repository includes a desktop game Alien Shooter. The player shoots aliens,
 Java version 13 was used in implementation.
 
 ## Building the project
-Go to `group5` directory and run the following commands:
+Go to `group5` directory and run the following command:
 ```
 sh build.sh
 ```
