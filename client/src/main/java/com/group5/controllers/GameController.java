@@ -158,6 +158,13 @@ public class GameController implements Initializable {
         multiplayerLevelLabel.setText("Waiting for a rival..");
         totalScoreOfGame.setVisible(false);
         totalScoreLabel.setVisible(false);
+        isRivalFound = false;
+        isMultiplayerLevelFinished = false;
+        isFinishingMessageSent = false;
+        gameScore = 0;
+        rivalGameScore = 0;
+        totalScore = 0;
+        gameStatus = Constants.STATUS_CONTINUING;
     }
 
     /**
@@ -390,26 +397,24 @@ public class GameController implements Initializable {
         // game is over
         if (isMultiplayerLevelFinished)
         {
+            totalScore = gameScore + this.msgReceived.getScore() + Constants.BONUS_POINT;
             // player wins
             if(finalAlien.getHealth() <=0){
-                if (gameScore > rivalGameScore)
+                if (gameScore > rivalGameScore || rivalSpaceShip.getHealth() <= 0)
                 {
                     gameStatus = Constants.STATUS_WON;
                     gameScore += Constants.BONUS_POINT;
-                    scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
                 }
                 // rival wins
                 else
                 {
                     gameStatus = Constants.STATUS_LOST;
+                    rivalGameScore += Constants.BONUS_POINT;
                 }
             }
-            if(spaceShip.getHealth()<=0){
-                gameStatus = Constants.STATUS_LOST;
-            }
-            totalScore = gameScore + this.msgReceived.getScore();
+            rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(rivalGameScore).asString());
+            scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
             totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
-
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
@@ -433,7 +438,6 @@ public class GameController implements Initializable {
             if (customTimer < 40){
                 return;
             }else{
-                System.out.println("levelTransitionFlag = false;");
                 levelTransitionFlag = false;
                 multiplayerLevelLabel.setVisible(false);
             }
@@ -441,21 +445,23 @@ public class GameController implements Initializable {
 
         if (this.msgReceived.getGameStatus() != Constants.STATUS_CONTINUING)
         {
+            totalScore = gameScore + this.msgReceived.getScore() + Constants.BONUS_POINT;
             if (gameScore > rivalGameScore)
             {
                 gameStatus = Constants.STATUS_WON;
                 gameScore += Constants.BONUS_POINT;
-                scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
             }
             // rival wins
             else
             {
                 gameStatus = Constants.STATUS_LOST;
+                rivalGameScore += Constants.BONUS_POINT;
             }
-            totalScore = gameScore + this.msgReceived.getScore();
-            totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
             isMultiplayerLevelFinished = true;
             isFinishingMessageSent = true;
+            rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(rivalGameScore).asString());
+            scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
+            totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
             return;
         }
 
@@ -504,7 +510,6 @@ public class GameController implements Initializable {
             }
         }
 
-        // TODO: check, do I need the first if statement in this loop?
         Iterator<Node> it = gameGrid.getChildren().iterator();
         while (it.hasNext()) {
             Object o2 = it.next();
@@ -542,8 +547,6 @@ public class GameController implements Initializable {
                                 //isGameOver = true;
                                 isMultiplayerLevelFinished = true;
                                 return;
-                                //break; // TODO: CHECK
-                                // TODO: send info to server
                             }
                         }
                     }
@@ -654,7 +657,13 @@ public class GameController implements Initializable {
     public void setFifthLevelAlien()
     {
         Vector2D downVector = new Vector2D(0.0d, -1.0d);
-        finalAlien = new Alien(((int) (Constants.GRID_WIDTH / 2)) - Constants.FINAL_ALIEN_WIDTH/2, (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
+        if ( finalAlien == null ){
+            finalAlien = new Alien(((int) (Constants.GRID_WIDTH / 2)) - Constants.FINAL_ALIEN_WIDTH/2, (int) Constants.FINAL_ALIEN_HEIGHT / 2 , Constants.FINAL_ALIEN_WIDTH, Constants.FINAL_ALIEN_HEIGHT, Constants.FINAL_ALIEN_COLOR, 0, downVector, Constants.FINAL_ALIEN_HEALTH);
+        }else{
+            finalAlien.setPosition(new Vector2D(((int) (Constants.GRID_WIDTH / 2)) - Constants.FINAL_ALIEN_WIDTH/2, (int) Constants.FINAL_ALIEN_HEIGHT / 2));
+            finalAlien.setHealth(Constants.FINAL_ALIEN_HEALTH);
+        }
+        alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(finalAlienHealth).asString());
         gameGrid.getChildren().add((Node) finalAlien);
     }
 
@@ -662,6 +671,7 @@ public class GameController implements Initializable {
      * This level prepares environment for the multiplayer level
      */
     public void multiplayerLevelInitialize(){
+        totalScore = 0;
         String levelNoString = "LEVEL 5";
         levelNumberLabel.setText(levelNoString);
         levelInitializationFlag = false;
@@ -672,7 +682,10 @@ public class GameController implements Initializable {
 
         isGameFinished = false;
         isGameOver = false;
+        spaceShip.setHealth(Constants.SPACESHIP_HEALTH);
+        rivalSpaceShip.setHealth(Constants.SPACESHIP_HEALTH);
         gameGrid.getChildren().add(rivalSpaceShip);
+        alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(finalAlienHealth).asString());
 
         new Thread(() -> {
             try {
