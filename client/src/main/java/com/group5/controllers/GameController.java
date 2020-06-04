@@ -415,6 +415,7 @@ public class GameController implements Initializable {
             rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(rivalGameScore).asString());
             scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
             totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
+            System.out.println("aaaaaa  gameScore:"+gameScore+"  rivalGameScore:"+rivalGameScore+"  totalScore:"+totalScore);
         }
 
         customTimer += Constants.LEVEL4_TIMESTEP_INCREMENT;
@@ -462,6 +463,8 @@ public class GameController implements Initializable {
             rivalScoreLabel.textProperty().bind(new SimpleIntegerProperty(rivalGameScore).asString());
             scoreLabel.textProperty().bind(new SimpleIntegerProperty(gameScore).asString());
             totalScoreOfGame.textProperty().bind(new SimpleIntegerProperty(totalScore).asString());
+
+            System.out.println("bbbbbb  gameScore:"+gameScore+"  rivalGameScore:"+rivalGameScore+"  totalScore:"+totalScore);
             return;
         }
 
@@ -662,8 +665,12 @@ public class GameController implements Initializable {
         }else{
             finalAlien.setPosition(new Vector2D(((int) (Constants.GRID_WIDTH / 2)) - Constants.FINAL_ALIEN_WIDTH/2, (int) Constants.FINAL_ALIEN_HEIGHT / 2));
             finalAlien.setHealth(Constants.FINAL_ALIEN_HEALTH);
+            finalAlien.setTranslateX((Constants.GRID_WIDTH / 2) - Constants.FINAL_ALIEN_WIDTH/2);
+            finalAlien.setTranslateY(Constants.FINAL_ALIEN_HEIGHT / 2);
+            finalAlienHealth = Constants.FINAL_ALIEN_HEALTH;
+            finalAlien.setAlive(true);
         }
-        alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(finalAlienHealth).asString());
+        alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(Constants.FINAL_ALIEN_HEALTH).asString());
         gameGrid.getChildren().add((Node) finalAlien);
     }
 
@@ -685,7 +692,7 @@ public class GameController implements Initializable {
         spaceShip.setHealth(Constants.SPACESHIP_HEALTH);
         rivalSpaceShip.setHealth(Constants.SPACESHIP_HEALTH);
         gameGrid.getChildren().add(rivalSpaceShip);
-        alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(finalAlienHealth).asString());
+        //alienHealthLabel.textProperty().bind(new SimpleDoubleProperty(finalAlienHealth).asString());
 
         new Thread(() -> {
             try {
