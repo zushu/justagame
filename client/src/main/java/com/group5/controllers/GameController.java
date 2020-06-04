@@ -121,9 +121,6 @@ public class GameController implements Initializable {
                     clearRemainingAliens();
                     clearRemainingBullets();
                 }
-//                else if (levelNo == 5){
-//                    isGameFinished = true;
-//                }
             }
         });
     }
@@ -442,7 +439,6 @@ public class GameController implements Initializable {
             }
         }
 
-        //if (rivalSpaceShip.getHealth() == 0 || this.msgReceived.getGameStatus() != 0)
         if (this.msgReceived.getGameStatus() != Constants.STATUS_CONTINUING)
         {
             if (gameScore > rivalGameScore)
@@ -487,12 +483,10 @@ public class GameController implements Initializable {
         }
 
         if (spaceShip.getBoundsInParent().intersects(finalAlien.getBoundsInParent())) {
-            //finalAlien.getHit();
             spaceShip.getHit(finalAlien.getHealth());        //SpaceShip gets damage as much as aliens health when a collision occurs
             healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
             if (spaceShip.getHealth() <= 0) {
                 spaceShip.setAlive(false);
-                //isGameOver = true;
                 isMultiplayerLevelFinished = true;
             }
         }
@@ -539,10 +533,7 @@ public class GameController implements Initializable {
                                 // player 1 earns point
                                 gameScore += (int) Constants.SPACESHIP_BULLET_DAMAGE;
                             }
-                            /*else
-                            {
-                                // rival earns point
-                            }*/
+
                             // remove bullet
                             it.remove();
                             if (finalAlien.getHealth() <= 0)
@@ -572,7 +563,6 @@ public class GameController implements Initializable {
                             healthLabel.textProperty().bind(new SimpleDoubleProperty(spaceShip.getHealth()).asString());
                             if (spaceShip.getHealth() <= 0) {
                                 spaceShip.setAlive(false);
-                                //isGameOver = true;
                                 isMultiplayerLevelFinished = true;
                             }
                         }
@@ -730,7 +720,6 @@ public class GameController implements Initializable {
 
                     isRivalFound = true;
                     System.out.println("Rival found the match is starting..");
-                    //msgFromServer.getPosition()
                 }catch (Exception e){
                     e.printStackTrace();
                 }

@@ -26,10 +26,10 @@ public class Match implements Runnable{
         initialSetupMsg.setPosition(Constants.INITIAL_POSITION_1);
         player2.SendMessage(initialSetupMsg);
 
+        // Create one thread for each user, get messsage from player and forward it to his rival
         new HandlePlayer(player1,player2).start();
         new HandlePlayer(player2,player1).start();
     }
-
 
     private class HandlePlayer extends Thread {
         private Player player;
