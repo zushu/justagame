@@ -165,6 +165,8 @@ public class GameController implements Initializable {
         rivalGameScore = 0;
         totalScore = 0;
         gameStatus = Constants.STATUS_CONTINUING;
+        finalAlienMovementFlag = 0;
+        finalAlienMovementDirectionFlag = true;
     }
 
     /**
